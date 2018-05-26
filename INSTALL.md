@@ -11,8 +11,8 @@
 
 * look in `src/src.pro` to modify include dirs if you want,
 * run
-
-    qmake
-    make
-
+```
+qmake
+make
+```
 `qloud` executable will be in `bin` directory.
