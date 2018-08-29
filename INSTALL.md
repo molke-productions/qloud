@@ -16,3 +16,11 @@ qmake
 make
 ```
 `qloud` executable will be in `bin` directory.
+
+## On Debian/Ubuntu
+
+* Install dependencies (`libjack-jackd2-dev` can be exchanged with `libjack-dev` if using jackd1):
+```
+sudo apt install qttools5-dev libqwt5-qt5-dev libjack-jackd2-dev libsndfile1-dev libfftw3-dev
+```
+* Change `-lqwt` to `-lqwt-qt5` in `src/src.pro`.
