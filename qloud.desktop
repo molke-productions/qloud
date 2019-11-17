@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Qloud
+Comment=Audio measurement tool for JACK
+Comment[fr]=Outil de mesure audio pour JACK
+Exec=qloud
+Terminal=false
+Icon=qloud
+Type=Application
+Categories=AudioVideo;Audio;
