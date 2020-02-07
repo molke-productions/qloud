@@ -1,3 +1,5 @@
+include(../config.pri)
+
 SOURCES += main.cpp \
  CapThread.cpp \
  Capture.cpp \
@@ -92,3 +94,6 @@ LIBS += -lsndfile \
 -lqwt
 
 QMAKE_CXXFLAGS += -std=c++11
+
+INSTALLS += target
+target.path = $$PREFIX/bin
