@@ -10,12 +10,16 @@
 # Installation
 
 * look in `src/src.pro` to modify include dirs if you want,
+* set `PREFIX` (default is `C:\Qloud` on Windows or `/usr/local`) with `qmake`
+```
+qmake PREFIX=/usr
+```
 * run
 ```
-qmake
 make
+make install INSTALL_ROOT=/my/package/root
 ```
-`qloud` executable will be in `bin` directory.
+The `qloud` executable will be in the `bin` directory.
 
 ## On Debian/Ubuntu
 
