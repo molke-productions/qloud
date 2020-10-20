@@ -91,7 +91,7 @@ INCLUDEPATH += /usr/include/qwt \
 LIBS += -lsndfile \
 -lfftw3 \
 -ljack \
--lqwt
+-lqwt-qt5
 
 QMAKE_CXXFLAGS += -std=c++11
 
