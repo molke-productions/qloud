@@ -79,6 +79,8 @@ IRPlot::IRPlot(
             points.append(QPointF(this->time[i], this->amps[i]));
         }
         ampCurve->replace(points);
+
+        this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 IRPlot::~IRPlot() {

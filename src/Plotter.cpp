@@ -104,6 +104,8 @@ Plotter::Plotter(
 	this->smoothFactor = Plotter::DEFAULT_SMOOTH; // 1/6 octave
 	this->winLength = 0.5; // 500 ms for right window
 	this->recalculate();
+
+    this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 Plotter::~Plotter() {

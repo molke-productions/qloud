@@ -78,6 +78,8 @@ HarmPlot::HarmPlot(
     chart->addAxis(YAxis, Qt::AlignLeft);
 
     this->addCurves(XAxis, YAxis);
+
+    this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 
