@@ -64,8 +64,9 @@ HarmPlot::HarmPlot(
     XAxis->setBase(10.0);
     XAxis->setLabelFormat("%d");
     XAxis->setTitleText(tr("Frequency in Hz"));
-    XAxis->setMax(40000);
-    XAxis->setMin(0);
+    XAxis->setRange(20, 20000);
+    //XAxis->setMax(40000);
+    //XAxis->setMin(0);
     XAxis->setMinorTickCount(10);
     XAxis->setMinorTickCount(6);
     chart->addAxis(XAxis, Qt::AlignBottom);
@@ -79,7 +80,7 @@ HarmPlot::HarmPlot(
     YAxis->setMinorTickCount(10);
     chart->addAxis(YAxis, Qt::AlignLeft);
 
-    this->addCurves(YAxis);
+    this->addCurves(XAxis, YAxis);
 }
 
 
@@ -93,7 +94,7 @@ HarmPlot::~HarmPlot() {
 }
 
 
-void HarmPlot::addCurves(QValueAxis* y) {
+void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 	Harmonics* harmonics = new Harmonics(this->dir, this->ii);
 	for(int i=0; i <= MAX_HARM - 2; i++) {
 		this->data[i] = harmonics->getHarm(i+2); // begin from second harmonic
@@ -106,6 +107,7 @@ void HarmPlot::addCurves(QValueAxis* y) {
 		curve->setPen(QPen(HARM_COLORS[i]));
         this->chart->addSeries(curve);
         curve->attachAxis(y);
+        curve->attachAxis(x);
         QList<QPointF> points;
         for (int j = 0; j < this->data[i]->length; j++) {
             points.append(QPointF(this->data[i]->freqs[j], this->data[i]->values[j]));

@@ -55,8 +55,8 @@ IRPlot::IRPlot(
         XAxis->setTitleText(tr("Time in ms"));
         XAxis->setMax(this->time[curveLength-1]);
         XAxis->setMin(this->time[0]);
-        XAxis->setTickCount(6);
-        XAxis->setMinorTickCount(10);
+        //XAxis->setTickCount(6);
+        //XAxis->setMinorTickCount(10);
         this->chart->addAxis(XAxis, Qt::AlignBottom);
 
         QValueAxis *YAxis = new QValueAxis(this->chart);
@@ -73,6 +73,7 @@ IRPlot::IRPlot(
         ampCurve->setPen(QPen(AMP_CURVE_COLOR));
         this->chart->addSeries(ampCurve);
         ampCurve->attachAxis(YAxis);
+        ampCurve->attachAxis(XAxis);
 
         QList<QPointF> points;
         for (unsigned int i = 0; i < curveLength; i++) {

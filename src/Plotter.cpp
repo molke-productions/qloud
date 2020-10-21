@@ -69,7 +69,7 @@ Plotter::Plotter(
     XAxis->setRange(20, 20000);
     //XAxis->setMax(40000);
     //XAxis->setMin(0);
-    ((QLogValueAxis *) XAxis)->setMinorTickCount(8);
+    ((QLogValueAxis *) XAxis)->setMinorTickCount(10);
     chart->addAxis(XAxis, Qt::AlignBottom);
 
     YAxis = new QValueAxis(this->chart);
@@ -100,10 +100,7 @@ Plotter::Plotter(
 
 	if(QLCfg::USE_PAHSE) {
         this->phaseCurve = new QLineSeries(this->chart);
-        this->chart->addSeries(this->phaseCurve);
 		this->phaseCurve->setPen(QPen(PHASE_CURVE_COLOR));
-        this->phaseCurve->attachAxis(XAxis);
-        this->phaseCurve->attachAxis(YPAxis);
 	}
 
 	this->smoothFactor = Plotter::DEFAULT_SMOOTH; // 1/6 octave

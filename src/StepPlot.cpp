@@ -58,8 +58,8 @@ StepPlot::StepPlot(
         XAxis->setTitleText(tr("Time in ms"));
         XAxis->setMax(this->time[curveLength-1]);
         XAxis->setMin(this->time[0]);
-        XAxis->setMinorTickCount(10);
-        XAxis->setTickCount(6);
+        //XAxis->setMinorTickCount(10);
+        //XAxis->setTickCount(6);
         this->chart->addAxis(XAxis, Qt::AlignBottom);
 
         QValueAxis *YAxis = new QValueAxis(this->chart);
@@ -67,8 +67,8 @@ StepPlot::StepPlot(
         YAxis->setLabelFormat("%.02f");
         YAxis->setMax(1.5);
         YAxis->setMin(-1.5);
-        YAxis->setTickCount(7);
-        YAxis->setMinorTickCount(10);
+        //YAxis->setTickCount(7);
+        //YAxis->setMinorTickCount(10);
         this->chart->addAxis(YAxis, Qt::AlignLeft);
 
 
@@ -76,6 +76,7 @@ StepPlot::StepPlot(
         ampCurve->setPen(QPen(AMP_CURVE_COLOR));
         this->chart->addSeries(ampCurve);
         ampCurve->attachAxis(YAxis);
+        ampCurve->attachAxis(XAxis);
 
         QList<QPointF> points;
         for (unsigned int i = 0; i < curveLength; i++) {
