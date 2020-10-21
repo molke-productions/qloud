@@ -108,16 +108,9 @@ ExcitForm::ExcitForm(
 	QHBoxLayout* exBottom = new QHBoxLayout();
 
 	exBottom->addWidget(new QLabel("Min. freq. [Hz]"));
-	this->fMinCnt = new QwtCounter();
+    this->fMinCnt = new QDoubleSpinBox(this);
 	this->fMinCnt->setRange(1, 100000);
-	this->fMinCnt->setSingleStep(1);
-	this->fMinCnt->setNumButtons(2);
-	this->fMinCnt->setIncSteps(QwtCounter::Button1, 1);
-	this->fMinCnt->setIncSteps(QwtCounter::Button2, 10);
-
-	this->fMinCnt->setNumButtons(2);
-	this->fMinCnt->setIncSteps(QwtCounter::Button1, 1);
-	this->fMinCnt->setIncSteps(QwtCounter::Button2, 10);
+    this->fMinCnt->setSingleStep(1);
 	this->fMinCnt->setValue(100);
 	QWidget* tmp = new QLabel("W100000W");
 	this->fMinCnt->setFixedWidth(this->fMinCnt->sizeHint().width() + tmp->sizeHint().width());
@@ -129,12 +122,9 @@ ExcitForm::ExcitForm(
 	exBottom->addSpacing(QLWin::SMALL_SPACE);
 
 	exBottom->addWidget(new QLabel("Max. freq. [Hz]"));
-	this->fMaxCnt = new QwtCounter();
+    this->fMaxCnt = new QDoubleSpinBox(this);
 	this->fMaxCnt->setRange(1, 100000);
-	this->fMaxCnt->setSingleStep(1);
-	this->fMaxCnt->setNumButtons(2);
-	this->fMaxCnt->setIncSteps(QwtCounter::Button1, 10);
-	this->fMaxCnt->setIncSteps(QwtCounter::Button2, 1000);
+    this->fMaxCnt->setSingleStep(1);
 	this->fMaxCnt->setValue(10000);
 	tmp = new QLabel("W1000000W");
 	this->fMaxCnt->setFixedWidth(

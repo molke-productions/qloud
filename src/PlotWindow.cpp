@@ -17,10 +17,7 @@
 */
 
 #include <QtWidgets>
-
-#include <qwt_counter.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_canvas.h>
+#include <QtCharts/QtCharts>
 
 #include "PlotWindow.h"
 #include "Plotter.h"
@@ -30,7 +27,6 @@
 #include "IRPPlot.h"
 #include "StepPlot.h"
 #include "HarmPlot.h"
-#include "RoundedZoomer.h"
 
 PlotWindow::PlotWindow(
 	const QString& dir,
@@ -72,8 +68,9 @@ QWidget* PlotWindow::getSplTab(
 	const IRInfo& ii
 ) {
 	Plotter* plotter = new Plotter(dir, ii);
-	this->zoomizePlotter(plotter, 1, 3);
+        //this->zoomizePlotter(plotter, 1, 3);
 	if(QLCfg::USE_PAHSE) {
+#if 0
 		// as we have additional curve/scale (phase), add a zoomer
 		RoundedZoomer* zoomer2 = new RoundedZoomer(
 			QwtPlot::xTop,
@@ -94,6 +91,7 @@ QWidget* PlotWindow::getSplTab(
 		);
 		zoomer2->setEnabled(true);
 		zoomer2->zoom(0);
+#endif
 	}
 
 	QWidget* splWidget = new QWidget();
@@ -117,12 +115,9 @@ QWidget* PlotWindow::getSplTab(
 
 	topLayout->addSpacing(15);
 	topLayout->addWidget(new QLabel("Octave smoothing, 1/x"));
-	QwtCounter* cntSmooth = new QwtCounter();
+    QDoubleSpinBox* cntSmooth = new QDoubleSpinBox();
 	cntSmooth->setRange(0.25, 256.0);
-	cntSmooth->setSingleStep(0.25);
-	cntSmooth->setNumButtons(2);
-	cntSmooth->setIncSteps(QwtCounter::Button1, 1);
-	cntSmooth->setIncSteps(QwtCounter::Button2, 12);
+    cntSmooth->setSingleStep(0.25);
 	cntSmooth->setValue(Plotter::DEFAULT_SMOOTH); // 1/6 octave
 	QWidget* tmp = new QLabel("W9999.99W");
 	cntSmooth->setFixedWidth(
@@ -139,14 +134,11 @@ QWidget* PlotWindow::getSplTab(
 
 	topLayout->addSpacing(15);
 	topLayout->addWidget(new QLabel("Window [ms]"));
-	QwtCounter* cntWindow = new QwtCounter();
+    QDoubleSpinBox* cntWindow = new QDoubleSpinBox();
 	// s to ms, right window width
 	double maxMilliSecs = plotter->getMaxTrimLength() * 1000.0;
 	cntWindow->setRange(1.0, maxMilliSecs);
-	cntWindow->setSingleStep(1);
-	cntWindow->setNumButtons(2);
-	cntWindow->setIncSteps(QwtCounter::Button1, 1);
-	cntWindow->setIncSteps(QwtCounter::Button2, 100);
+    cntWindow->setSingleStep(1);
 	cntWindow->setValue(500);
 	tmp = new QLabel("W25999.0W");
 	cntWindow->setFixedWidth(
@@ -190,8 +182,8 @@ QWidget* PlotWindow::getIRTab(
 	const QString& dir,
 	const IRInfo& ii
 ) {
-	QwtPlot* irPlot = new IRPlot(dir, ii);
-	this->zoomizePlotter(irPlot, 2, 3);
+        QWidget* irPlot = new IRPlot(dir, ii);
+        //this->zoomizePlotter(irPlot, 2, 3);
 	return irPlot;
 }
 
@@ -199,8 +191,8 @@ QWidget* PlotWindow::getIRPTab(
 	const QString& dir,
 	const IRInfo& ii
 ) {
-	QwtPlot* irpPlot = new IRPPlot(dir, ii);
-	this->zoomizePlotter(irpPlot, 2, 3);
+        QWidget* irpPlot = new IRPPlot(dir, ii);
+        //this->zoomizePlotter(irpPlot, 2, 3);
 	return irpPlot;
 }
 
@@ -208,8 +200,8 @@ QWidget* PlotWindow::getStepTab(
 	const QString& dir,
 	const IRInfo& ii
 ) {
-	QwtPlot* stepPlot = new StepPlot(dir, ii);
-	this->zoomizePlotter(stepPlot, 2, 3);
+        QWidget* stepPlot = new StepPlot(dir, ii);
+        //this->zoomizePlotter(stepPlot, 2, 3);
 	return stepPlot;
 }
 
@@ -217,11 +209,12 @@ QWidget* PlotWindow::getHarmTab(
 	const QString& dir,
 	const IRInfo& ii
 ) {
-	QwtPlot* harmPlot = new HarmPlot(dir, ii);
-	this->zoomizePlotter(harmPlot, 1, 3);
+        QWidget* harmPlot = new HarmPlot(dir, ii);
+        //this->zoomizePlotter(harmPlot, 1, 3);
 	return harmPlot;
 }
 
+#if 0
 void PlotWindow::zoomizePlotter(
 	QwtPlot* plotter,
 	int roundX,
@@ -230,7 +223,7 @@ void PlotWindow::zoomizePlotter(
 	RoundedZoomer* zoomer1 = new RoundedZoomer(
 		QwtPlot::xBottom,
 		QwtPlot::yLeft,
-		plotter->canvas()
+                plotter->canvas()
 	);
 	zoomer1->setRound(roundX, roundY);
 	zoomer1->setRubberBand(QwtPicker::RectRubberBand);
@@ -246,4 +239,5 @@ void PlotWindow::zoomizePlotter(
 	zoomer1->setEnabled(true);
 	zoomer1->zoom(0);
 }
+#endif
 

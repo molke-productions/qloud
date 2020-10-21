@@ -29,7 +29,7 @@
 class QLCfg {
 
 public:
-	static const bool USE_PAHSE = true;
+    static const bool USE_PAHSE = true;
 	static const int INDENT = 4;
 
 	QLCfg(QString aPath);

@@ -21,7 +21,7 @@
 #define PLOTTER_H
 
 #include <QtWidgets>
-#include <qwt_plot.h>
+#include <QtCharts/QtCharts>
 #include "QLE.h"
 #include "IR.h"
 #include "IRInfo.h"
@@ -29,7 +29,7 @@
 class QwtPlotCurve;
 class QwtPlotMarker;
 
-class Plotter: public QwtPlot {
+class Plotter: public QChartView {
 	Q_OBJECT
 
 public:
@@ -56,8 +56,12 @@ private:
 	double winLength;
 	double smoothFactor;
 
-	QwtPlotCurve *ampCurve;
-	QwtPlotCurve *phaseCurve;
+    QLineSeries *ampCurve;
+    QLineSeries *phaseCurve;
+    QChart *chart;
+    QAbstractAxis *XAxis;
+    QAbstractAxis *YAxis;
+    QAbstractAxis *YPAxis;
 
 	void recalculate();
 };

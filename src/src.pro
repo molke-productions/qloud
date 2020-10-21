@@ -26,7 +26,6 @@ SOURCES += main.cpp \
  QLCfg.cpp \
  QLUtl.cpp \
  QLWin.cpp \
- RoundedZoomer.cpp \
  StepPlot.cpp \
  TickPoster.cpp \
  WavIn.cpp \
@@ -66,7 +65,6 @@ HEADERS += CapThread.h \
  QLE.h \
  QLUtl.h \
  QLWin.h \
- RoundedZoomer.h \
  StepPlot.h \
  TickPoster.h \
  WavInfo.h \
@@ -75,7 +73,8 @@ HEADERS += CapThread.h \
  Weights.h
 
 QT += xml \
- widgets
+ widgets \
+ charts
 
 TEMPLATE = app
 TARGET = ../bin/qloud
@@ -90,8 +89,7 @@ INCLUDEPATH += /usr/include/qwt \
 
 LIBS += -lsndfile \
 -lfftw3 \
--ljack \
--lqwt-qt5
+-ljack
 
 QMAKE_CXXFLAGS += -std=c++11
 

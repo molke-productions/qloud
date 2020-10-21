@@ -20,7 +20,7 @@
 #define QLWIN_H
 
 #include <QtWidgets>
-#include <qwt_counter.h>
+#include <QDoubleSpinBox>
 #include "ExcitForm.h"
 #include "Capture.h"
 #include "TickPoster.h"
@@ -74,7 +74,7 @@ private:
 	Capture* capture;
 	TickPoster* ticker;
 	QLabel* excitInfoLbl;
-	QwtCounter* playDb;
+    QDoubleSpinBox* playDb;
 	QPushButton* capBtn;
 
 	bool jackConnected;

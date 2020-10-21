@@ -105,12 +105,9 @@ QLWin::QLWin(QWidget* parent) : QMainWindow(parent) {
 	capBottom->addStretch(6);
 
 	capBottom->addWidget(new QLabel("Playback level [dB]"));
-	this->playDb = new QwtCounter();
+    this->playDb = new QDoubleSpinBox();
 	this->playDb->setRange(-100, 0);
-	this->playDb->setSingleStep(1);
-	this->playDb->setNumButtons(2);
-	this->playDb->setIncSteps(QwtCounter::Button1, 1);
-	this->playDb->setIncSteps(QwtCounter::Button2, 10);
+    this->playDb->setSingleStep(1);
 	this->playDb->setValue(-6);
 	tmp = new QLabel("W-100W");
 	this->playDb->setFixedWidth(

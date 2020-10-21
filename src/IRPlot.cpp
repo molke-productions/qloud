@@ -16,9 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qwt_plot_grid.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
+#include <QtCharts/QtCharts>
 
 #include "FileFft.h"
 #include "QLUtl.h"
@@ -37,39 +35,50 @@ IRPlot::IRPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : QwtPlot(parent) {
+) : QChartView(parent) {
 	this->dir = aDir;
 	this->ii = anIi;
 
 	this->time = 0;
 	this->amps = 0;
 
-	this->setAutoReplot(false);
-	this->setCanvasBackground(BG_COLOR);
-
 	unsigned curveLength = this->calculate();
 
-	this->setAxisScale( xBottom, this->time[0], this->time[curveLength-1]);
-	this->setAxisAutoScale( xBottom);
-	this->setAxisScale( yLeft, -1.5, 1.5);
+        this->chart = new QChart();
+        this->chart->setTitle(tr("Impulse Response"));
+        this->chart->legend()->hide();
+        this->setChart(chart);
+        this->setRenderHint(QPainter::Antialiasing);
 
-	QwtPlotGrid *grid = new QwtPlotGrid;
-	grid->enableXMin(true);
-	grid->setMajorPen(QPen(MAJ_PEN_COLOR, 0, Qt::DotLine));
-	grid->setMinorPen(QPen(MIN_PEN_COLOR, 0 , Qt::DotLine));
-	grid->attach(this);
+        QValueAxis *XAxis = new QValueAxis(this->chart);
+        XAxis->setLabelFormat("%d");
+        XAxis->setTitleText(tr("Time in ms"));
+        XAxis->setMax(this->time[curveLength-1]);
+        XAxis->setMin(this->time[0]);
+        XAxis->setTickCount(6);
+        XAxis->setMinorTickCount(10);
+        this->chart->addAxis(XAxis, Qt::AlignBottom);
 
-	QwtPlotCurve* ampCurve = new QwtPlotCurve("IR_Plot");
-	ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	ampCurve->setYAxis(QwtPlot::yLeft);
-	ampCurve->attach(this);
-	ampCurve->setSamples(this->time, this->amps, curveLength);
+        QValueAxis *YAxis = new QValueAxis(this->chart);
+        YAxis->setTitleText(tr("Amplitude"));
+        YAxis->setLabelFormat("%.02f");
+        YAxis->setMax(1.5);
+        YAxis->setMin(-1.5);
+        YAxis->setTickCount(7);
+        YAxis->setMinorTickCount(10);
+        chart->addAxis(YAxis, Qt::AlignLeft);
 
-	QwtPlotPanner* panner = new QwtPlotPanner(this->canvas());
-	panner->setMouseButton(Qt::MidButton);
-	panner->setEnabled(true);
 
-	this->setAutoReplot(true);
+        QLineSeries* ampCurve = new QLineSeries(this->chart);
+        ampCurve->setPen(QPen(AMP_CURVE_COLOR));
+        this->chart->addSeries(ampCurve);
+        ampCurve->attachAxis(YAxis);
+
+        QList<QPointF> points;
+        for (unsigned int i = 0; i < curveLength; i++) {
+            points.append(QPointF(this->time[i], this->amps[i]));
+        }
+        ampCurve->replace(points);
 }
 
 IRPlot::~IRPlot() {
@@ -80,8 +89,6 @@ IRPlot::~IRPlot() {
 }
 
 unsigned IRPlot::calculate() {
-	this->setAutoReplot(false);
-
 	WavIn* irWav = new WavIn(this->dir + "/" + this->ii.key + IR::irFileName());
 	try {
 		this->amps = irWav->readDouble();
@@ -139,6 +146,5 @@ unsigned IRPlot::calculate() {
 		for(int i=1; i < length; i++)
 			this->amps[i] /= maxAmp;
 
-	this->setAutoReplot(true);
 	return unsigned(length);
 }

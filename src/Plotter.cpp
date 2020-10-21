@@ -16,12 +16,16 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#if 0
 #include <qwt_math.h>
 #include <qwt_scale_engine.h>
 #include <qwt_symbol.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
+#else
+#include <QtCharts/QtCharts>
+#endif
 
 #include "IR.h"
 #include "FileFft.h"
@@ -39,7 +43,7 @@ Plotter::Plotter(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : QwtPlot(parent) {
+) : QChartView(parent) {
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	this->dir = aDir;
@@ -52,49 +56,59 @@ Plotter::Plotter(
 
 	this->ir = new IR(dir, ii.key);
 
-	this->setAutoReplot(false);
-	this->setCanvasBackground(BG_COLOR);
+    chart = new QChart();
+    chart->setTitle(tr("Frequency Response"));
+    chart->legend()->hide();
+    this->setChart(chart);
+    this->setRenderHint(QPainter::Antialiasing);
 
-	this->setAxisScale(QwtPlot::yLeft, -80.0, 20.0);
-	this->setAxisMaxMajor(QwtPlot::yLeft, 7);
-	this->setAxisMaxMinor(QwtPlot::yLeft, 10);
+    XAxis = new QLogValueAxis(this->chart);
+    ((QLogValueAxis*) XAxis)->setBase(10.0);
+    ((QLogValueAxis*) XAxis)->setLabelFormat("%d");
+    XAxis->setTitleText(tr("Frequency in Hz"));
+    XAxis->setRange(20, 20000);
+    //XAxis->setMax(40000);
+    //XAxis->setMin(0);
+    ((QLogValueAxis *) XAxis)->setMinorTickCount(8);
+    chart->addAxis(XAxis, Qt::AlignBottom);
+
+    YAxis = new QValueAxis(this->chart);
+    YAxis->setTitleText(tr("Amplitude in dB"));
+    ((QValueAxis *) YAxis)->setLabelFormat("%d");
+    YAxis->setMax(20);
+    YAxis->setMin(-80);
+    ((QValueAxis *) YAxis)->setTickCount(7);
+    ((QValueAxis *) YAxis)->setMinorTickCount(10);
+    chart->addAxis(YAxis, Qt::AlignLeft);
 
 	if(QLCfg::USE_PAHSE) {
-		this->enableAxis(QwtPlot::yRight);
-		this->setAxisScale(QwtPlot::yRight, -180.0, 180.0);
+        YPAxis = new QValueAxis(this->chart);
+        YPAxis->setTitleText(tr("Phase in degrees"));
+        ((QValueAxis *) YPAxis)->setLabelFormat("%d");
+        YPAxis->setMax(180);
+        YPAxis->setMin(-180);
+        chart->addAxis(YPAxis, Qt::AlignRight);
 	}
-
-	this->setAxisMaxMajor(QwtPlot::xBottom, 6);
-	this->setAxisMaxMinor(QwtPlot::xBottom, 10);
-	QwtLogScaleEngine* logEngine = new QwtLogScaleEngine(10.0);
-	this->setAxisScaleEngine(QwtPlot::xBottom, logEngine);
-
-	QwtPlotGrid *grid = new QwtPlotGrid;
-	grid->enableXMin(true);
-	grid->setMajorPen(QPen(MAJ_PEN_COLOR, 0, Qt::DotLine));
-	grid->setMinorPen(QPen(MIN_PEN_COLOR, 0 , Qt::DotLine));
-	grid->attach(this);
 
 	// curves
-	this->ampCurve = new QwtPlotCurve("Amplitude");
-	this->ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	this->ampCurve->setYAxis(QwtPlot::yLeft);
-	this->ampCurve->attach(this);
+    this->ampCurve = new QLineSeries(this->chart);
+    this->chart->addSeries(this->ampCurve);
+
+    this->ampCurve->setPen(QPen(AMP_CURVE_COLOR));
+    this->ampCurve->attachAxis(XAxis);
+    this->ampCurve->attachAxis(YAxis);
 
 	if(QLCfg::USE_PAHSE) {
-		this->phaseCurve = new QwtPlotCurve("Phase");
+        this->phaseCurve = new QLineSeries(this->chart);
+        this->chart->addSeries(this->phaseCurve);
 		this->phaseCurve->setPen(QPen(PHASE_CURVE_COLOR));
-		this->phaseCurve->setYAxis(QwtPlot::yRight);
+        this->phaseCurve->attachAxis(XAxis);
+        this->phaseCurve->attachAxis(YPAxis);
 	}
-
-	QwtPlotPanner* panner = new QwtPlotPanner(this->canvas());
-	panner->setMouseButton(Qt::MidButton);
-	panner->setEnabled(true);
 
 	this->smoothFactor = Plotter::DEFAULT_SMOOTH; // 1/6 octave
 	this->winLength = 0.5; // 500 ms for right window
 	this->recalculate();
-	this->setAutoReplot(true);
 }
 
 Plotter::~Plotter() {
@@ -128,17 +142,17 @@ void Plotter::enablePhase(int state) {
 	if( ! QLCfg::USE_PAHSE)
 		return;
 
-	if(state)
-		this->phaseCurve->attach(this);
-	else
-		this->phaseCurve->detach();
-	this->replot();
+    if(state) {
+        this->chart->addSeries(phaseCurve);
+        this->phaseCurve->attachAxis(this->XAxis);
+        this->phaseCurve->attachAxis(this->YPAxis);
+    } else {
+        this->chart->removeSeries(phaseCurve);
+    }
 }
 
 // private
 void Plotter::recalculate() {
-	this->setAutoReplot(false);
-
 	this->ir->trim(this->winLength);
 
 	FileFft* ff = new FileFft(
@@ -161,18 +175,17 @@ void Plotter::recalculate() {
 
 	delete ff;
 
-	this->ampCurve->setSamples(
-		this->freqs,
-		this->amps,
-		FileFft::POINTS_AMOUNT
-	);
-	if(QLCfg::USE_PAHSE)
-		this->phaseCurve->setSamples(
-			this->freqs,
-			this->phase,
-			FileFft::POINTS_AMOUNT
-		);
+    QList<QPointF> points;
+    for (int i = 0; i < FileFft::POINTS_AMOUNT; ++i) {
+        points.append(QPointF(this->freqs[i], this->amps[i]));
+    }
+    this->ampCurve->replace(points);
 
-	this->setAutoReplot(true);
-	this->replot();
+    if(QLCfg::USE_PAHSE) {
+        QList<QPointF> ppoints;
+        for (int i = 0; i < FileFft::POINTS_AMOUNT; ++i) {
+            ppoints.append(QPointF(this->freqs[i], this->phase[i]));
+        }
+        this->phaseCurve->replace(ppoints);
+    }
 }

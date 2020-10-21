@@ -20,7 +20,7 @@
 #define EXCITFORM_H
 
 #include <QtWidgets>
-#include <qwt_counter.h>
+#include <QDoubleSpinBox>
 #include "ExcitCfg.h"
 #include "QLE.h"
 #include "QLCfg.h"
@@ -66,8 +66,8 @@ private:
 	QComboBox* lengthCombo;
 	QComboBox* rateCombo;
 	QComboBox* depthCombo;
-	QwtCounter* fMinCnt;
-	QwtCounter* fMaxCnt;
+    QDoubleSpinBox* fMinCnt;
+    QDoubleSpinBox* fMaxCnt;
 
 	QString getInfoString();
 	void mapCfgToControls();

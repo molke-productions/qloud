@@ -20,14 +20,14 @@
 #define STEPPLOT_H
 
 #include <QtCore>
-#include <qwt_plot.h>
+#include <QtCharts/QtCharts>
 #include "QLE.h"
 #include "IRInfo.h"
 
 class QwtPlotCurve;
 class QwtPlotMarker;
 
-class StepPlot: public QwtPlot {
+class StepPlot: public QChartView {
 	Q_OBJECT
 
 public:
@@ -40,6 +40,7 @@ private:
 
 	double* time;
 	double* amps;
+    QChart *chart;
 
 	unsigned calculate();
 };
