@@ -64,11 +64,8 @@ HarmPlot::HarmPlot(
     XAxis->setBase(10.0);
     XAxis->setLabelFormat("%d");
     XAxis->setTitleText(tr("Frequency in Hz"));
-    XAxis->setRange(20, 20000);
-    //XAxis->setMax(40000);
-    //XAxis->setMin(0);
-    XAxis->setMinorTickCount(10);
-    XAxis->setMinorTickCount(6);
+    XAxis->setRange(10, 10000);
+    XAxis->setMinorTickCount(8);
     chart->addAxis(XAxis, Qt::AlignBottom);
 
     QValueAxis *YAxis = new QValueAxis(this->chart);

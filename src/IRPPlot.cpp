@@ -60,8 +60,7 @@ IRPPlot::IRPPlot(
         XAxis->setTitleText(tr("Time in ms"));
         XAxis->setMax(this->time[curveLength-1]);
         XAxis->setMin(this->time[0]);
-        //XAxis->setMinorTickCount(10);
-        //XAxis->setTickCount(6);
+        XAxis->applyNiceNumbers();
         this->chart->addAxis(XAxis, Qt::AlignBottom);
 
         QValueAxis *YAxis = new QValueAxis(this->chart);

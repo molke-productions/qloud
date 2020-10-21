@@ -66,10 +66,8 @@ Plotter::Plotter(
     ((QLogValueAxis*) XAxis)->setBase(10.0);
     ((QLogValueAxis*) XAxis)->setLabelFormat("%d");
     XAxis->setTitleText(tr("Frequency in Hz"));
-    XAxis->setRange(20, 20000);
-    //XAxis->setMax(40000);
-    //XAxis->setMin(0);
-    ((QLogValueAxis *) XAxis)->setMinorTickCount(10);
+    XAxis->setRange(10, 100000);
+    ((QLogValueAxis *) XAxis)->setMinorTickCount(8);
     chart->addAxis(XAxis, Qt::AlignBottom);
 
     YAxis = new QValueAxis(this->chart);
