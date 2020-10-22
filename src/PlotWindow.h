@@ -21,8 +21,7 @@
 #define PLOTWINDOW_H
 
 #include <QtWidgets>
-#include <qwt_plot.h>
-#include <qwt_counter.h>
+#include <QPrinter>
 #include "QLE.h"
 #include "IRInfo.h"
 #include "Plotter.h"
@@ -39,25 +38,34 @@ public:
 	);
 	~PlotWindow();
 
+public slots:
+    void onPrintClicked();
+    void onTabChanged(int index);
+
+protected:
+    bool print(QPrinter *printer);
+
 private:
 	QMap<PlotWindow*, QString>* plots;
 
 	// SPL plotting
-	QWidget* getSplTab(const QString& dir, const IRInfo& ii);
+    QWidget* getSplTab(const QString& dir, const IRInfo& ii, QChartView** plot);
 	// IR itself plotting
-	QWidget* getIRTab(const QString& dir, const IRInfo& ii);
+    QWidget* getIRTab(const QString& dir, const IRInfo& ii, QChartView** plot);
 	// IR power plotting
-	QWidget* getIRPTab(const QString& dir, const IRInfo& ii);
+    QWidget* getIRPTab(const QString& dir, const IRInfo& ii, QChartView** plot);
 	// Step Response plotting
-	QWidget* getStepTab(const QString& dir, const IRInfo& ii);
+    QWidget* getStepTab(const QString& dir, const IRInfo& ii, QChartView** plot);
 	// Harmonics plotting
-	QWidget* getHarmTab(const QString& dir, const IRInfo& ii);
+    QWidget* getHarmTab(const QString& dir, const IRInfo& ii, QChartView** plot);
 
-	void zoomizePlotter(
-		QwtPlot* plotter,
-		int roundX,
-		int roundY
-	);
+    QChartView *splplot;
+    QChartView *irplot;
+    QChartView *irpplot;
+    QChartView *stepplot;
+    QChartView *harmplot;
+
+    QChartView *currentplot;
 };
 
 #endif

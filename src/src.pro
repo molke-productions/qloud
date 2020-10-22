@@ -74,7 +74,8 @@ HEADERS += CapThread.h \
 
 QT += xml \
  widgets \
- charts
+ charts \
+ printsupport
 
 TEMPLATE = app
 TARGET = ../bin/qloud

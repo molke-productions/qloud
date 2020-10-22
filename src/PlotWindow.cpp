@@ -18,6 +18,10 @@
 
 #include <QtWidgets>
 #include <QtCharts/QtCharts>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QPrinterInfo>
+#include <QPainter>
 
 #include "PlotWindow.h"
 #include "Plotter.h"
@@ -48,14 +52,25 @@ PlotWindow::PlotWindow(
 	// laying out
 	QVBoxLayout* mainLayout = new QVBoxLayout();
 	mainLayout->setMargin(2);
-	QTabWidget* tab = new QTabWidget();
+
+    QTabWidget* tab = new QTabWidget();
 	tab->setTabPosition(QTabWidget::North);
-	tab->addTab(this->getSplTab(dir, ii), "SPL [dB/Hz]");
-	tab->addTab(this->getIRTab(dir, ii), "IR [amp/ms]");
-	tab->addTab(this->getIRPTab(dir, ii), "IR power [dB/ms]");
-	tab->addTab(this->getStepTab(dir, ii), "Step response [amp/ms]");
-	tab->addTab(this->getHarmTab(dir, ii), "Harmonics [dB/Hz]");
+    tab->addTab(this->getSplTab(dir, ii, &splplot), "SPL [dB/Hz]");
+    this->currentplot = splplot;
+    tab->addTab(this->getIRTab(dir, ii, &irplot), "IR [amp/ms]");
+    tab->addTab(this->getIRPTab(dir, ii, &irpplot), "IR power [dB/ms]");
+    tab->addTab(this->getStepTab(dir, ii, &stepplot), "Step response [amp/ms]");
+    tab->addTab(this->getHarmTab(dir, ii, &harmplot), "Harmonics [dB/Hz]");
+    connect(tab, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 	mainLayout->addWidget(tab);
+
+    QHBoxLayout* actions = new QHBoxLayout();
+    QPushButton* print = new QPushButton();
+    print->setText(tr("Print"));
+    connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
+    actions->addWidget(print);
+
+    mainLayout->addLayout(actions, 0);
 	this->setLayout(mainLayout);
 }
 
@@ -63,36 +78,57 @@ PlotWindow::~PlotWindow() {
 	this->plots->remove(this);
 }
 
+void PlotWindow::onTabChanged(int index)
+{
+    switch (index) {
+    case 0: currentplot = splplot; break;
+    case 1: currentplot = irplot; break;
+    case 2: currentplot = irpplot; break;
+    case 3: currentplot = stepplot; break;
+    case 4: currentplot = harmplot; break;
+    default: currentplot = nullptr;
+    }
+}
+void PlotWindow::onPrintClicked()
+{
+    if (currentplot) {
+        QPrinter printer;
+        printer.setCreator("QLoud");
+        printer.setDocName("Curve");
+        printer.setOrientation(QPrinter::Landscape);
+        QPrintDialog dialog(&printer, this);
+        if (dialog.exec() == QDialog::Accepted) {
+            if (printer.isValid()) {
+                if (!print(&printer)) {
+                    QPrinterInfo info(printer);
+                    qWarning() << "printerinfo definition null:" << info.isNull();
+                    qWarning() << "printerinfo state error:" << (info.state() == QPrinter::Error);
+                }
+            } else {
+                qWarning() << "invalid printer object";
+            }
+        }
+    }
+}
+
+bool PlotWindow::print(QPrinter* printer)
+{
+    QPainter painter;
+    if (!painter.begin(printer))
+        return false;
+
+    QRect page = printer->pageRect();
+    currentplot->render(&painter, QRectF(page.left(), page.top(), page.width(), page.height()));
+    painter.end();
+    return true;
+}
+
 QWidget* PlotWindow::getSplTab(
 	const QString& dir,
-	const IRInfo& ii
+    const IRInfo& ii,
+    QChartView **ref
 ) {
-	Plotter* plotter = new Plotter(dir, ii);
-        //this->zoomizePlotter(plotter, 1, 3);
-	if(QLCfg::USE_PAHSE) {
-#if 0
-		// as we have additional curve/scale (phase), add a zoomer
-		RoundedZoomer* zoomer2 = new RoundedZoomer(
-			QwtPlot::xTop,
-			QwtPlot::yRight,
-			plotter->canvas()
-		);
-		zoomer2->setRound(1, 3);
-		zoomer2->setTrackerMode(QwtPicker::AlwaysOff);
-		zoomer2->setRubberBand(QwtPicker::NoRubberBand);
-		zoomer2->setMousePattern(
-			QwtEventPattern::MouseSelect2,
-			Qt::RightButton,
-			Qt::ControlModifier
-		);
-		zoomer2->setMousePattern(
-			QwtEventPattern::MouseSelect3,
-			Qt::RightButton
-		);
-		zoomer2->setEnabled(true);
-		zoomer2->zoom(0);
-#endif
-	}
+    Plotter* plotter = new Plotter(dir, ii);
 
 	QWidget* splWidget = new QWidget();
 	QVBoxLayout* splLayout = new QVBoxLayout();
@@ -104,10 +140,7 @@ QWidget* PlotWindow::getSplTab(
 	QLabel* hlp = new QLabel("<b>?</b>");
 	QString tip = "Mouse using:\n";
 	tip += "Left button drag – zoom in\n";
-	tip += "Right button click – go back in zoom history\n";
-	tip += "Shift + middle button click – go forward in zoom history\n";
-	tip += "Ctrl + right button click – go to zoom history start\n";
-	tip += "Middle button drag – move window";
+    tip += "Right button click – zoom out";
 	hlp->setToolTip(tip);
 	topLayout->addWidget(hlp);
 
@@ -175,69 +208,46 @@ QWidget* PlotWindow::getSplTab(
 	// layout final
 	splLayout->setMargin(1);
 	splWidget->setLayout(splLayout);
+
+    *ref = static_cast<QChartView*>(plotter);
 	return splWidget;
 }
 
 QWidget* PlotWindow::getIRTab(
 	const QString& dir,
-	const IRInfo& ii
+    const IRInfo& ii,
+    QChartView **ref
 ) {
         QWidget* irPlot = new IRPlot(dir, ii);
-        //this->zoomizePlotter(irPlot, 2, 3);
+        *ref = static_cast<QChartView*>(irPlot);
 	return irPlot;
 }
 
 QWidget* PlotWindow::getIRPTab(
 	const QString& dir,
-	const IRInfo& ii
+    const IRInfo& ii,
+    QChartView **ref
 ) {
         QWidget* irpPlot = new IRPPlot(dir, ii);
-        //this->zoomizePlotter(irpPlot, 2, 3);
+        *ref = static_cast<QChartView*>(irpPlot);
 	return irpPlot;
 }
 
 QWidget* PlotWindow::getStepTab(
 	const QString& dir,
-	const IRInfo& ii
+    const IRInfo& ii,
+    QChartView **ref
 ) {
         QWidget* stepPlot = new StepPlot(dir, ii);
-        //this->zoomizePlotter(stepPlot, 2, 3);
+        *ref = static_cast<QChartView*>(stepPlot);
 	return stepPlot;
 }
 
-QWidget* PlotWindow::getHarmTab(
-	const QString& dir,
-	const IRInfo& ii
-) {
+QWidget* PlotWindow::getHarmTab(const QString& dir,
+    const IRInfo& ii, QChartView **ref) {
         QWidget* harmPlot = new HarmPlot(dir, ii);
-        //this->zoomizePlotter(harmPlot, 1, 3);
+        *ref = static_cast<QChartView*>(harmPlot);
 	return harmPlot;
 }
 
-#if 0
-void PlotWindow::zoomizePlotter(
-	QwtPlot* plotter,
-	int roundX,
-	int roundY
-) {
-	RoundedZoomer* zoomer1 = new RoundedZoomer(
-		QwtPlot::xBottom,
-		QwtPlot::yLeft,
-                plotter->canvas()
-	);
-	zoomer1->setRound(roundX, roundY);
-	zoomer1->setRubberBand(QwtPicker::RectRubberBand);
-	zoomer1->setRubberBandPen(QColor(192, 0, 0));
-	zoomer1->setTrackerMode(QwtPicker::AlwaysOn);
-	zoomer1->setTrackerPen(QColor(0, 0, 0));
-	zoomer1->setMousePattern(
-		QwtEventPattern::MouseSelect2,
-		Qt::RightButton,
-		Qt::ControlModifier
-	);
-	zoomer1->setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
-	zoomer1->setEnabled(true);
-	zoomer1->zoom(0);
-}
-#endif
 
