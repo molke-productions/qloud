@@ -49,44 +49,44 @@ IRPPlot::IRPPlot(
 
 	unsigned curveLength = this->calculate();
 
-        this->chart = new QChart();
-        this->chart->setTitle(tr("IR Power"));
-        this->chart->legend()->hide();
-        this->setChart(chart);
-        this->setRenderHint(QPainter::Antialiasing);
+		this->chart = new QChart();
+		this->chart->setTitle(tr("IR Power"));
+		this->chart->legend()->hide();
+		this->setChart(chart);
+		this->setRenderHint(QPainter::Antialiasing);
 
-        QValueAxis *XAxis = new QValueAxis(this->chart);
-        XAxis->setLabelFormat("%d");
-        XAxis->setTitleText(tr("Time in ms"));
-        XAxis->setMax(this->time[curveLength-1]);
-        XAxis->setMin(this->time[0]);
-        XAxis->applyNiceNumbers();
-        this->chart->addAxis(XAxis, Qt::AlignBottom);
+		QValueAxis *XAxis = new QValueAxis(this->chart);
+		XAxis->setLabelFormat("%d");
+		XAxis->setTitleText(tr("Time in ms"));
+		XAxis->setMax(this->time[curveLength-1]);
+		XAxis->setMin(this->time[0]);
+		XAxis->applyNiceNumbers();
+		this->chart->addAxis(XAxis, Qt::AlignBottom);
 
-        QValueAxis *YAxis = new QValueAxis(this->chart);
-        YAxis->setTitleText(tr("Power in dB"));
-        YAxis->setLabelFormat("%d");
-        YAxis->setMax(20);
-        YAxis->setMin(-100);
-        YAxis->setTickCount(7);
-        YAxis->setMinorTickCount(10);
-        chart->addAxis(YAxis, Qt::AlignLeft);
-
-
-        QLineSeries* ampCurve = new QLineSeries(this->chart);
-        ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-        this->chart->addSeries(ampCurve);
-        ampCurve->attachAxis(YAxis);
-        ampCurve->attachAxis(XAxis);
+		QValueAxis *YAxis = new QValueAxis(this->chart);
+		YAxis->setTitleText(tr("Power in dB"));
+		YAxis->setLabelFormat("%d");
+		YAxis->setMax(20);
+		YAxis->setMin(-100);
+		YAxis->setTickCount(7);
+		YAxis->setMinorTickCount(10);
+		chart->addAxis(YAxis, Qt::AlignLeft);
 
 
-        QList<QPointF> points;
-        for (unsigned int i = 0; i < curveLength; i++) {
-            points.append(QPointF(this->time[i], this->amps[i]));
-        }
-        ampCurve->replace(points);
+		QLineSeries* ampCurve = new QLineSeries(this->chart);
+		ampCurve->setPen(QPen(AMP_CURVE_COLOR));
+		this->chart->addSeries(ampCurve);
+		ampCurve->attachAxis(YAxis);
+		ampCurve->attachAxis(XAxis);
 
-        this->setRubberBand(QChartView::HorizontalRubberBand);
+
+		QList<QPointF> points;
+		for (unsigned int i = 0; i < curveLength; i++) {
+			points.append(QPointF(this->time[i], this->amps[i]));
+		}
+		ampCurve->replace(points);
+
+		this->setRubberBand(QChartView::HorizontalRubberBand);
 
 }
 
@@ -152,5 +152,5 @@ unsigned IRPPlot::calculate() {
 
 	QLUtl::toDbInPlace(this->amps, length, true);
 
-        return unsigned(length);
+		return unsigned(length);
 }

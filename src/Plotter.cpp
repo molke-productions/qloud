@@ -16,16 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#if 0
-#include <qwt_math.h>
-#include <qwt_scale_engine.h>
-#include <qwt_symbol.h>
-#include <qwt_plot_grid.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
-#else
 #include <QtCharts/QtCharts>
-#endif
 
 #include "IR.h"
 #include "FileFft.h"
@@ -74,7 +65,7 @@ Plotter::Plotter(
     YAxis->setTitleText(tr("Amplitude in dB"));
     ((QValueAxis *) YAxis)->setLabelFormat("%d");
     YAxis->setMax(20);
-    YAxis->setMin(-80);
+    YAxis->setMin(-100);
     ((QValueAxis *) YAxis)->setTickCount(7);
     ((QValueAxis *) YAxis)->setMinorTickCount(10);
     chart->addAxis(YAxis, Qt::AlignLeft);

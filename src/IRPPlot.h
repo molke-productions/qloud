@@ -24,9 +24,6 @@
 #include "QLE.h"
 #include "IRInfo.h"
 
-class QwtPlotCurve;
-class QwtPlotMarker;
-
 class IRPPlot: public QChartView {
 	Q_OBJECT
 
@@ -40,7 +37,7 @@ private:
 
 	double* time;
 	double* amps;
-    QChart *chart;
+	QChart *chart;
 
 	unsigned calculate();
 };

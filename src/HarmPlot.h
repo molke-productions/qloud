@@ -37,8 +37,8 @@ private:
 	IRInfo ii;
 
 	HarmData** data;
-    void addCurves(QAbstractAxis *x, QAbstractAxis *y);
-    QChart *chart;
+	void addCurves(QAbstractAxis *x, QAbstractAxis *y);
+	QChart *chart;
 };
 
 #endif

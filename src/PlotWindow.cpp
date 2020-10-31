@@ -53,24 +53,24 @@ PlotWindow::PlotWindow(
 	QVBoxLayout* mainLayout = new QVBoxLayout();
 	mainLayout->setMargin(2);
 
-    QTabWidget* tab = new QTabWidget();
+	QTabWidget* tab = new QTabWidget();
 	tab->setTabPosition(QTabWidget::North);
-    tab->addTab(this->getSplTab(dir, ii, &splplot), "SPL [dB/Hz]");
-    this->currentplot = splplot;
-    tab->addTab(this->getIRTab(dir, ii, &irplot), "IR [amp/ms]");
-    tab->addTab(this->getIRPTab(dir, ii, &irpplot), "IR power [dB/ms]");
-    tab->addTab(this->getStepTab(dir, ii, &stepplot), "Step response [amp/ms]");
-    tab->addTab(this->getHarmTab(dir, ii, &harmplot), "Harmonics [dB/Hz]");
-    connect(tab, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
+	tab->addTab(this->getSplTab(dir, ii, &splplot), "SPL [dB/Hz]");
+	this->currentplot = splplot;
+	tab->addTab(this->getIRTab(dir, ii, &irplot), "IR [amp/ms]");
+	tab->addTab(this->getIRPTab(dir, ii, &irpplot), "IR power [dB/ms]");
+	tab->addTab(this->getStepTab(dir, ii, &stepplot), "Step response [amp/ms]");
+	tab->addTab(this->getHarmTab(dir, ii, &harmplot), "Harmonics [dB/Hz]");
+	connect(tab, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 	mainLayout->addWidget(tab);
 
-    QHBoxLayout* actions = new QHBoxLayout();
-    QPushButton* print = new QPushButton();
-    print->setText(tr("Print"));
-    connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
-    actions->addWidget(print);
+	QHBoxLayout* actions = new QHBoxLayout();
+	QPushButton* print = new QPushButton();
+	print->setText(tr("Print"));
+	connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
+	actions->addWidget(print);
 
-    mainLayout->addLayout(actions, 0);
+	mainLayout->addLayout(actions, 0);
 	this->setLayout(mainLayout);
 }
 
@@ -78,57 +78,59 @@ PlotWindow::~PlotWindow() {
 	this->plots->remove(this);
 }
 
-void PlotWindow::onTabChanged(int index)
-{
-    switch (index) {
-    case 0: currentplot = splplot; break;
-    case 1: currentplot = irplot; break;
-    case 2: currentplot = irpplot; break;
-    case 3: currentplot = stepplot; break;
-    case 4: currentplot = harmplot; break;
-    default: currentplot = nullptr;
-    }
+void PlotWindow::onTabChanged(int index) {
+	switch (index) {
+		case 0: currentplot = splplot; break;
+		case 1: currentplot = irplot; break;
+		case 2: currentplot = irpplot; break;
+		case 3: currentplot = stepplot; break;
+		case 4: currentplot = harmplot; break;
+		default: currentplot = nullptr;
+	}
 }
-void PlotWindow::onPrintClicked()
-{
-    if (currentplot) {
-        QPrinter printer;
-        printer.setCreator("QLoud");
-        printer.setDocName("Curve");
-        printer.setOrientation(QPrinter::Landscape);
-        QPrintDialog dialog(&printer, this);
-        if (dialog.exec() == QDialog::Accepted) {
-            if (printer.isValid()) {
-                if (!print(&printer)) {
-                    QPrinterInfo info(printer);
-                    qWarning() << "printerinfo definition null:" << info.isNull();
-                    qWarning() << "printerinfo state error:" << (info.state() == QPrinter::Error);
-                }
-            } else {
-                qWarning() << "invalid printer object";
-            }
-        }
-    }
+void PlotWindow::onPrintClicked() {
+	if (currentplot) {
+		QPrinter printer;
+		printer.setCreator("QLoud");
+		printer.setDocName("Curve");
+		printer.setOrientation(QPrinter::Landscape);
+		QPrintDialog dialog(&printer, this);
+		if (dialog.exec() == QDialog::Accepted) {
+			if (printer.isValid()) {
+				if (!print(&printer)) {
+					QPrinterInfo info(printer);
+					qWarning() << "printerinfo definition null:"
+						<< info.isNull();
+					qWarning() << "printerinfo state error:"
+						<< (info.state() == QPrinter::Error);
+				}
+			} else {
+				qWarning() << "invalid printer object";
+			}
+		}
+	}
 }
 
-bool PlotWindow::print(QPrinter* printer)
-{
-    QPainter painter;
-    if (!painter.begin(printer))
-        return false;
+bool PlotWindow::print(QPrinter* printer) {
+	QPainter painter;
+	if (!painter.begin(printer))
+		return false;
 
-    QRect page = printer->pageRect();
-    currentplot->render(&painter, QRectF(page.left(), page.top(), page.width(), page.height()));
-    painter.end();
-    return true;
+	QRect page = printer->pageRect();
+	currentplot->render(
+		&painter,
+		QRectF(page.left(), page.top(), page.width(), page.height())
+	);
+	painter.end();
+	return true;
 }
 
 QWidget* PlotWindow::getSplTab(
 	const QString& dir,
-    const IRInfo& ii,
-    QChartView **ref
+	const IRInfo& ii,
+	QChartView **ref
 ) {
-    Plotter* plotter = new Plotter(dir, ii);
+	Plotter* plotter = new Plotter(dir, ii);
 
 	QWidget* splWidget = new QWidget();
 	QVBoxLayout* splLayout = new QVBoxLayout();
@@ -140,7 +142,7 @@ QWidget* PlotWindow::getSplTab(
 	QLabel* hlp = new QLabel("<b>?</b>");
 	QString tip = "Mouse using:\n";
 	tip += "Left button drag – zoom in\n";
-    tip += "Right button click – zoom out";
+	tip += "Right button click – zoom out";
 	hlp->setToolTip(tip);
 	topLayout->addWidget(hlp);
 
@@ -148,9 +150,9 @@ QWidget* PlotWindow::getSplTab(
 
 	topLayout->addSpacing(15);
 	topLayout->addWidget(new QLabel("Octave smoothing, 1/x"));
-    QDoubleSpinBox* cntSmooth = new QDoubleSpinBox();
+	QDoubleSpinBox* cntSmooth = new QDoubleSpinBox();
 	cntSmooth->setRange(0.25, 256.0);
-    cntSmooth->setSingleStep(0.25);
+	cntSmooth->setSingleStep(0.25);
 	cntSmooth->setValue(Plotter::DEFAULT_SMOOTH); // 1/6 octave
 	QWidget* tmp = new QLabel("W9999.99W");
 	cntSmooth->setFixedWidth(
@@ -167,11 +169,11 @@ QWidget* PlotWindow::getSplTab(
 
 	topLayout->addSpacing(15);
 	topLayout->addWidget(new QLabel("Window [ms]"));
-    QDoubleSpinBox* cntWindow = new QDoubleSpinBox();
+	QDoubleSpinBox* cntWindow = new QDoubleSpinBox();
 	// s to ms, right window width
 	double maxMilliSecs = plotter->getMaxTrimLength() * 1000.0;
 	cntWindow->setRange(1.0, maxMilliSecs);
-    cntWindow->setSingleStep(1);
+	cntWindow->setSingleStep(1);
 	cntWindow->setValue(500);
 	tmp = new QLabel("W25999.0W");
 	cntWindow->setFixedWidth(
@@ -209,44 +211,44 @@ QWidget* PlotWindow::getSplTab(
 	splLayout->setMargin(1);
 	splWidget->setLayout(splLayout);
 
-    *ref = static_cast<QChartView*>(plotter);
+	*ref = static_cast<QChartView*>(plotter);
 	return splWidget;
 }
 
 QWidget* PlotWindow::getIRTab(
 	const QString& dir,
-    const IRInfo& ii,
-    QChartView **ref
+	const IRInfo& ii,
+	QChartView **ref
 ) {
-        QWidget* irPlot = new IRPlot(dir, ii);
-        *ref = static_cast<QChartView*>(irPlot);
+		QWidget* irPlot = new IRPlot(dir, ii);
+		*ref = static_cast<QChartView*>(irPlot);
 	return irPlot;
 }
 
 QWidget* PlotWindow::getIRPTab(
 	const QString& dir,
-    const IRInfo& ii,
-    QChartView **ref
+	const IRInfo& ii,
+	QChartView **ref
 ) {
-        QWidget* irpPlot = new IRPPlot(dir, ii);
-        *ref = static_cast<QChartView*>(irpPlot);
+		QWidget* irpPlot = new IRPPlot(dir, ii);
+		*ref = static_cast<QChartView*>(irpPlot);
 	return irpPlot;
 }
 
 QWidget* PlotWindow::getStepTab(
 	const QString& dir,
-    const IRInfo& ii,
-    QChartView **ref
+	const IRInfo& ii,
+	QChartView **ref
 ) {
-        QWidget* stepPlot = new StepPlot(dir, ii);
-        *ref = static_cast<QChartView*>(stepPlot);
+		QWidget* stepPlot = new StepPlot(dir, ii);
+		*ref = static_cast<QChartView*>(stepPlot);
 	return stepPlot;
 }
 
 QWidget* PlotWindow::getHarmTab(const QString& dir,
-    const IRInfo& ii, QChartView **ref) {
-        QWidget* harmPlot = new HarmPlot(dir, ii);
-        *ref = static_cast<QChartView*>(harmPlot);
+	const IRInfo& ii, QChartView **ref) {
+		QWidget* harmPlot = new HarmPlot(dir, ii);
+		*ref = static_cast<QChartView*>(harmPlot);
 	return harmPlot;
 }
 

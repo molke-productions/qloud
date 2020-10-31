@@ -66,8 +66,8 @@ private:
 	QComboBox* lengthCombo;
 	QComboBox* rateCombo;
 	QComboBox* depthCombo;
-    QDoubleSpinBox* fMinCnt;
-    QDoubleSpinBox* fMaxCnt;
+	QDoubleSpinBox* fMinCnt;
+	QDoubleSpinBox* fMaxCnt;
 
 	QString getInfoString();
 	void mapCfgToControls();

@@ -16,16 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#if 0
-#include <qwt_math.h>
-#include <qwt_scale_engine.h>
-#include <qwt_symbol.h>
-#include <qwt_plot_grid.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
-#else
 #include <QtCharts/QtCharts>
-#endif
 #include "HarmPlot.h"
 #include "Harmonics.h"
 
@@ -54,37 +45,37 @@ HarmPlot::HarmPlot(
 
 	this->data = (HarmData**) new char[sizeof(HarmData*) * (MAX_HARM - 1)];
 
-    this->chart = new QChart();
-    this->chart->setTitle(tr("Harmonic Distortion"));
-    this->chart->legend()->hide();
-    this->setChart(chart);
-    this->setRenderHint(QPainter::Antialiasing);
+	this->chart = new QChart();
+	this->chart->setTitle(tr("Harmonic Distortion"));
+	this->chart->legend()->hide();
+	this->setChart(chart);
+	this->setRenderHint(QPainter::Antialiasing);
 
-    QLogValueAxis *XAxis = new QLogValueAxis(this->chart);
-    XAxis->setBase(10.0);
-    XAxis->setLabelFormat("%d");
-    XAxis->setTitleText(tr("Frequency in Hz"));
-    XAxis->setRange(10, 10000);
-    XAxis->setMinorTickCount(8);
-    chart->addAxis(XAxis, Qt::AlignBottom);
+	QLogValueAxis *XAxis = new QLogValueAxis(this->chart);
+	XAxis->setBase(10.0);
+	XAxis->setLabelFormat("%d");
+	XAxis->setTitleText(tr("Frequency in Hz"));
+	XAxis->setRange(10, 10000);
+	XAxis->setMinorTickCount(8);
+	chart->addAxis(XAxis, Qt::AlignBottom);
 
-    QValueAxis *YAxis = new QValueAxis(this->chart);
-    YAxis->setTitleText(tr("Distortion in dB"));
-    YAxis->setLabelFormat("%d");
-    YAxis->setMax(20);
-    YAxis->setMin(-120);
-    YAxis->setTickCount(7);
-    YAxis->setMinorTickCount(10);
-    chart->addAxis(YAxis, Qt::AlignLeft);
+	QValueAxis *YAxis = new QValueAxis(this->chart);
+	YAxis->setTitleText(tr("Distortion in dB"));
+	YAxis->setLabelFormat("%d");
+	YAxis->setMax(20);
+	YAxis->setMin(-120);
+	YAxis->setTickCount(8);
+	YAxis->setMinorTickCount(10);
+	chart->addAxis(YAxis, Qt::AlignLeft);
 
-    this->addCurves(XAxis, YAxis);
+	this->addCurves(XAxis, YAxis);
 
-    this->setRubberBand(QChartView::HorizontalRubberBand);
+	this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 
 HarmPlot::~HarmPlot() {
-	for( int i = 0; i < MAX_HARM - 2; i++) {
+	for(int i = 0; i < MAX_HARM - 2; i++) {
 		HarmData* data = this->data[i];
 		if( data )
 			delete data;
@@ -102,16 +93,18 @@ void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 
 		QString name = "Harmonic";
 		name += i;
-        QLineSeries* curve = new QLineSeries(this->chart);
+		QLineSeries* curve = new QLineSeries(this->chart);
 		curve->setPen(QPen(HARM_COLORS[i]));
-        this->chart->addSeries(curve);
-        curve->attachAxis(y);
-        curve->attachAxis(x);
-        QList<QPointF> points;
-        for (int j = 0; j < this->data[i]->length; j++) {
-            points.append(QPointF(this->data[i]->freqs[j], this->data[i]->values[j]));
-        }
-        curve->replace(points);
+		this->chart->addSeries(curve);
+		curve->attachAxis(y);
+		curve->attachAxis(x);
+		QList<QPointF> points;
+		for(int j = 0; j < this->data[i]->length; j++) {
+			points.append(
+				QPointF(this->data[i]->freqs[j], this->data[i]->values[j])
+			);
+		}
+		curve->replace(points);
 	}
 	delete harmonics;
 }
