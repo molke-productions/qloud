@@ -47,48 +47,48 @@ Plotter::Plotter(
 
 	this->ir = new IR(dir, ii.key);
 
-    chart = new QChart();
-    chart->setTitle(tr("Frequency Response"));
-    chart->legend()->hide();
-    this->setChart(chart);
-    this->setRenderHint(QPainter::Antialiasing);
+	chart = new QChart();
+	chart->setTitle(tr("Frequency Response"));
+	chart->legend()->hide();
+	this->setChart(chart);
+	this->setRenderHint(QPainter::Antialiasing);
 
-    XAxis = new QLogValueAxis(this->chart);
-    ((QLogValueAxis*) XAxis)->setBase(10.0);
-    ((QLogValueAxis*) XAxis)->setLabelFormat("%d");
-    XAxis->setTitleText(tr("Frequency in Hz"));
-    XAxis->setRange(10, 100000);
-    ((QLogValueAxis *) XAxis)->setMinorTickCount(8);
-    chart->addAxis(XAxis, Qt::AlignBottom);
+	XAxis = new QLogValueAxis(this->chart);
+	((QLogValueAxis*) XAxis)->setBase(10.0);
+	((QLogValueAxis*) XAxis)->setLabelFormat("%d");
+	XAxis->setTitleText(tr("Frequency in Hz"));
+	XAxis->setRange(10, 100000);
+	((QLogValueAxis *) XAxis)->setMinorTickCount(8);
+	chart->addAxis(XAxis, Qt::AlignBottom);
 
-    YAxis = new QValueAxis(this->chart);
-    YAxis->setTitleText(tr("Amplitude in dB"));
-    ((QValueAxis *) YAxis)->setLabelFormat("%d");
-    YAxis->setMax(20);
-    YAxis->setMin(-100);
-    ((QValueAxis *) YAxis)->setTickCount(7);
-    ((QValueAxis *) YAxis)->setMinorTickCount(10);
-    chart->addAxis(YAxis, Qt::AlignLeft);
+	YAxis = new QValueAxis(this->chart);
+	YAxis->setTitleText(tr("Amplitude in dB"));
+	((QValueAxis *) YAxis)->setLabelFormat("%d");
+	YAxis->setMax(20);
+	YAxis->setMin(-100);
+	((QValueAxis *) YAxis)->setTickCount(7);
+	((QValueAxis *) YAxis)->setMinorTickCount(10);
+	chart->addAxis(YAxis, Qt::AlignLeft);
 
 	if(QLCfg::USE_PAHSE) {
-        YPAxis = new QValueAxis(this->chart);
-        YPAxis->setTitleText(tr("Phase in degrees"));
-        ((QValueAxis *) YPAxis)->setLabelFormat("%d");
-        YPAxis->setMax(180);
-        YPAxis->setMin(-180);
-        chart->addAxis(YPAxis, Qt::AlignRight);
+		YPAxis = new QValueAxis(this->chart);
+		YPAxis->setTitleText(tr("Phase in degrees"));
+		((QValueAxis *) YPAxis)->setLabelFormat("%d");
+		YPAxis->setMax(180);
+		YPAxis->setMin(-180);
+		chart->addAxis(YPAxis, Qt::AlignRight);
 	}
 
 	// curves
-    this->ampCurve = new QLineSeries(this->chart);
-    this->chart->addSeries(this->ampCurve);
+	this->ampCurve = new QLineSeries(this->chart);
+	this->chart->addSeries(this->ampCurve);
 
-    this->ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-    this->ampCurve->attachAxis(XAxis);
-    this->ampCurve->attachAxis(YAxis);
+	this->ampCurve->setPen(QPen(AMP_CURVE_COLOR));
+	this->ampCurve->attachAxis(XAxis);
+	this->ampCurve->attachAxis(YAxis);
 
 	if(QLCfg::USE_PAHSE) {
-        this->phaseCurve = new QLineSeries(this->chart);
+		this->phaseCurve = new QLineSeries(this->chart);
 		this->phaseCurve->setPen(QPen(PHASE_CURVE_COLOR));
 	}
 
@@ -96,7 +96,7 @@ Plotter::Plotter(
 	this->winLength = 0.5; // 500 ms for right window
 	this->recalculate();
 
-    this->setRubberBand(QChartView::HorizontalRubberBand);
+	this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 Plotter::~Plotter() {
@@ -130,13 +130,13 @@ void Plotter::enablePhase(int state) {
 	if( ! QLCfg::USE_PAHSE)
 		return;
 
-    if(state) {
-        this->chart->addSeries(phaseCurve);
-        this->phaseCurve->attachAxis(this->XAxis);
-        this->phaseCurve->attachAxis(this->YPAxis);
-    } else {
-        this->chart->removeSeries(phaseCurve);
-    }
+	if(state) {
+		this->chart->addSeries(phaseCurve);
+		this->phaseCurve->attachAxis(this->XAxis);
+		this->phaseCurve->attachAxis(this->YPAxis);
+	} else {
+		this->chart->removeSeries(phaseCurve);
+	}
 }
 
 // private
@@ -163,17 +163,17 @@ void Plotter::recalculate() {
 
 	delete ff;
 
-    QList<QPointF> points;
-    for (int i = 0; i < FileFft::POINTS_AMOUNT; ++i) {
-        points.append(QPointF(this->freqs[i], this->amps[i]));
-    }
-    this->ampCurve->replace(points);
+	QList<QPointF> points;
+	for (int i = 0; i < FileFft::POINTS_AMOUNT; ++i) {
+		points.append(QPointF(this->freqs[i], this->amps[i]));
+	}
+	this->ampCurve->replace(points);
 
-    if(QLCfg::USE_PAHSE) {
-        QList<QPointF> ppoints;
-        for (int i = 0; i < FileFft::POINTS_AMOUNT; ++i) {
-            ppoints.append(QPointF(this->freqs[i], this->phase[i]));
-        }
-        this->phaseCurve->replace(ppoints);
-    }
+	if(QLCfg::USE_PAHSE) {
+		QList<QPointF> ppoints;
+		for (int i = 0; i < FileFft::POINTS_AMOUNT; ++i) {
+			ppoints.append(QPointF(this->freqs[i], this->phase[i]));
+		}
+		this->phaseCurve->replace(ppoints);
+	}
 }
