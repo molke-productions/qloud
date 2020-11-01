@@ -67,6 +67,7 @@ PlotWindow::PlotWindow(
 	QHBoxLayout* actions = new QHBoxLayout();
 	QPushButton* print = new QPushButton();
 	print->setText(tr("Print"));
+    print->setMaximumWidth(120);
 	connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
 	actions->addWidget(print);
 
