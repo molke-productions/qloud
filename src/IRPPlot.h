@@ -20,11 +20,11 @@
 #define IRPPLOT_H
 
 #include <QtCore>
-#include <QtCharts/QtCharts>
+#include "Plotter.h"
 #include "QLE.h"
 #include "IRInfo.h"
 
-class IRPPlot: public QChartView {
+class IRPPlot: public Plotter {
 	Q_OBJECT
 
 public:
@@ -37,7 +37,6 @@ private:
 
 	double* time;
 	double* amps;
-	QChart *chart;
 
 	unsigned calculate();
 };

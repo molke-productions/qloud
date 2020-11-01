@@ -40,32 +40,34 @@ public:
 
 public slots:
     void onPrintClicked();
-    void onTabChanged(int index);
+    void onGnuplotClicked();
+    void onTabChanged(int index);  
 
 protected:
     bool print(QPrinter *printer);
+    bool gnuplot(const QString& filename);
 
 private:
 	QMap<PlotWindow*, QString>* plots;
 
 	// SPL plotting
-    QWidget* getSplTab(const QString& dir, const IRInfo& ii, QChartView** plot);
+    QWidget* getSplTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// IR itself plotting
-    QWidget* getIRTab(const QString& dir, const IRInfo& ii, QChartView** plot);
+    QWidget* getIRTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// IR power plotting
-    QWidget* getIRPTab(const QString& dir, const IRInfo& ii, QChartView** plot);
+    QWidget* getIRPTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// Step Response plotting
-    QWidget* getStepTab(const QString& dir, const IRInfo& ii, QChartView** plot);
+    QWidget* getStepTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// Harmonics plotting
-    QWidget* getHarmTab(const QString& dir, const IRInfo& ii, QChartView** plot);
+    QWidget* getHarmTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 
-    QChartView *splplot;
-    QChartView *irplot;
-    QChartView *irpplot;
-    QChartView *stepplot;
-    QChartView *harmplot;
+    Plotter *splplot;
+    Plotter *irplot;
+    Plotter *irpplot;
+    Plotter *stepplot;
+    Plotter *harmplot;
 
-    QChartView *currentplot;
+    Plotter *currentplot;
 };
 
 #endif

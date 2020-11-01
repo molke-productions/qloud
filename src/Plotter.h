@@ -35,35 +35,19 @@ class Plotter: public QChartView {
 public:
 	static constexpr double DEFAULT_SMOOTH = 6.0; // 1/6 octave
 
-	Plotter(const QString& dir, IRInfo ii, QWidget *parent = 0);
-	~Plotter();
-	double getMaxTrimLength(); // secs
+    Plotter(QWidget *parent = 0);
+    ~Plotter();
 
-public slots:
-	void setSmooth(double smoothFactor);
-	void setWinLength(double secs);
-	void enablePhase(int);
+    void setTitle(const QString& title);
+    QString getTitle();
 
-private:
-	IR* ir;
-	QString dir;
-	IRInfo ii;
+    void appendSeries(QLineSeries* series, QAbstractAxis* xaxis, Qt::Alignment xalign, QAbstractAxis* yaxis, Qt::Alignment yalign);
+    void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
 
-	double* freqs;
-	double* amps;
-	double* phase;
+    bool gnuplotSeries(const QString &filename);
 
-	double winLength;
-	double smoothFactor;
-
-    QLineSeries *ampCurve;
-    QLineSeries *phaseCurve;
     QChart *chart;
-    QAbstractAxis *XAxis;
-    QAbstractAxis *YAxis;
-    QAbstractAxis *YPAxis;
-
-	void recalculate();
+    QList<QLineSeries*> list;
 };
 
 #endif

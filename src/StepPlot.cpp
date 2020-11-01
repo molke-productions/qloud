@@ -38,7 +38,7 @@ StepPlot::StepPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : QChartView(parent) {
+) : Plotter(parent) {
 	this->dir = aDir;
 	this->ii = anIi;
 
@@ -47,11 +47,7 @@ StepPlot::StepPlot(
 
 	unsigned curveLength = this->calculate();
 
-        this->chart = new QChart();
-        this->chart->setTitle(tr("Step Response"));
-        this->chart->legend()->hide();
-        this->setChart(chart);
-        this->setRenderHint(QPainter::Antialiasing);
+        setTitle(tr("Step Response"));
 
         QValueAxis *XAxis = new QValueAxis(this->chart);
         XAxis->setLabelFormat("%d");
@@ -59,7 +55,6 @@ StepPlot::StepPlot(
         XAxis->setMax(this->time[curveLength-1]);
         XAxis->setMin(this->time[0]);
         XAxis->applyNiceNumbers();
-        this->chart->addAxis(XAxis, Qt::AlignBottom);
 
         QValueAxis *YAxis = new QValueAxis(this->chart);
         YAxis->setTitleText(tr("Amplitude"));
@@ -68,22 +63,17 @@ StepPlot::StepPlot(
         YAxis->setMin(-1.5);
         //YAxis->setTickCount(7);
         //YAxis->setMinorTickCount(10);
-        this->chart->addAxis(YAxis, Qt::AlignLeft);
 
 
         QLineSeries* ampCurve = new QLineSeries(this->chart);
         ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-        this->chart->addSeries(ampCurve);
-        ampCurve->attachAxis(YAxis);
-        ampCurve->attachAxis(XAxis);
+        appendSeries(ampCurve, XAxis, Qt::AlignBottom, YAxis, Qt::AlignLeft);
 
         QList<QPointF> points;
         for (unsigned int i = 0; i < curveLength; i++) {
             points.append(QPointF(this->time[i], this->amps[i]));
         }
         ampCurve->replace(points);
-
-        this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 

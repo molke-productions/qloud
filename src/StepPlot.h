@@ -23,11 +23,12 @@
 #include <QtCharts/QtCharts>
 #include "QLE.h"
 #include "IRInfo.h"
+#include "Plotter.h"
 
 class QwtPlotCurve;
 class QwtPlotMarker;
 
-class StepPlot: public QChartView {
+class StepPlot: public Plotter {
 	Q_OBJECT
 
 public:
@@ -40,7 +41,6 @@ private:
 
 	double* time;
 	double* amps;
-    QChart *chart;
 
 	unsigned calculate();
 };

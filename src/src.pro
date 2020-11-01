@@ -26,6 +26,7 @@ SOURCES += main.cpp \
  QLCfg.cpp \
  QLUtl.cpp \
  QLWin.cpp \
+ SplPlot.cpp \
  StepPlot.cpp \
  TickPoster.cpp \
  WavIn.cpp \
@@ -65,6 +66,7 @@ HEADERS += CapThread.h \
  QLE.h \
  QLUtl.h \
  QLWin.h \
+ SplPlot.h \
  StepPlot.h \
  TickPoster.h \
  WavInfo.h \

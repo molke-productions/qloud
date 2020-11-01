@@ -16,8 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <QtCharts/QtCharts>
-
+#include "Plotter.h"
 #include "FileFft.h"
 #include "QLUtl.h"
 #include "IR.h"
@@ -35,7 +34,7 @@ IRPlot::IRPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : QChartView(parent) {
+) : Plotter(parent) {
 	this->dir = aDir;
 	this->ii = anIi;
 
@@ -44,11 +43,7 @@ IRPlot::IRPlot(
 
 	unsigned curveLength = this->calculate();
 
-        this->chart = new QChart();
-        this->chart->setTitle(tr("Impulse Response"));
-        this->chart->legend()->hide();
-        this->setChart(chart);
-        this->setRenderHint(QPainter::Antialiasing);
+        setTitle(tr("Impulse Response"));
 
         QValueAxis *XAxis = new QValueAxis(this->chart);
         XAxis->setLabelFormat("%d");
@@ -56,7 +51,7 @@ IRPlot::IRPlot(
         XAxis->setMax(this->time[curveLength-1]);
         XAxis->setMin(this->time[0]);
         XAxis->applyNiceNumbers();
-        this->chart->addAxis(XAxis, Qt::AlignBottom);
+
 
         QValueAxis *YAxis = new QValueAxis(this->chart);
         YAxis->setTitleText(tr("Amplitude"));
@@ -65,22 +60,16 @@ IRPlot::IRPlot(
         YAxis->setMin(-1.5);
         YAxis->setTickCount(7);
         YAxis->setMinorTickCount(10);
-        chart->addAxis(YAxis, Qt::AlignLeft);
-
 
         QLineSeries* ampCurve = new QLineSeries(this->chart);
         ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-        this->chart->addSeries(ampCurve);
-        ampCurve->attachAxis(YAxis);
-        ampCurve->attachAxis(XAxis);
+        appendSeries(ampCurve, XAxis, Qt::AlignBottom, YAxis, Qt::AlignLeft);
 
         QList<QPointF> points;
         for (unsigned int i = 0; i < curveLength; i++) {
             points.append(QPointF(this->time[i], this->amps[i]));
         }
         ampCurve->replace(points);
-
-        this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 IRPlot::~IRPlot() {

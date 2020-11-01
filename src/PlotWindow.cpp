@@ -27,6 +27,7 @@
 #include "Plotter.h"
 #include "QLUtl.h"
 #include "QLCfg.h"
+#include "SplPlot.h"
 #include "IRPlot.h"
 #include "IRPPlot.h"
 #include "StepPlot.h"
@@ -65,11 +66,18 @@ PlotWindow::PlotWindow(
 	mainLayout->addWidget(tab);
 
 	QHBoxLayout* actions = new QHBoxLayout();
-	QPushButton* print = new QPushButton();
+
+    QPushButton* print = new QPushButton();
 	print->setText(tr("Print"));
-    print->setMaximumWidth(120);
+    print->setMinimumWidth(120);
 	connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
 	actions->addWidget(print);
+
+    QPushButton* gnuplot = new QPushButton();
+    gnuplot->setText(tr("Export Gnuplot"));
+    gnuplot->setMinimumWidth(120);
+    connect(gnuplot, SIGNAL(clicked()), this, SLOT(onGnuplotClicked()));
+    actions->addWidget(gnuplot);
 
 	mainLayout->addLayout(actions, 0);
 	this->setLayout(mainLayout);
@@ -89,27 +97,29 @@ void PlotWindow::onTabChanged(int index) {
 		default: currentplot = nullptr;
 	}
 }
+
 void PlotWindow::onPrintClicked() {
-	if (currentplot) {
-		QPrinter printer;
-		printer.setCreator("QLoud");
-		printer.setDocName("Curve");
-		printer.setOrientation(QPrinter::Landscape);
-		QPrintDialog dialog(&printer, this);
-		if (dialog.exec() == QDialog::Accepted) {
-			if (printer.isValid()) {
-				if (!print(&printer)) {
-					QPrinterInfo info(printer);
-					qWarning() << "printerinfo definition null:"
-						<< info.isNull();
-					qWarning() << "printerinfo state error:"
-						<< (info.state() == QPrinter::Error);
-				}
-			} else {
-				qWarning() << "invalid printer object";
-			}
-		}
-	}
+    if (!currentplot)
+        return;
+
+    QPrinter printer;
+    printer.setCreator("QLoud");
+    printer.setDocName("Curve");
+    printer.setOrientation(QPrinter::Landscape);
+    QPrintDialog dialog(&printer, this);
+    if (dialog.exec() == QDialog::Accepted) {
+        if (printer.isValid()) {
+            if (!print(&printer)) {
+                QPrinterInfo info(printer);
+                qWarning() << "printerinfo definition null:"
+                    << info.isNull();
+                qWarning() << "printerinfo state error:"
+                    << (info.state() == QPrinter::Error);
+            }
+        } else {
+            qWarning() << "invalid printer object";
+        }
+    }
 }
 
 bool PlotWindow::print(QPrinter* printer) {
@@ -126,12 +136,27 @@ bool PlotWindow::print(QPrinter* printer) {
 	return true;
 }
 
+void PlotWindow::onGnuplotClicked() {
+    if (!currentplot)
+        return;
+
+    QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QString f = QString("QLoud %1").arg(currentplot->getTitle());
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Export for Gnuplot"), home + QDir::separator() + f + ".dat", tr("Gnuplot data (*.dat)"));
+    gnuplot(fileName);
+}
+
+bool PlotWindow::gnuplot(const QString& filename)
+{
+    return currentplot->gnuplotSeries(filename);
+}
+
 QWidget* PlotWindow::getSplTab(
 	const QString& dir,
 	const IRInfo& ii,
-	QChartView **ref
+    Plotter **ref
 ) {
-	Plotter* plotter = new Plotter(dir, ii);
+    SplPlot* plotter = new SplPlot(dir, ii);
 
 	QWidget* splWidget = new QWidget();
 	QVBoxLayout* splLayout = new QVBoxLayout();
@@ -189,7 +214,7 @@ QWidget* PlotWindow::getSplTab(
 		SLOT(setWinLength(double))
 	);
 
-	if(QLCfg::USE_PAHSE) {
+    if(QLCfg::USE_PHASE) {
 		topLayout->addSpacing(15);
 		QCheckBox* phaseCheck = new QCheckBox("Phase");
 		phaseCheck->setChecked(false);
@@ -212,44 +237,44 @@ QWidget* PlotWindow::getSplTab(
 	splLayout->setMargin(1);
 	splWidget->setLayout(splLayout);
 
-	*ref = static_cast<QChartView*>(plotter);
+    *ref = static_cast<Plotter*>(plotter);
 	return splWidget;
 }
 
 QWidget* PlotWindow::getIRTab(
 	const QString& dir,
 	const IRInfo& ii,
-	QChartView **ref
+    Plotter **ref
 ) {
 		QWidget* irPlot = new IRPlot(dir, ii);
-		*ref = static_cast<QChartView*>(irPlot);
+        *ref = static_cast<Plotter*>(irPlot);
 	return irPlot;
 }
 
 QWidget* PlotWindow::getIRPTab(
 	const QString& dir,
 	const IRInfo& ii,
-	QChartView **ref
+    Plotter **ref
 ) {
 		QWidget* irpPlot = new IRPPlot(dir, ii);
-		*ref = static_cast<QChartView*>(irpPlot);
+        *ref = static_cast<Plotter*>(irpPlot);
 	return irpPlot;
 }
 
 QWidget* PlotWindow::getStepTab(
 	const QString& dir,
 	const IRInfo& ii,
-	QChartView **ref
+    Plotter **ref
 ) {
 		QWidget* stepPlot = new StepPlot(dir, ii);
-		*ref = static_cast<QChartView*>(stepPlot);
+        *ref = static_cast<Plotter*>(stepPlot);
 	return stepPlot;
 }
 
 QWidget* PlotWindow::getHarmTab(const QString& dir,
-	const IRInfo& ii, QChartView **ref) {
+    const IRInfo& ii, Plotter **ref) {
 		QWidget* harmPlot = new HarmPlot(dir, ii);
-		*ref = static_cast<QChartView*>(harmPlot);
+        *ref = static_cast<Plotter*>(harmPlot);
 	return harmPlot;
 }
 

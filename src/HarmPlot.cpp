@@ -16,7 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <QtCharts/QtCharts>
+#include "Plotter.h"
 #include "HarmPlot.h"
 #include "Harmonics.h"
 
@@ -37,7 +37,7 @@ HarmPlot::HarmPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : QChartView(parent) {
+) : Plotter(parent) {
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	this->dir = aDir;
@@ -45,19 +45,14 @@ HarmPlot::HarmPlot(
 
 	this->data = (HarmData**) new char[sizeof(HarmData*) * (MAX_HARM - 1)];
 
-	this->chart = new QChart();
-	this->chart->setTitle(tr("Harmonic Distortion"));
-	this->chart->legend()->hide();
-	this->setChart(chart);
-	this->setRenderHint(QPainter::Antialiasing);
+    setTitle(tr("Harmonic Distortion"));
 
 	QLogValueAxis *XAxis = new QLogValueAxis(this->chart);
 	XAxis->setBase(10.0);
 	XAxis->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Frequency in Hz"));
 	XAxis->setRange(10, 10000);
-	XAxis->setMinorTickCount(8);
-	chart->addAxis(XAxis, Qt::AlignBottom);
+    XAxis->setMinorTickCount(8);
 
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Distortion in dB"));
@@ -65,12 +60,9 @@ HarmPlot::HarmPlot(
 	YAxis->setMax(20);
 	YAxis->setMin(-120);
 	YAxis->setTickCount(8);
-	YAxis->setMinorTickCount(10);
-	chart->addAxis(YAxis, Qt::AlignLeft);
+    YAxis->setMinorTickCount(10);
 
 	this->addCurves(XAxis, YAxis);
-
-	this->setRubberBand(QChartView::HorizontalRubberBand);
 }
 
 
@@ -86,7 +78,7 @@ HarmPlot::~HarmPlot() {
 
 void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 	Harmonics* harmonics = new Harmonics(this->dir, this->ii);
-	for(int i=0; i <= MAX_HARM - 2; i++) {
+    for(int i = 0; i <= MAX_HARM - 2; i++) {
 		this->data[i] = harmonics->getHarm(i+2); // begin from second harmonic
 		if( ! this->data[i])
 			continue; // have not more harmonic in IR
@@ -95,9 +87,11 @@ void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 		name += i;
 		QLineSeries* curve = new QLineSeries(this->chart);
 		curve->setPen(QPen(HARM_COLORS[i]));
-		this->chart->addSeries(curve);
-		curve->attachAxis(y);
-		curve->attachAxis(x);
+        if (i == 0)
+            appendSeries(curve, x, Qt::AlignBottom, y, Qt::AlignLeft);
+        else
+            appendSeries(curve, nullptr, 0, nullptr, 0);
+
 		QList<QPointF> points;
 		for(int j = 0; j < this->data[i]->length; j++) {
 			points.append(

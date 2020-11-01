@@ -24,8 +24,9 @@
 #include "QLE.h"
 #include "IRInfo.h"
 #include "HarmData.h"
+#include "Plotter.h"
 
-class HarmPlot: public QChartView {
+class HarmPlot: public Plotter {
 	Q_OBJECT
 
 public:
@@ -38,7 +39,6 @@ private:
 
 	HarmData** data;
 	void addCurves(QAbstractAxis *x, QAbstractAxis *y);
-	QChart *chart;
 };
 
 #endif
