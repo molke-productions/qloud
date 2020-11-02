@@ -20,10 +20,38 @@
 #include "QLWin.h"
 #include "QLE.h"
 #include "QLUtl.h"
+#include "config.h"
 
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    //app.setOrganizationName("Herewe");
+    //app.setOrganizationDomain("herewe");
+    app.setApplicationName("QLoud");
+    app.setApplicationVersion(VERSION " (" REVISION ")");
+
+    QString locale = QLocale::system().name();
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + locale,
+            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
+    QTranslator qloudTranslator;
+    if (!qloudTranslator.load(TARGET "_" + locale, "locale"))
+#ifdef __mswin
+        qloudTranslator.load(TARGET "_" + locale, QCoreApplication::applicationDirPath() + QDir::separator() + "locale");
+#else
+        qloudTranslator.load(TARGET "_" + locale, DATADIR "/" TARGET "/locale");
+#endif
+    app.installTranslator(&qloudTranslator);
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QObject::tr("Loudspeaker response measurement program."));
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.process(app);
+
     try {
         QLWin * w = new QLWin(0);
         w->show();

@@ -94,6 +94,14 @@
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="main.cpp" line="49"/>
+        <source>Loudspeaker response measurement program.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SplPlot</name>
     <message>
         <location filename="SplPlot.cpp" line="29"/>

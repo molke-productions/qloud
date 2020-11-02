@@ -135,9 +135,11 @@ bool SplPlot::octaveOutput(const QString& filename, const QString& dir, const IR
     f += "ylabel('Level / dB');\n";
     f += "set(gca(), 'ytick', -48:6:6);\n";
     f += "print('-dpdfcrop', 'qloudplot.pdf', '-F:10');\n";
-    file.write(f.toUtf8());
+    bool ret = file.write(f.toUtf8());
     file.close();
+    return ret;
 }
+
 double SplPlot::getMaxTrimLength() {
     return this->ir->getMaxTrimLength();
 }

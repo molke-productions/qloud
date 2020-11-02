@@ -172,8 +172,9 @@ void PlotWindow::onOctaveClicked() {
 bool PlotWindow::octave(const QString& filename)
 {
     if (currentplot == splplot)
-        splplot->octaveOutput(filename, dir, ii);
+        return splplot->octaveOutput(filename, dir, ii);
     // FIXME implement in other tabs
+    return false;
 }
 
 QWidget* PlotWindow::getSplTab(
