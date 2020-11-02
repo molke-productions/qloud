@@ -112,7 +112,7 @@ void PlotWindow::onPrintClicked() {
 
     QPrinter printer;
     printer.setCreator("QLoud");
-    printer.setDocName("Curve");
+    printer.setDocName("qloud_curve");
     printer.setOrientation(QPrinter::Landscape);
     QPrintDialog dialog(&printer, this);
     if (dialog.exec() == QDialog::Accepted) {
@@ -150,6 +150,7 @@ void PlotWindow::onGnuplotClicked() {
 
     QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
     QString f = QString("QLoud %1").arg(currentplot->getTitle());
+    f.replace(' ', '_');
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export for Gnuplot"), home + QDir::separator() + f + ".dat", tr("Gnuplot data (*.dat)"));
     gnuplot(fileName);
 }
@@ -165,6 +166,7 @@ void PlotWindow::onOctaveClicked() {
 
     QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
     QString f = QString("QLoud %1").arg(currentplot->getTitle());
+    f.replace(' ', '_');
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export for GNU Octave"), home + QDir::separator() + f + ".m", tr("GNU Octave data (*.m)"));
     octave(fileName);
 }
