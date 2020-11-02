@@ -28,7 +28,7 @@ Plotter::Plotter(QWidget *parent)
     chart->legend()->hide();
     this->setChart(chart);
     this->setRenderHint(QPainter::Antialiasing);
-    this->setRubberBand(QChartView::HorizontalRubberBand);
+    this->setRubberBand(QChartView::RectangleRubberBand);
 
 }
 
