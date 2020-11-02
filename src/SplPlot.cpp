@@ -114,7 +114,10 @@ bool SplPlot::octaveOutput(const QString& filename, const QString& dir, const IR
 {
     QFile file(filename);
     file.open(QFile::WriteOnly);
-    QString f = "clear all;\nclose all;\n";
+
+    QString f("# QLoud plot: ");
+    f += getTitle() + "\n";
+    f += "clear all;\nclose all;\n";
     f += ("s = 0.0;\n");
     f += QString("key = %1;\n").arg(ii.key);
     f += QString("maxLevel = %1;\n").arg(ii.maxLevel);
