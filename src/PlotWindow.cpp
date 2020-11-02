@@ -76,13 +76,13 @@ PlotWindow::PlotWindow(
 	actions->addWidget(print);
 
     QPushButton* gnuplot = new QPushButton();
-    gnuplot->setText(tr("Export Gnuplot"));
+    gnuplot->setText(tr("Export to Gnuplot"));
     gnuplot->setMinimumWidth(120);
     connect(gnuplot, SIGNAL(clicked()), this, SLOT(onGnuplotClicked()));
     actions->addWidget(gnuplot);
 
     QPushButton* octave = new QPushButton();
-    octave->setText(tr("Export Octave"));
+    octave->setText(tr("Export to Octave"));
     octave->setMinimumWidth(120);
     connect(octave, SIGNAL(clicked()), this, SLOT(onOctaveClicked()));
     actions->addWidget(octave);
