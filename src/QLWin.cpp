@@ -29,7 +29,7 @@
 #include "IRInfo.h"
 #include "GenThread.h"
 
-QLWin::QLWin(QWidget* parent) : QMainWindow(parent) {
+QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 
 	this->workDir = QDir::homePath();
 
@@ -178,7 +178,7 @@ QLWin::QLWin(QWidget* parent) : QMainWindow(parent) {
 	);
 
 	// Restore
-	this->restoreMyState();
+	this->restoreMyState(wrkDir);
 
 	// workDir is restored, it is safe to add widgets which depends on it
 	this->excit = new ExcitForm(this, this->workDir);
@@ -269,10 +269,16 @@ void QLWin::saveMyState() {
 	settings.sync();
 }
 
-void QLWin::restoreMyState() {
+void QLWin::restoreMyState(const QString *wrkDir) {
 	QSettings settings("Andrew_Gaydenko", "QLoud");
 	settings.beginGroup("MainWindow");
-	this->workDir = settings.value("workDir", QDir::homePath()).toString();
+
+    if (wrkDir) {
+        this->workDir = *wrkDir;
+    } else {
+        this->workDir = settings.value("workDir", QDir::homePath()).toString();
+    }
+
 	this->resize(settings.value("size", QSize(800, 800)).toSize());
 	this->move(settings.value("pos", QPoint(200, 200)).toPoint());
 	settings.endGroup();

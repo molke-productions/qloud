@@ -34,7 +34,7 @@ public:
 	static const int SMALL_SPACE = 15;
 	static QSize rightSize();
 
-	QLWin(QWidget* parent);
+    QLWin(const QString* wrkDir, QWidget* parent);
 	~QLWin();
 
 signals:
@@ -80,7 +80,7 @@ private:
 	bool jackConnected;
 
 	void saveMyState();
-	void restoreMyState();
+    void restoreMyState(const QString *wrkDir);
 	void createIrList();
 	bool initCapture();
 };

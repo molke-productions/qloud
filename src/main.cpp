@@ -25,8 +25,7 @@
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    //app.setOrganizationName("Herewe");
-    //app.setOrganizationDomain("herewe");
+    app.setOrganizationName("Andrew_Gaydenko");
     app.setApplicationName("QLoud");
     app.setApplicationVersion(VERSION " (" REVISION ")");
 
@@ -49,11 +48,17 @@ int main(int argc, char *argv[]) {
     parser.setApplicationDescription(QObject::tr("Loudspeaker response measurement program."));
     parser.addHelpOption();
     parser.addVersionOption();
+    parser.addPositionalArgument("workdir", QCoreApplication::translate("main", "Project directory to work on."));
 
     parser.process(app);
 
+    const QString *wrkDir = nullptr;
+    const QStringList args = parser.positionalArguments();
+    if (args.length() > 0)
+        wrkDir = &args.at(0);
+
     try {
-        QLWin * w = new QLWin(0);
+        QLWin * w = new QLWin(wrkDir, 0);
         w->show();
         app.exec();
         delete w;
