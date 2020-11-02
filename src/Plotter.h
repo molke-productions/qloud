@@ -44,7 +44,13 @@ public:
     void appendSeries(QLineSeries* series, QAbstractAxis* xaxis, Qt::Alignment xalign, QAbstractAxis* yaxis, Qt::Alignment yalign);
     void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
 
-    bool gnuplotSeries(const QString &filename);
+    virtual bool gnuplotSeries(const QString &filename);
+
+    virtual bool octaveOutput(const QString& filename, const QString& dir, const IRInfo& ii)
+    {
+        qDebug() << "Not implemented";
+        return false;
+    }
 
     QChart *chart;
     QList<QLineSeries*> list;

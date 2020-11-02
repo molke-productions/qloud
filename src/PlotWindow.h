@@ -41,11 +41,14 @@ public:
 public slots:
     void onPrintClicked();
     void onGnuplotClicked();
+    void onOctaveClicked();
+
     void onTabChanged(int index);  
 
 protected:
     bool print(QPrinter *printer);
     bool gnuplot(const QString& filename);
+    bool octave(const QString &filename);
 
 private:
 	QMap<PlotWindow*, QString>* plots;
@@ -68,6 +71,8 @@ private:
     Plotter *harmplot;
 
     Plotter *currentplot;
+    IRInfo ii;
+    QString dir;
 };
 
 #endif

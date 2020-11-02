@@ -11,7 +11,8 @@ public:
     ~SplPlot();
 
     double getMaxTrimLength(); // secs
-    bool gnuplotSeries(const QString &filename);
+    bool gnuplotSeries(const QString &filename) override;
+    bool octaveOutput(const QString &filename, const QString &dir, const IRInfo& ii) override;
 
 public slots:
     void setSmooth(double smoothFactor);

@@ -39,13 +39,15 @@ PlotWindow::PlotWindow(
 	QMap<PlotWindow*, QString>* aPlots,
 	QWidget *parent
 ) : QWidget(parent) {
+    this->dir = dir;
+    this->ii = ii;
 	this->plots = aPlots;
 	this->plots->insert(this, dir + "@" + ii.key);
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	QString tit(ii.info + " (" + ii.format());
 	tit += ", ";
-	tit += ii.maxLevelAsString();
+    tit += ii.maxLevelAsString();
 	tit += " dB)";
 	this->setWindowTitle(tit);
 	this->setContextMenuPolicy(Qt::NoContextMenu);
@@ -78,6 +80,12 @@ PlotWindow::PlotWindow(
     gnuplot->setMinimumWidth(120);
     connect(gnuplot, SIGNAL(clicked()), this, SLOT(onGnuplotClicked()));
     actions->addWidget(gnuplot);
+
+    QPushButton* octave = new QPushButton();
+    octave->setText(tr("Export Octave"));
+    octave->setMinimumWidth(120);
+    connect(octave, SIGNAL(clicked()), this, SLOT(onOctaveClicked()));
+    actions->addWidget(octave);
 
 	mainLayout->addLayout(actions, 0);
 	this->setLayout(mainLayout);
@@ -149,6 +157,23 @@ void PlotWindow::onGnuplotClicked() {
 bool PlotWindow::gnuplot(const QString& filename)
 {
     return currentplot->gnuplotSeries(filename);
+}
+
+void PlotWindow::onOctaveClicked() {
+    if (!currentplot)
+        return;
+
+    QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QString f = QString("QLoud %1").arg(currentplot->getTitle());
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Export for GNU Octave"), home + QDir::separator() + f + ".m", tr("GNU Octave data (*.m)"));
+    octave(fileName);
+}
+
+bool PlotWindow::octave(const QString& filename)
+{
+    if (currentplot == splplot)
+        splplot->octaveOutput(filename, dir, ii);
+    // FIXME implement in other tabs
 }
 
 QWidget* PlotWindow::getSplTab(

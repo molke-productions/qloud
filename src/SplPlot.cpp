@@ -110,6 +110,34 @@ bool SplPlot::gnuplotSeries(const QString &filename)
     return true;
 }
 
+bool SplPlot::octaveOutput(const QString& filename, const QString& dir, const IRInfo& ii)
+{
+    QFile file(filename);
+    file.open(QFile::WriteOnly);
+    QString f = "clear all;\nclose all;\n";
+    f += ("s = 0.0;\n");
+    f += QString("key = %1;\n").arg(ii.key);
+    f += QString("maxLevel = %1;\n").arg(ii.maxLevel);
+    f += QString("rate = %1;\n").arg(ii.rate);
+    f += ("N = pow2(16);\n");
+    f += ("f = linspace(1, rate, N);\n");
+    QString path = dir + QDir::separator() + ii.key + "irTrimmed.wav";
+    f += "path = '" + path + "';\n";
+    f += "l = 20 * log10(abs(fft(audioread(path), N)));\n";
+    f += "lrel = l - max(l) + maxLevel + s;\n";
+    f += "figure();\n";
+    f += "semilogx(f, lrel);\n";
+    f += "grid('on');\n";
+    f += "grid('minor'); set(gca(), 'minorgridlinestyle', '-');\n";
+    f += "axis([20 20e3 -96 6]);\n";
+    f += "xlabel('Frequency / Hz');\n";
+    f += "set(gca(), 'xticklabel', logspace(2, 4, 3));\n";
+    f += "ylabel('Level / dB');\n";
+    f += "set(gca(), 'ytick', -48:6:6);\n";
+    f += "print('-dpdfcrop', 'qloudplot.pdf', '-F:10');\n";
+    file.write(f.toUtf8());
+    file.close();
+}
 double SplPlot::getMaxTrimLength() {
     return this->ir->getMaxTrimLength();
 }
