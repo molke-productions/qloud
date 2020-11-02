@@ -13,4 +13,7 @@ desktop.path = $$PREFIX/share/applications
 icon.files = qloud.xpm
 icon.path = $$PREFIX/share/pixmaps
 
-INSTALLS += desktop icon
+translations.path = $$DATADIR/$${TARGET}
+translations.files = locale
+
+INSTALLS += desktop icon translations

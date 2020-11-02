@@ -33,12 +33,14 @@ SOURCES += main.cpp \
  WavInfo.cpp \
  WavOut.cpp \
  Weights.cpp
+
 CONFIG += warn_on \
  thread \
  qt \
  exceptions \
  build_all \
  release
+
 HEADERS += CapThread.h \
  Capture.h \
  Excitation.h \
@@ -98,3 +100,14 @@ QMAKE_CXXFLAGS += -std=c++11
 
 INSTALLS += target
 target.path = $$PREFIX/bin
+
+TRANSLATIONS += \
+    qloud_en.ts \
+    qloud_fr.ts
+
+LOCALE_DIR = ../locale
+updateqm.input = TRANSLATIONS
+updateqm.output = $$LOCALE_DIR/${QMAKE_FILE_BASE}.qm
+updateqm.commands = $$QMAKE_LRELEASE ${QMAKE_FILE_IN} -qm $$LOCALE_DIR/${QMAKE_FILE_BASE}.qm
+updateqm.CONFIG += no_link target_predeps
+QMAKE_EXTRA_COMPILERS += updateqm
