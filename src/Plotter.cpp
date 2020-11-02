@@ -54,6 +54,7 @@ void Plotter::appendSeries(QLineSeries *series, QAbstractAxis* xaxis, Qt::Alignm
 
     if (yaxis)
         chart->addAxis(yaxis, yalign);
+
     chart->addSeries(series);
 
     if (xaxis)

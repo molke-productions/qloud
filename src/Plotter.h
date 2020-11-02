@@ -48,7 +48,7 @@ public:
 
     virtual bool octaveOutput(const QString& filename, const QString& dir, const IRInfo& ii)
     {
-        qDebug() << "Not implemented";
+        qDebug() << dir << ii.key << filename << "Not implemented";
         return false;
     }
 
