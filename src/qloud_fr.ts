@@ -60,27 +60,27 @@
     <message>
         <location filename="PlotWindow.cpp" line="61"/>
         <source>SPL [dB/Hz]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="63"/>
         <source>IR [amp/ms]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="64"/>
         <source>IR power [dB/ms]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="65"/>
         <source>Step response [amp/ms]</source>
-        <translation type="unfinished"></translation>
+        <translation>Réponse transitoire [amp/ms]</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="66"/>
         <source>Harmonics [dB/Hz]</source>
-        <translation type="unfinished"></translation>
+        <translation>Harmoniques [dB/Hz]</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="73"/>
@@ -123,33 +123,33 @@
         <location filename="PlotWindow.cpp" line="197"/>
         <source>Mouse using:
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Usage de la souris :\n</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="198"/>
         <source>Left button drag – zoom in
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Mouvement du bouton gauche – zoom avant\n</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="199"/>
         <source>Right button click – zoom out</source>
-        <translation type="unfinished"></translation>
+        <translation>Clic du bouton droit – zoom arrière</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="206"/>
         <source>Octave smoothing, 1/x</source>
-        <translation type="unfinished"></translation>
+        <translation>Lissage d&apos;octave, 1/x</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="225"/>
         <source>Window [ms]</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre [ms]</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="247"/>
         <source>Phase</source>
-        <translation type="unfinished"></translation>
+        <translation>Phase</translation>
     </message>
 </context>
 <context>
@@ -157,109 +157,109 @@
     <message>
         <location filename="QLWin.cpp" line="44"/>
         <source>All project files are here</source>
-        <translation type="unfinished"></translation>
+        <translation>Les fichiers du projet sont là</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="47"/>
         <source>Select working directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner le répertoire de travail</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="67"/>
         <source>&lt;b&gt;Directory&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Répertoire&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="79"/>
         <source>Capturing audiosystem response</source>
-        <translation type="unfinished"></translation>
+        <translation>Capture de la réponse du système audio</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="86"/>
         <source>Excitation:</source>
-        <translation type="unfinished"></translation>
+        <translation>Excitation :</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="92"/>
         <source>Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Connecter</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="93"/>
         <source>Disconnect</source>
-        <translation type="unfinished"></translation>
+        <translation>Déconnecter</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="96"/>
         <source>&lt;b&gt;Capture&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Capture&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="107"/>
         <source>Playback level [dB]</source>
-        <translation type="unfinished"></translation>
+        <translation>Niveau de sortie [dB]</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="119"/>
         <source>Delay before capture [s]</source>
-        <translation type="unfinished"></translation>
+        <translation>Délai avant capture [s]</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="133"/>
         <source>Start recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Démarrer l&apos;enregistrement</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="196"/>
         <source>Impulse response</source>
-        <translation type="unfinished"></translation>
+        <translation>Réponse impultionnelle</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="342"/>
         <source>Failed connecting with JACK server. The error is:
 
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de se connecter au serveur JACK. L&apos;erreur est :\n</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="344"/>
         <source>
 
 Capturing will be disabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>\n\nLa capture sera désactivée.</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="345"/>
         <source>
 To enable start JACK and restart the application</source>
-        <translation type="unfinished"></translation>
+        <translation>\nPour activer démarrer JACK et redémarrer l&apos;application</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="360"/>
         <source>Connect JACK ports before capturing!</source>
-        <translation type="unfinished"></translation>
+        <translation>Connectez les ports JACK avant d&apos;enregistrer !</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="395"/>
         <source>Maximum capture level: </source>
-        <translation type="unfinished"></translation>
+        <translation>Niveau maximum de capture : </translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="397"/>
         <source>
 Give a meaningful description for the measurement</source>
-        <translation type="unfinished"></translation>
+        <translation>\nDonnez une description utile pour la mesure</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="398"/>
         <source>
 (“Cancel” will ignore this measurement)</source>
-        <translation type="unfinished"></translation>
+        <translation>\n(&quot;Annuler&quot; annulera cette mesure)</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="399"/>
         <source>Measurement description</source>
-        <translation type="unfinished"></translation>
+        <translation>Description de la mesure</translation>
     </message>
 </context>
 <context>
