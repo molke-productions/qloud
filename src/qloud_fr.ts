@@ -6,17 +6,17 @@
     <message>
         <location filename="HarmPlot.cpp" line="48"/>
         <source>Harmonic Distortion</source>
-        <translation type="unfinished"></translation>
+        <translation>Distortion harmonique</translation>
     </message>
     <message>
         <location filename="HarmPlot.cpp" line="53"/>
         <source>Frequency in Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Fréquence en Hz</translation>
     </message>
     <message>
         <location filename="HarmPlot.cpp" line="58"/>
         <source>Distortion in dB</source>
-        <translation type="unfinished"></translation>
+        <translation>Distortion en dB</translation>
     </message>
 </context>
 <context>
@@ -24,17 +24,17 @@
     <message>
         <location filename="IRPPlot.cpp" line="52"/>
         <source>IR Power</source>
-        <translation type="unfinished"></translation>
+        <translation>RI puissance</translation>
     </message>
     <message>
         <location filename="IRPPlot.cpp" line="56"/>
         <source>Time in ms</source>
-        <translation type="unfinished"></translation>
+        <translation>Temps en ms</translation>
     </message>
     <message>
         <location filename="IRPPlot.cpp" line="62"/>
         <source>Power in dB</source>
-        <translation type="unfinished"></translation>
+        <translation>Puissance en dB</translation>
     </message>
 </context>
 <context>
@@ -42,17 +42,17 @@
     <message>
         <location filename="IRPlot.cpp" line="46"/>
         <source>Impulse Response</source>
-        <translation type="unfinished"></translation>
+        <translation>Réponse impulsionnelle</translation>
     </message>
     <message>
         <location filename="IRPlot.cpp" line="50"/>
         <source>Time in ms</source>
-        <translation type="unfinished"></translation>
+        <translation>Temps en ms</translation>
     </message>
     <message>
         <location filename="IRPlot.cpp" line="57"/>
         <source>Amplitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Amplitude</translation>
     </message>
 </context>
 <context>
@@ -60,39 +60,39 @@
     <message>
         <location filename="PlotWindow.cpp" line="73"/>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Imprimer</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="79"/>
         <source>Export to Gnuplot</source>
         <oldsource>Export Gnuplot</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Exporter vers Gnuplot</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="85"/>
         <source>Export to Octave</source>
         <oldsource>Export Octave</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Exporter vers Octave</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="154"/>
         <source>Export for Gnuplot</source>
-        <translation type="unfinished"></translation>
+        <translation>Export pour Gnuplot</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="154"/>
         <source>Gnuplot data (*.dat)</source>
-        <translation type="unfinished"></translation>
+        <translation>Données Gnuplot (*.dat)</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="170"/>
         <source>Export for GNU Octave</source>
-        <translation type="unfinished"></translation>
+        <translation>Export pour GNU Octave</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="170"/>
         <source>GNU Octave data (*.m)</source>
-        <translation type="unfinished"></translation>
+        <translation>Données GNU Octave (*.m)</translation>
     </message>
 </context>
 <context>
@@ -100,7 +100,7 @@
     <message>
         <location filename="main.cpp" line="48"/>
         <source>Loudspeaker response measurement program.</source>
-        <translation type="unfinished"></translation>
+        <translation>Programme de mesure de réponse de haut-parleur</translation>
     </message>
 </context>
 <context>
@@ -108,22 +108,22 @@
     <message>
         <location filename="SplPlot.cpp" line="29"/>
         <source>Frequency Response</source>
-        <translation type="unfinished"></translation>
+        <translation>Réponse fréquentielle</translation>
     </message>
     <message>
         <location filename="SplPlot.cpp" line="34"/>
         <source>Frequency in Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>Fréquence en Hz</translation>
     </message>
     <message>
         <location filename="SplPlot.cpp" line="39"/>
         <source>Amplitude in dB</source>
-        <translation type="unfinished"></translation>
+        <translation>Amplitude en dB</translation>
     </message>
     <message>
         <location filename="SplPlot.cpp" line="52"/>
         <source>Phase in degrees</source>
-        <translation type="unfinished"></translation>
+        <translation>Phase en degrés</translation>
     </message>
 </context>
 <context>
@@ -131,17 +131,17 @@
     <message>
         <location filename="StepPlot.cpp" line="50"/>
         <source>Step Response</source>
-        <translation type="unfinished"></translation>
+        <translation>Réponse transitoire</translation>
     </message>
     <message>
         <location filename="StepPlot.cpp" line="54"/>
         <source>Time in ms</source>
-        <translation type="unfinished"></translation>
+        <translation>Temps en ms</translation>
     </message>
     <message>
         <location filename="StepPlot.cpp" line="60"/>
         <source>Amplitude</source>
-        <translation type="unfinished"></translation>
+        <translation>Amplitude</translation>
     </message>
 </context>
 <context>
@@ -149,7 +149,7 @@
     <message>
         <location filename="main.cpp" line="51"/>
         <source>Project directory to work on.</source>
-        <translation type="unfinished"></translation>
+        <translation>Répertoire du projet où travailler</translation>
     </message>
 </context>
 </TS>
