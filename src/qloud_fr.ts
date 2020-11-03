@@ -126,6 +126,63 @@
     </message>
 </context>
 <context>
+    <name>IrsForm</name>
+    <message>
+        <location filename="IrsForm.cpp" line="36"/>
+        <source>Measurements set</source>
+        <translation>Ensemble de mesures</translation>
+    </message>
+    <message>
+        <location filename="IrsForm.cpp" line="73"/>
+        <source>&lt;b&gt;Response&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Réponse&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="IrsForm.cpp" line="77"/>
+        <source>Plot</source>
+        <translation>Graphique</translation>
+    </message>
+    <message>
+        <location filename="IrsForm.cpp" line="96"/>
+        <source>Valid selection not found</source>
+        <translation>Sélection valide non trouvée</translation>
+    </message>
+</context>
+<context>
+    <name>IrsModel</name>
+    <message>
+        <location filename="IrsModel.cpp" line="91"/>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="93"/>
+        <source>Used excitation</source>
+        <translation>Excitation utilisée</translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="95"/>
+        <source>Max. level [dB]</source>
+        <translation>Niv. max [dB]</translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="146"/>
+        <source>Close plot window with this measurement before deleting</source>
+        <translation>Fermez la fenêtre de cette mesure avant sa suppression</translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="168"/>
+        <location filename="IrsModel.cpp" line="176"/>
+        <source>Failed removing </source>
+        <translation>Impossible de supprimer </translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="190"/>
+        <source>&quot; measurement is deleted</source>
+        <translation>&quot; la mesure a été supprimée</translation>
+    </message>
+</context>
+<context>
     <name>PlotWindow</name>
     <message>
         <location filename="PlotWindow.cpp" line="61"/>

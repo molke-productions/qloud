@@ -33,7 +33,7 @@ IrsForm::IrsForm(
 	this->workDir = aWorkDir;
 
 	QVBoxLayout* mainLayout = new QVBoxLayout();
-	QGroupBox* group = new QGroupBox("Measurements set");
+	QGroupBox* group = new QGroupBox(tr("Measurements set"));
 	QHBoxLayout* hLay = new QHBoxLayout();
 
 	this->model = new IrsModel(this->workDir, &this->plots);
@@ -70,11 +70,11 @@ IrsForm::IrsForm(
 	QVBoxLayout* vLay = new QVBoxLayout();
 	vLay->addStretch(1);
 
-	QWidget* lbl = new QLabel("<b>Response</b>");
+	QWidget* lbl = new QLabel(tr("<b>Response</b>"));
 	lbl->setFixedWidth(QLWin::rightSize().width());
 	vLay->addWidget(lbl);
 
-	this->btnPlot = new QPushButton("Plot");
+	this->btnPlot = new QPushButton(tr("Plot"));
 	this->btnPlot->setFixedWidth(QLWin::rightSize().width());
 	vLay->addWidget(this->btnPlot);
 
@@ -93,7 +93,7 @@ IrsForm::~IrsForm() {}
 void IrsForm::newPlot() {
 	QModelIndex index = this->view->currentIndex();
 	if( (! index.isValid()) || (this->model->rowCount() < 1) ) {
-		emit setStatus("Valid selection not found", 2000);
+		emit setStatus(tr("Valid selection not found"), 2000);
 		return;
 	}
 	QString irKey = this->model->data(index, Qt::UserRole).toString();

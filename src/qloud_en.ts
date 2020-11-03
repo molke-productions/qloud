@@ -124,6 +124,63 @@
     </message>
 </context>
 <context>
+    <name>IrsForm</name>
+    <message>
+        <location filename="IrsForm.cpp" line="36"/>
+        <source>Measurements set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsForm.cpp" line="73"/>
+        <source>&lt;b&gt;Response&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsForm.cpp" line="77"/>
+        <source>Plot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsForm.cpp" line="96"/>
+        <source>Valid selection not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>IrsModel</name>
+    <message>
+        <location filename="IrsModel.cpp" line="91"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="93"/>
+        <source>Used excitation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="95"/>
+        <source>Max. level [dB]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="146"/>
+        <source>Close plot window with this measurement before deleting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="168"/>
+        <location filename="IrsModel.cpp" line="176"/>
+        <source>Failed removing </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsModel.cpp" line="190"/>
+        <source>&quot; measurement is deleted</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PlotWindow</name>
     <message>
         <location filename="PlotWindow.cpp" line="61"/>
