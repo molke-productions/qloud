@@ -2,6 +2,76 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR">
 <context>
+    <name>ExcitForm</name>
+    <message>
+        <location filename="ExcitForm.cpp" line="35"/>
+        <source>Parameters for excitation signal</source>
+        <translation>Paramètres du signal d&apos;excitation</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="41"/>
+        <source>Length [s]</source>
+        <translation>Longeur [s]</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="58"/>
+        <source>Sample rate [Hz]</source>
+        <translation>Fréquence d&apos;échantillonnage [Hz]</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="77"/>
+        <source>Bit depth</source>
+        <translation>Résolution</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="89"/>
+        <source>&lt;b&gt;Excitation&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Excitation&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="98"/>
+        <source>Min. freq. [Hz]</source>
+        <translation>Fréq. minimale [Hz]</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="115"/>
+        <source>Max. freq. [Hz]</source>
+        <translation>Fréq. maximale [Hz]</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="130"/>
+        <source>Generate</source>
+        <translation>Générer</translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="197"/>
+        <source>Failed accepting JACK rate!</source>
+        <translation>Impossible d&apos;accepter l&apos;échantillonnage de JACK !</translation>
+    </message>
+</context>
+<context>
+    <name>GenThread</name>
+    <message>
+        <location filename="GenThread.cpp" line="62"/>
+        <source>Calculating IR file …</source>
+        <translation>Calcul du fichier de réponse impulsionnelle...</translation>
+    </message>
+    <message>
+        <location filename="GenThread.cpp" line="80"/>
+        <source>IR-file calculation failed:
+
+</source>
+        <translation>Impossible de calculer le ficher de réponse impulsionnelle :
+
+</translation>
+    </message>
+    <message>
+        <location filename="GenThread.cpp" line="85"/>
+        <source>IR-file calculated successfully.</source>
+        <translation>Fichier de réponse impulsionnelle calculé avec succès.</translation>
+    </message>
+</context>
+<context>
     <name>HarmPlot</name>
     <message>
         <location filename="HarmPlot.cpp" line="48"/>
@@ -123,13 +193,15 @@
         <location filename="PlotWindow.cpp" line="197"/>
         <source>Mouse using:
 </source>
-        <translation>Usage de la souris :\n</translation>
+        <translation>Usage de la souris :
+</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="198"/>
         <source>Left button drag – zoom in
 </source>
-        <translation>Mouvement du bouton gauche – zoom avant\n</translation>
+        <translation>Mouvement du bouton gauche – zoom avant
+</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="199"/>
@@ -219,20 +291,25 @@
         <source>Failed connecting with JACK server. The error is:
 
 </source>
-        <translation>Impossible de se connecter au serveur JACK. L&apos;erreur est :\n</translation>
+        <translation>Impossible de se connecter au serveur JACK. L&apos;erreur est :
+
+</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="344"/>
         <source>
 
 Capturing will be disabled.</source>
-        <translation>\n\nLa capture sera désactivée.</translation>
+        <translation>
+
+La capture sera désactivée.</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="345"/>
         <source>
 To enable start JACK and restart the application</source>
-        <translation>\nPour activer démarrer JACK et redémarrer l&apos;application</translation>
+        <translation>
+Pour activer démarrer JACK et redémarrer l&apos;application</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="360"/>
@@ -248,13 +325,15 @@ To enable start JACK and restart the application</source>
         <location filename="QLWin.cpp" line="397"/>
         <source>
 Give a meaningful description for the measurement</source>
-        <translation>\nDonnez une description utile pour la mesure</translation>
+        <translation>
+Donnez une description utile pour la mesure</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="398"/>
         <source>
 (“Cancel” will ignore this measurement)</source>
-        <translation>\n(&quot;Annuler&quot; annulera cette mesure)</translation>
+        <translation>
+(&quot;Annuler&quot; annulera cette mesure)</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="399"/>

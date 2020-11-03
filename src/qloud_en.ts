@@ -2,6 +2,74 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
+    <name>ExcitForm</name>
+    <message>
+        <location filename="ExcitForm.cpp" line="35"/>
+        <source>Parameters for excitation signal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="41"/>
+        <source>Length [s]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="58"/>
+        <source>Sample rate [Hz]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="77"/>
+        <source>Bit depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="89"/>
+        <source>&lt;b&gt;Excitation&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="98"/>
+        <source>Min. freq. [Hz]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="115"/>
+        <source>Max. freq. [Hz]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="130"/>
+        <source>Generate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ExcitForm.cpp" line="197"/>
+        <source>Failed accepting JACK rate!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GenThread</name>
+    <message>
+        <location filename="GenThread.cpp" line="62"/>
+        <source>Calculating IR file …</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="GenThread.cpp" line="80"/>
+        <source>IR-file calculation failed:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="GenThread.cpp" line="85"/>
+        <source>IR-file calculated successfully.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>HarmPlot</name>
     <message>
         <location filename="HarmPlot.cpp" line="48"/>

@@ -189,7 +189,7 @@ void IR::generate() {
 		if( tmpAbs > max )
 			max = tmpAbs;
 	}
-	delete irBuf;
+    delete irBuf;
 	for(unsigned i=0; i < fftLength; i++)
 		realIr[i] /= max;
 
@@ -199,13 +199,13 @@ void IR::generate() {
 	try {
 		wavOut->writeDouble(*wavInfo, realIr);
 	} catch(QLE e) {
-		delete wavOut;
-		delete realIr;
+        delete wavOut;
+        delete[] realIr;
 		throw QLE(e.msg);
 	}
 	delete wavOut;
 	delete wavInfo;
-	delete realIr;
+    delete[] realIr;
 }
 
 
@@ -284,10 +284,10 @@ void IR::trim(double secs) {
 		trimOut->writeDouble(*wavInfo, trimmed);
 	} catch(QLE e) {
 		delete trimOut;
-		delete trimmed;
+        delete[] trimmed;
 		throw QLE(e.msg);
 	}
 	delete trimOut;
 	delete wavInfo;
-	delete trimmed;
+    delete[] trimmed;
 }

@@ -97,7 +97,7 @@ void QLUtl::checkFileError(const QFile& file) {
 }
 
 void QLUtl::showCritical(QWidget* parent, const QString& msg) {
-	QMessageBox::critical(parent, "Error", msg);
+    QMessageBox::critical(parent, "Error", msg);
 }
 
 
@@ -333,7 +333,7 @@ fftw_complex* QLUtl::doFFT(
 
 	fftw_free(in);
 	fftw_free(out);
-	delete buf;
+    delete[] buf;
 
 	return fftResult;
 }
