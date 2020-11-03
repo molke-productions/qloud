@@ -58,12 +58,12 @@ PlotWindow::PlotWindow(
 
 	QTabWidget* tab = new QTabWidget();
 	tab->setTabPosition(QTabWidget::North);
-	tab->addTab(this->getSplTab(dir, ii, &splplot), "SPL [dB/Hz]");
+    tab->addTab(this->getSplTab(dir, ii, &splplot), tr("SPL [dB/Hz]"));
 	this->currentplot = splplot;
-	tab->addTab(this->getIRTab(dir, ii, &irplot), "IR [amp/ms]");
-	tab->addTab(this->getIRPTab(dir, ii, &irpplot), "IR power [dB/ms]");
-	tab->addTab(this->getStepTab(dir, ii, &stepplot), "Step response [amp/ms]");
-	tab->addTab(this->getHarmTab(dir, ii, &harmplot), "Harmonics [dB/Hz]");
+    tab->addTab(this->getIRTab(dir, ii, &irplot), tr("IR [amp/ms]"));
+    tab->addTab(this->getIRPTab(dir, ii, &irpplot), tr("IR power [dB/ms]"));
+    tab->addTab(this->getStepTab(dir, ii, &stepplot), tr("Step response [amp/ms]"));
+    tab->addTab(this->getHarmTab(dir, ii, &harmplot), tr("Harmonics [dB/Hz]"));
 	connect(tab, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 	mainLayout->addWidget(tab);
 
@@ -71,13 +71,13 @@ PlotWindow::PlotWindow(
 
     QPushButton* print = new QPushButton();
 	print->setText(tr("Print"));
-    print->setMinimumWidth(120);
+    print->setMaximumWidth(print->sizeHint().width());
 	connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
 	actions->addWidget(print);
 
     QPushButton* gnuplot = new QPushButton();
     gnuplot->setText(tr("Export to Gnuplot"));
-    gnuplot->setMinimumWidth(120);
+    gnuplot->setMaximumWidth(gnuplot->sizeHint().width());
     connect(gnuplot, SIGNAL(clicked()), this, SLOT(onGnuplotClicked()));
     actions->addWidget(gnuplot);
 #if 0
@@ -194,16 +194,16 @@ QWidget* PlotWindow::getSplTab(
 	topLayout->addSpacing(15);
 
 	QLabel* hlp = new QLabel("<b>?</b>");
-	QString tip = "Mouse using:\n";
-	tip += "Left button drag – zoom in\n";
-	tip += "Right button click – zoom out";
+    QString tip = tr("Mouse using:\n");
+    tip += tr("Left button drag – zoom in\n");
+    tip += tr("Right button click – zoom out");
 	hlp->setToolTip(tip);
 	topLayout->addWidget(hlp);
 
 	topLayout->addStretch(1);
 
 	topLayout->addSpacing(15);
-	topLayout->addWidget(new QLabel("Octave smoothing, 1/x"));
+    topLayout->addWidget(new QLabel(tr("Octave smoothing, 1/x")));
 	QDoubleSpinBox* cntSmooth = new QDoubleSpinBox();
 	cntSmooth->setRange(0.25, 256.0);
 	cntSmooth->setSingleStep(0.25);
@@ -222,7 +222,7 @@ QWidget* PlotWindow::getSplTab(
 	);
 
 	topLayout->addSpacing(15);
-	topLayout->addWidget(new QLabel("Window [ms]"));
+    topLayout->addWidget(new QLabel(tr("Window [ms]")));
 	QDoubleSpinBox* cntWindow = new QDoubleSpinBox();
 	// s to ms, right window width
 	double maxMilliSecs = plotter->getMaxTrimLength() * 1000.0;
@@ -244,7 +244,7 @@ QWidget* PlotWindow::getSplTab(
 
     if(QLCfg::USE_PHASE) {
 		topLayout->addSpacing(15);
-		QCheckBox* phaseCheck = new QCheckBox("Phase");
+        QCheckBox* phaseCheck = new QCheckBox(tr("Phase"));
 		phaseCheck->setChecked(false);
 		topLayout->addWidget(phaseCheck, 0);
 		connect(

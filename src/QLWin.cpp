@@ -41,10 +41,10 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->jackConnected = false;
 
 	// create WorkDir group
-	QGroupBox* wrkGroup = new QGroupBox("All project files are here");
+    QGroupBox* wrkGroup = new QGroupBox(tr("All project files are here"));
 	QHBoxLayout* wrkLayout = new QHBoxLayout();
 
-	wrkLayout->addWidget(new QLabel("Select working directory"));
+    wrkLayout->addWidget(new QLabel(tr("Select working directory")));
 
 	QLineEdit* dirEdit = new QLineEdit();
 	dirEdit->setText(QDir::homePath());
@@ -64,7 +64,7 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	connect(dirBtn, SIGNAL(clicked()), this, SLOT(dirDialog()));
 
 	wrkLayout->addSpacing(QLWin::BIG_SPACE);
-	QWidget* tmp = new QLabel("<b>Directory</b>");
+    QWidget* tmp = new QLabel(tr("<b>Directory</b>"));
 	tmp->setFixedWidth(QLWin::rightSize().width());
 	wrkLayout->addWidget(tmp);
 
@@ -76,24 +76,24 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	int excitLayoutIndex = mainLayout->indexOf(wrkGroup) + 1;
 
 	// create Capture group
-	QGroupBox* capGroup = new QGroupBox("Capturing audiosystem response");
+    QGroupBox* capGroup = new QGroupBox(tr("Capturing audiosystem response"));
 	QVBoxLayout* capLayout = new QVBoxLayout();
 
 	// Capture top
 	QHBoxLayout* capTop = new QHBoxLayout();
 
 	capTop->addStretch(2);
-	capTop->addWidget(new QLabel("Excitation:"));
+    capTop->addWidget(new QLabel(tr("Excitation:")));
 
 	this->excitInfoLbl = new QLabel("");
 	capTop->addWidget(this->excitInfoLbl);
 
 	capTop->addSpacing(QLWin::SMALL_SPACE);
-	QPushButton* jackBtn = new QPushButton("Connect");
-	jackBtn->setFixedWidth(QPushButton("Disconnect").sizeHint().width());
+    QPushButton* jackBtn = new QPushButton(tr("Connect"));
+    jackBtn->setFixedWidth(QPushButton(tr("Disconnect")).sizeHint().width());
 
 	capTop->addSpacing(QLWin::BIG_SPACE);
-	tmp = new QLabel("<b>Capture</b>");
+    tmp = new QLabel(tr("<b>Capture</b>"));
 	tmp->setFixedWidth(QLWin::rightSize().width());
 	capTop->addWidget(tmp);
 
@@ -104,7 +104,7 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 
 	capBottom->addStretch(6);
 
-	capBottom->addWidget(new QLabel("Playback level [dB]"));
+    capBottom->addWidget(new QLabel(tr("Playback level [dB]")));
     this->playDb = new QDoubleSpinBox();
 	this->playDb->setRange(-100, 0);
     this->playDb->setSingleStep(1);
@@ -116,7 +116,7 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	capBottom->addWidget(this->playDb);
 	capBottom->addStretch(6);
 
-	capBottom->addWidget(new QLabel("Delay before capture [s]"));
+    capBottom->addWidget(new QLabel(tr("Delay before capture [s]")));
 
 	this->delayCombo = new QComboBox();
 	this->delayCombo->setEditable(false);
@@ -130,7 +130,7 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	capBottom->addWidget(this->delayCombo);
 
 	capBottom->addSpacing(QLWin::BIG_SPACE);
-	this->capBtn = new QPushButton("Start recording");
+    this->capBtn = new QPushButton(tr("Start recording"));
 	this->capBtn->setFixedWidth(QLWin::rightSize().width());
 	capBottom->addWidget(this->capBtn);
 	connect(this->capBtn, SIGNAL(clicked()), this, SLOT(startCapture()));
@@ -193,7 +193,7 @@ QLWin::~QLWin() {
 }
 
 QSize QLWin::rightSize() {
-	QWidget* tmp = new QPushButton("Impulse response");
+    QWidget* tmp = new QPushButton(tr("Impulse response"));
 	QSize size = tmp->sizeHint();
 	delete tmp;
 	return size;
@@ -285,7 +285,7 @@ void QLWin::restoreMyState(const QString *wrkDir) {
 
 	QDir dir(this->workDir);
 	if( ! dir.exists() ) {
-		this->showCritical("Directory " + this->workDir + " doesn’t exist!");
+        this->showCritical("Directory " + this->workDir + " doesn’t exist!");
 		this->workDir = QDir::homePath();
 	}
 
@@ -319,7 +319,7 @@ void QLWin::createIrList() {
 
 void QLWin::updateWorkDir(const QString& newDir) {
 	this->workDir = newDir;
-	emit setStatus("Working dir is: " + this->workDir, 2000);
+    emit setStatus("Working dir is: " + this->workDir, 2000);
 	emit irAdded();
 	if( ! this->jackConnected)
 		return;
@@ -339,10 +339,10 @@ bool QLWin::initCapture() {
 		emit forceRate(this->capture->getJackRate());
 		return true;
 	} catch(QLE e) {
-		QString s = "Failed connecting with JACK server. The error is:\n\n";
+        QString s = tr("Failed connecting with JACK server. The error is:\n\n");
 		s += e.msg;
-		s += "\n\nCapturing will be disabled.";
-		s += "\nTo enable start JACK and restart the application";
+        s += tr("\n\nCapturing will be disabled.");
+        s += tr("\nTo enable start JACK and restart the application");
 		this->showCritical(s);
 	}
 	return false;
@@ -357,7 +357,7 @@ void QLWin::startCapture() {
 	}
 
 	if( ! this->capture->jackIsConnected()) {
-		emit showCritical("Connect JACK ports before capturing!");
+        emit showCritical(tr("Connect JACK ports before capturing!"));
 		return;
 	}
 
@@ -392,11 +392,11 @@ void QLWin::captureFinished() {
 
 	double maxLevel = QLUtl::toDb(this->capture->getMaxResponse());
 	bool ok;
-	QString msg = "Maximum capture level: ";
+    QString msg = tr("Maximum capture level: ");
 	msg += QVariant(maxLevel).toString() + " dB";
-	msg += "\nGive a meaningful description for the measurement";
-	msg += "\n(“Cancel” will ignore this measurement)";
-	QString tmp = "Measurement description";
+    msg += tr("\nGive a meaningful description for the measurement");
+    msg += tr("\n(“Cancel” will ignore this measurement)");
+    QString tmp = tr("Measurement description");
 	QString description = QInputDialog::getText(
 		this,
 		tmp,
