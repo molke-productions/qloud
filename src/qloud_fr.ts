@@ -130,17 +130,17 @@
     <message>
         <location filename="PlotWindow.cpp" line="61"/>
         <source>SPL [dB/Hz]</source>
-        <translation></translation>
+        <translation>Pression sonore [dB/Hz]</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="63"/>
         <source>IR [amp/ms]</source>
-        <translation></translation>
+        <translation>Réponse impulsionnelle [amp/ms]</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="64"/>
         <source>IR power [dB/ms]</source>
-        <translation></translation>
+        <translation>Puissance réponse impulsionnelle [dB/ms]</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="65"/>
@@ -229,7 +229,7 @@
     <message>
         <location filename="QLWin.cpp" line="44"/>
         <source>All project files are here</source>
-        <translation>Les fichiers du projet sont là</translation>
+        <translation>Les fichiers du projet sont ici</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="47"/>
