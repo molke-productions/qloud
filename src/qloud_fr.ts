@@ -6,7 +6,7 @@
     <message>
         <location filename="HarmPlot.cpp" line="48"/>
         <source>Harmonic Distortion</source>
-        <translation>Distortion harmonique</translation>
+        <translation>Distorsion harmonique</translation>
     </message>
     <message>
         <location filename="HarmPlot.cpp" line="53"/>
@@ -16,7 +16,7 @@
     <message>
         <location filename="HarmPlot.cpp" line="58"/>
         <source>Distortion in dB</source>
-        <translation>Distortion en dB</translation>
+        <translation>Distorsion en dB</translation>
     </message>
 </context>
 <context>
@@ -100,7 +100,7 @@
     <message>
         <location filename="main.cpp" line="48"/>
         <source>Loudspeaker response measurement program.</source>
-        <translation>Programme de mesure de réponse de haut-parleur</translation>
+        <translation>Programme de mesure de réponse de haut-parleur.</translation>
     </message>
 </context>
 <context>
@@ -149,7 +149,7 @@
     <message>
         <location filename="main.cpp" line="51"/>
         <source>Project directory to work on.</source>
-        <translation>Répertoire du projet où travailler</translation>
+        <translation>Répertoire du projet où travailler.</translation>
     </message>
 </context>
 </TS>
