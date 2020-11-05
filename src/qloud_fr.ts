@@ -336,7 +336,7 @@
     <message>
         <location filename="QLWin.cpp" line="133"/>
         <source>Start recording</source>
-        <translation>Démarrer l&apos;enregistrement</translation>
+        <translation>Démarrer la capture</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="196"/>
