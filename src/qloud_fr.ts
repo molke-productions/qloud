@@ -11,7 +11,7 @@
     <message>
         <location filename="ExcitForm.cpp" line="41"/>
         <source>Length [s]</source>
-        <translation>Longeur [s]</translation>
+        <translation>Longueur [s]</translation>
     </message>
     <message>
         <location filename="ExcitForm.cpp" line="58"/>
@@ -54,7 +54,7 @@
     <message>
         <location filename="GenThread.cpp" line="62"/>
         <source>Calculating IR file …</source>
-        <translation>Calcul du fichier de réponse impulsionnelle...</translation>
+        <translation>Calcul du fichier de réponse impulsionnelle…</translation>
     </message>
     <message>
         <location filename="GenThread.cpp" line="80"/>
@@ -228,7 +228,7 @@ Are you sure you want to delete this measurement?</source>
     <message>
         <location filename="PlotWindow.cpp" line="64"/>
         <source>IR power [dB/ms]</source>
-        <translation>Puissance réponse impulsionnelle [dB/ms]</translation>
+        <translation>Puissance de la réponse impulsionnelle [dB/ms]</translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="65"/>
@@ -317,7 +317,7 @@ Are you sure you want to delete this measurement?</source>
     <message>
         <location filename="QLWin.cpp" line="43"/>
         <source>All project files are here</source>
-        <translation>Les fichiers du projet sont ici</translation>
+        <translation>Tous les fichiers du projet sont ici</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="46"/>
@@ -332,7 +332,7 @@ Are you sure you want to delete this measurement?</source>
     <message>
         <location filename="QLWin.cpp" line="78"/>
         <source>Capturing audiosystem response</source>
-        <translation>Capture de la réponse du système audio</translation>
+        <translation>Enregistrement de la réponse du système audio</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="85"/>
@@ -352,7 +352,7 @@ Are you sure you want to delete this measurement?</source>
     <message>
         <location filename="QLWin.cpp" line="95"/>
         <source>&lt;b&gt;Capture&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Capture&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Enregistrement&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="106"/>
@@ -362,17 +362,17 @@ Are you sure you want to delete this measurement?</source>
     <message>
         <location filename="QLWin.cpp" line="118"/>
         <source>Delay before capture [s]</source>
-        <translation>Délai avant capture [s]</translation>
+        <translation>Délai avant l&apos;enregistrement [s]</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="132"/>
         <source>Start recording</source>
-        <translation>Démarrer la capture</translation>
+        <translation>Démarrer l&apos;enregistrement</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="195"/>
         <source>Impulse response</source>
-        <translation>Réponse impultionnelle</translation>
+        <translation>Réponse impulsionnelle</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="341"/>
@@ -390,14 +390,14 @@ Are you sure you want to delete this measurement?</source>
 Capturing will be disabled.</source>
         <translation>
 
-La capture sera désactivée.</translation>
+L&apos;enregistrement sera désactivé.</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="344"/>
         <source>
 To enable start JACK and restart the application</source>
         <translation>
-Pour activer démarrer JACK et redémarrer l&apos;application</translation>
+Pour activer, démarrer JACK et redémarrer l&apos;application</translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="359"/>
@@ -407,7 +407,7 @@ Pour activer démarrer JACK et redémarrer l&apos;application</translation>
     <message>
         <location filename="QLWin.cpp" line="394"/>
         <source>Maximum capture level: </source>
-        <translation>Niveau maximum de capture : </translation>
+        <translation>Niveau maximum de l&apos;enregistrement : </translation>
     </message>
     <message>
         <location filename="QLWin.cpp" line="396"/>
