@@ -34,20 +34,20 @@
 #include "HarmPlot.h"
 
 PlotWindow::PlotWindow(
-	const QString& dir,
-	const IRInfo& ii,
-	QMap<PlotWindow*, QString>* aPlots,
-	QWidget *parent
-) : QWidget(parent) {
-    this->dir = dir;
-    this->ii = ii;
+		const QString& dir,
+		const IRInfo& ii,
+		QMap<PlotWindow*, QString>* aPlots,
+		QWidget *parent
+		) : QWidget(parent) {
+	this->dir = dir;
+	this->ii = ii;
 	this->plots = aPlots;
 	this->plots->insert(this, dir + "@" + ii.key);
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	QString tit(ii.info + " (" + ii.format());
 	tit += ", ";
-    tit += ii.maxLevelAsString();
+	tit += ii.maxLevelAsString();
 	tit += " dB)";
 	this->setWindowTitle(tit);
 	this->setContextMenuPolicy(Qt::NoContextMenu);
@@ -58,34 +58,34 @@ PlotWindow::PlotWindow(
 
 	QTabWidget* tab = new QTabWidget();
 	tab->setTabPosition(QTabWidget::North);
-    tab->addTab(this->getSplTab(dir, ii, &splplot), tr("SPL [dB/Hz]"));
+	tab->addTab(this->getSplTab(dir, ii, &splplot), tr("SPL [dB/Hz]"));
 	this->currentplot = splplot;
-    tab->addTab(this->getIRTab(dir, ii, &irplot), tr("IR [amp/ms]"));
-    tab->addTab(this->getIRPTab(dir, ii, &irpplot), tr("IR power [dB/ms]"));
-    tab->addTab(this->getStepTab(dir, ii, &stepplot), tr("Step response [amp/ms]"));
-    tab->addTab(this->getHarmTab(dir, ii, &harmplot), tr("Harmonics [dB/Hz]"));
+	tab->addTab(this->getIRTab(dir, ii, &irplot), tr("IR [amp/ms]"));
+	tab->addTab(this->getIRPTab(dir, ii, &irpplot), tr("IR power [dB/ms]"));
+	tab->addTab(this->getStepTab(dir, ii, &stepplot), tr("Step response [amp/ms]"));
+	tab->addTab(this->getHarmTab(dir, ii, &harmplot), tr("Harmonics [dB/Hz]"));
 	connect(tab, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 	mainLayout->addWidget(tab);
 
 	QHBoxLayout* actions = new QHBoxLayout();
 
-    QPushButton* print = new QPushButton();
+	QPushButton* print = new QPushButton();
 	print->setText(tr("Print"));
-    print->setMaximumWidth(print->sizeHint().width());
+	print->setMaximumWidth(print->sizeHint().width());
 	connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
 	actions->addWidget(print);
 
-    QPushButton* gnuplot = new QPushButton();
-    gnuplot->setText(tr("Export to Gnuplot"));
-    gnuplot->setMaximumWidth(gnuplot->sizeHint().width());
-    connect(gnuplot, SIGNAL(clicked()), this, SLOT(onGnuplotClicked()));
-    actions->addWidget(gnuplot);
+	QPushButton* gnuplot = new QPushButton();
+	gnuplot->setText(tr("Export to Gnuplot"));
+	gnuplot->setMaximumWidth(gnuplot->sizeHint().width());
+	connect(gnuplot, SIGNAL(clicked()), this, SLOT(onGnuplotClicked()));
+	actions->addWidget(gnuplot);
 #if 0
-    QPushButton* octave = new QPushButton();
-    octave->setText(tr("Export to Octave"));
-    octave->setMinimumWidth(120);
-    connect(octave, SIGNAL(clicked()), this, SLOT(onOctaveClicked()));
-    actions->addWidget(octave);
+	QPushButton* octave = new QPushButton();
+	octave->setText(tr("Export to Octave"));
+	octave->setMinimumWidth(120);
+	connect(octave, SIGNAL(clicked()), this, SLOT(onOctaveClicked()));
+	actions->addWidget(octave);
 #endif
 	mainLayout->addLayout(actions, 0);
 	this->setLayout(mainLayout);
@@ -107,27 +107,27 @@ void PlotWindow::onTabChanged(int index) {
 }
 
 void PlotWindow::onPrintClicked() {
-    if (!currentplot)
-        return;
+	if (!currentplot)
+		return;
 
-    QPrinter printer;
-    printer.setCreator("QLoud");
-    printer.setDocName("qloud_curve");
-    printer.setOrientation(QPrinter::Landscape);
-    QPrintDialog dialog(&printer, this);
-    if (dialog.exec() == QDialog::Accepted) {
-        if (printer.isValid()) {
-            if (!print(&printer)) {
-                QPrinterInfo info(printer);
-                qWarning() << "printerinfo definition null:"
-                    << info.isNull();
-                qWarning() << "printerinfo state error:"
-                    << (info.state() == QPrinter::Error);
-            }
-        } else {
-            qWarning() << "invalid printer object";
-        }
-    }
+	QPrinter printer;
+	printer.setCreator("QLoud");
+	printer.setDocName("qloud_curve");
+	printer.setOrientation(QPrinter::Landscape);
+	QPrintDialog dialog(&printer, this);
+	if (dialog.exec() == QDialog::Accepted) {
+		if (printer.isValid()) {
+			if (!print(&printer)) {
+				QPrinterInfo info(printer);
+				qWarning() << "printerinfo definition null:"
+					<< info.isNull();
+				qWarning() << "printerinfo state error:"
+					<< (info.state() == QPrinter::Error);
+			}
+		} else {
+			qWarning() << "invalid printer object";
+		}
+	}
 }
 
 bool PlotWindow::print(QPrinter* printer) {
@@ -137,54 +137,54 @@ bool PlotWindow::print(QPrinter* printer) {
 
 	QRect page = printer->pageRect();
 	currentplot->render(
-		&painter,
-		QRectF(page.left(), page.top(), page.width(), page.height())
-	);
+			&painter,
+			QRectF(page.left(), page.top(), page.width(), page.height())
+			);
 	painter.end();
 	return true;
 }
 
 void PlotWindow::onGnuplotClicked() {
-    if (!currentplot)
-        return;
+	if (!currentplot)
+		return;
 
-    QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    QString f = QString("QLoud %1").arg(currentplot->getTitle());
-    f.replace(' ', '_');
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Export for Gnuplot"), home + QDir::separator() + f + ".dat", tr("Gnuplot data (*.dat)"));
-    gnuplot(fileName);
+	QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+	QString f = QString("QLoud %1").arg(currentplot->getTitle());
+	f.replace(' ', '_');
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Export for Gnuplot"), home + QDir::separator() + f + ".dat", tr("Gnuplot data (*.dat)"));
+	gnuplot(fileName);
 }
 
 bool PlotWindow::gnuplot(const QString& filename)
 {
-    return currentplot->gnuplotSeries(filename);
+	return currentplot->gnuplotSeries(filename);
 }
 
 void PlotWindow::onOctaveClicked() {
-    if (!currentplot)
-        return;
+	if (!currentplot)
+		return;
 
-    QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    QString f = QString("QLoud %1").arg(currentplot->getTitle());
-    f.replace(' ', '_');
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Export for GNU Octave"), home + QDir::separator() + f + ".m", tr("GNU Octave data (*.m)"));
-    octave(fileName);
+	QString home = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+	QString f = QString("QLoud %1").arg(currentplot->getTitle());
+	f.replace(' ', '_');
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Export for GNU Octave"), home + QDir::separator() + f + ".m", tr("GNU Octave data (*.m)"));
+	octave(fileName);
 }
 
 bool PlotWindow::octave(const QString& filename)
 {
-    if (currentplot == splplot)
-        return splplot->octaveOutput(filename, dir, ii);
-    // FIXME implement in other tabs
-    return false;
+	if (currentplot == splplot)
+		return splplot->octaveOutput(filename, dir, ii);
+	// FIXME implement in other tabs
+	return false;
 }
 
 QWidget* PlotWindow::getSplTab(
-	const QString& dir,
-	const IRInfo& ii,
-    Plotter **ref
-) {
-    SplPlot* plotter = new SplPlot(dir, ii);
+		const QString& dir,
+		const IRInfo& ii,
+		Plotter **ref
+		) {
+	SplPlot* plotter = new SplPlot(dir, ii);
 
 	QWidget* splWidget = new QWidget();
 	QVBoxLayout* splLayout = new QVBoxLayout();
@@ -194,35 +194,35 @@ QWidget* PlotWindow::getSplTab(
 	topLayout->addSpacing(15);
 
 	QLabel* hlp = new QLabel("<b>?</b>");
-    QString tip = tr("Mouse using:\n");
-    tip += tr("Left button drag – zoom in\n");
-    tip += tr("Right button click – zoom out");
+	QString tip = tr("Mouse using:\n");
+	tip += tr("Left button drag – zoom in\n");
+	tip += tr("Right button click – zoom out");
 	hlp->setToolTip(tip);
 	topLayout->addWidget(hlp);
 
 	topLayout->addStretch(1);
 
 	topLayout->addSpacing(15);
-    topLayout->addWidget(new QLabel(tr("Octave smoothing, 1/x")));
+	topLayout->addWidget(new QLabel(tr("Octave smoothing, 1/x")));
 	QDoubleSpinBox* cntSmooth = new QDoubleSpinBox();
 	cntSmooth->setRange(0.25, 256.0);
 	cntSmooth->setSingleStep(0.25);
 	cntSmooth->setValue(Plotter::DEFAULT_SMOOTH); // 1/6 octave
 	QWidget* tmp = new QLabel("W9999.99W");
 	cntSmooth->setFixedWidth(
-		cntSmooth->sizeHint().width() + tmp->sizeHint().width()
-	);
+			cntSmooth->sizeHint().width() + tmp->sizeHint().width()
+			);
 	delete tmp;
 	topLayout->addWidget(cntSmooth, 0);
 	connect(
-		cntSmooth,
-		SIGNAL(valueChanged(double)),
-		plotter,
-		SLOT(setSmooth(double))
-	);
+			cntSmooth,
+			SIGNAL(valueChanged(double)),
+			plotter,
+			SLOT(setSmooth(double))
+		   );
 
 	topLayout->addSpacing(15);
-    topLayout->addWidget(new QLabel(tr("Window [ms]")));
+	topLayout->addWidget(new QLabel(tr("Window [ms]")));
 	QDoubleSpinBox* cntWindow = new QDoubleSpinBox();
 	// s to ms, right window width
 	double maxMilliSecs = plotter->getMaxTrimLength() * 1000.0;
@@ -231,28 +231,28 @@ QWidget* PlotWindow::getSplTab(
 	cntWindow->setValue(500);
 	tmp = new QLabel("W25999.0W");
 	cntWindow->setFixedWidth(
-		cntWindow->sizeHint().width() + tmp->sizeHint().width()
-	);
+			cntWindow->sizeHint().width() + tmp->sizeHint().width()
+			);
 	delete tmp;
 	topLayout->addWidget(cntWindow);
 	connect(
-		cntWindow,
-		SIGNAL(valueChanged(double)),
-		plotter,
-		SLOT(setWinLength(double))
-	);
+			cntWindow,
+			SIGNAL(valueChanged(double)),
+			plotter,
+			SLOT(setWinLength(double))
+		   );
 
-    if(QLCfg::USE_PHASE) {
+	if(QLCfg::USE_PHASE) {
 		topLayout->addSpacing(15);
-        QCheckBox* phaseCheck = new QCheckBox(tr("Phase"));
+		QCheckBox* phaseCheck = new QCheckBox(tr("Phase"));
 		phaseCheck->setChecked(false);
 		topLayout->addWidget(phaseCheck, 0);
 		connect(
-			phaseCheck,
-			SIGNAL(stateChanged(int)),
-			plotter,
-			SLOT(enablePhase(int))
-		);
+				phaseCheck,
+				SIGNAL(stateChanged(int)),
+				plotter,
+				SLOT(enablePhase(int))
+			   );
 	}
 
 	topLayout->addSpacing(15);
@@ -265,44 +265,44 @@ QWidget* PlotWindow::getSplTab(
 	splLayout->setMargin(1);
 	splWidget->setLayout(splLayout);
 
-    *ref = static_cast<Plotter*>(plotter);
+	*ref = static_cast<Plotter*>(plotter);
 	return splWidget;
 }
 
 QWidget* PlotWindow::getIRTab(
-	const QString& dir,
-	const IRInfo& ii,
-    Plotter **ref
-) {
-		QWidget* irPlot = new IRPlot(dir, ii);
-        *ref = static_cast<Plotter*>(irPlot);
+		const QString& dir,
+		const IRInfo& ii,
+		Plotter **ref
+		) {
+	QWidget* irPlot = new IRPlot(dir, ii);
+	*ref = static_cast<Plotter*>(irPlot);
 	return irPlot;
 }
 
 QWidget* PlotWindow::getIRPTab(
-	const QString& dir,
-	const IRInfo& ii,
-    Plotter **ref
-) {
-		QWidget* irpPlot = new IRPPlot(dir, ii);
-        *ref = static_cast<Plotter*>(irpPlot);
+		const QString& dir,
+		const IRInfo& ii,
+		Plotter **ref
+		) {
+	QWidget* irpPlot = new IRPPlot(dir, ii);
+	*ref = static_cast<Plotter*>(irpPlot);
 	return irpPlot;
 }
 
 QWidget* PlotWindow::getStepTab(
-	const QString& dir,
-	const IRInfo& ii,
-    Plotter **ref
-) {
-		QWidget* stepPlot = new StepPlot(dir, ii);
-        *ref = static_cast<Plotter*>(stepPlot);
+		const QString& dir,
+		const IRInfo& ii,
+		Plotter **ref
+		) {
+	QWidget* stepPlot = new StepPlot(dir, ii);
+	*ref = static_cast<Plotter*>(stepPlot);
 	return stepPlot;
 }
 
 QWidget* PlotWindow::getHarmTab(const QString& dir,
-    const IRInfo& ii, Plotter **ref) {
-		QWidget* harmPlot = new HarmPlot(dir, ii);
-        *ref = static_cast<Plotter*>(harmPlot);
+		const IRInfo& ii, Plotter **ref) {
+	QWidget* harmPlot = new HarmPlot(dir, ii);
+	*ref = static_cast<Plotter*>(harmPlot);
 	return harmPlot;
 }
 

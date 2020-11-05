@@ -181,6 +181,33 @@
     </message>
 </context>
 <context>
+    <name>IrsView</name>
+    <message>
+        <location filename="IrsView.cpp" line="50"/>
+        <source>Delete measurement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsView.cpp" line="67"/>
+        <source>Measurement description:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsView.cpp" line="69"/>
+        <source>
+
+Are you sure you want to delete this measurement?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="IrsView.cpp" line="72"/>
+        <source>Delete measurement permanently</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PlotWindow</name>
     <message>
         <location filename="PlotWindow.cpp" line="61"/>
@@ -280,109 +307,109 @@
 <context>
     <name>QLWin</name>
     <message>
-        <location filename="QLWin.cpp" line="44"/>
+        <location filename="QLWin.cpp" line="43"/>
         <source>All project files are here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="47"/>
+        <location filename="QLWin.cpp" line="46"/>
         <source>Select working directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="67"/>
+        <location filename="QLWin.cpp" line="66"/>
         <source>&lt;b&gt;Directory&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="79"/>
+        <location filename="QLWin.cpp" line="78"/>
         <source>Capturing audiosystem response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="86"/>
+        <location filename="QLWin.cpp" line="85"/>
         <source>Excitation:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="92"/>
+        <location filename="QLWin.cpp" line="91"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="93"/>
+        <location filename="QLWin.cpp" line="92"/>
         <source>Disconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="96"/>
+        <location filename="QLWin.cpp" line="95"/>
         <source>&lt;b&gt;Capture&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="107"/>
+        <location filename="QLWin.cpp" line="106"/>
         <source>Playback level [dB]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="119"/>
+        <location filename="QLWin.cpp" line="118"/>
         <source>Delay before capture [s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="133"/>
+        <location filename="QLWin.cpp" line="132"/>
         <source>Start recording</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="196"/>
+        <location filename="QLWin.cpp" line="195"/>
         <source>Impulse response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="342"/>
+        <location filename="QLWin.cpp" line="341"/>
         <source>Failed connecting with JACK server. The error is:
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="344"/>
+        <location filename="QLWin.cpp" line="343"/>
         <source>
 
 Capturing will be disabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="345"/>
+        <location filename="QLWin.cpp" line="344"/>
         <source>
 To enable start JACK and restart the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="360"/>
+        <location filename="QLWin.cpp" line="359"/>
         <source>Connect JACK ports before capturing!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="395"/>
+        <location filename="QLWin.cpp" line="394"/>
         <source>Maximum capture level: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="397"/>
+        <location filename="QLWin.cpp" line="396"/>
         <source>
 Give a meaningful description for the measurement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="398"/>
+        <location filename="QLWin.cpp" line="397"/>
         <source>
 (“Cancel” will ignore this measurement)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="399"/>
+        <location filename="QLWin.cpp" line="398"/>
         <source>Measurement description</source>
         <translation type="unfinished"></translation>
     </message>

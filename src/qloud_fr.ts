@@ -183,6 +183,37 @@
     </message>
 </context>
 <context>
+    <name>IrsView</name>
+    <message>
+        <location filename="IrsView.cpp" line="50"/>
+        <source>Delete measurement</source>
+        <translation>Supprimer la mesure</translation>
+    </message>
+    <message>
+        <location filename="IrsView.cpp" line="67"/>
+        <source>Measurement description:
+
+</source>
+        <translation>Description de la mesure :
+
+</translation>
+    </message>
+    <message>
+        <location filename="IrsView.cpp" line="69"/>
+        <source>
+
+Are you sure you want to delete this measurement?</source>
+        <translation>
+
+Êtes-vous sur de vouloir supprimer cette mesure ?</translation>
+    </message>
+    <message>
+        <location filename="IrsView.cpp" line="72"/>
+        <source>Delete measurement permanently</source>
+        <translation>Suppression permanente de la mesure</translation>
+    </message>
+</context>
+<context>
     <name>PlotWindow</name>
     <message>
         <location filename="PlotWindow.cpp" line="61"/>
@@ -284,67 +315,67 @@
 <context>
     <name>QLWin</name>
     <message>
-        <location filename="QLWin.cpp" line="44"/>
+        <location filename="QLWin.cpp" line="43"/>
         <source>All project files are here</source>
         <translation>Les fichiers du projet sont ici</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="47"/>
+        <location filename="QLWin.cpp" line="46"/>
         <source>Select working directory</source>
         <translation>Sélectionner le répertoire de travail</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="67"/>
+        <location filename="QLWin.cpp" line="66"/>
         <source>&lt;b&gt;Directory&lt;/b&gt;</source>
         <translation>&lt;b&gt;Répertoire&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="79"/>
+        <location filename="QLWin.cpp" line="78"/>
         <source>Capturing audiosystem response</source>
         <translation>Capture de la réponse du système audio</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="86"/>
+        <location filename="QLWin.cpp" line="85"/>
         <source>Excitation:</source>
         <translation>Excitation :</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="92"/>
+        <location filename="QLWin.cpp" line="91"/>
         <source>Connect</source>
         <translation>Connecter</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="93"/>
+        <location filename="QLWin.cpp" line="92"/>
         <source>Disconnect</source>
         <translation>Déconnecter</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="96"/>
+        <location filename="QLWin.cpp" line="95"/>
         <source>&lt;b&gt;Capture&lt;/b&gt;</source>
         <translation>&lt;b&gt;Capture&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="107"/>
+        <location filename="QLWin.cpp" line="106"/>
         <source>Playback level [dB]</source>
         <translation>Niveau de sortie [dB]</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="119"/>
+        <location filename="QLWin.cpp" line="118"/>
         <source>Delay before capture [s]</source>
         <translation>Délai avant capture [s]</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="133"/>
+        <location filename="QLWin.cpp" line="132"/>
         <source>Start recording</source>
         <translation>Démarrer la capture</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="196"/>
+        <location filename="QLWin.cpp" line="195"/>
         <source>Impulse response</source>
         <translation>Réponse impultionnelle</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="342"/>
+        <location filename="QLWin.cpp" line="341"/>
         <source>Failed connecting with JACK server. The error is:
 
 </source>
@@ -353,7 +384,7 @@
 </translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="344"/>
+        <location filename="QLWin.cpp" line="343"/>
         <source>
 
 Capturing will be disabled.</source>
@@ -362,38 +393,38 @@ Capturing will be disabled.</source>
 La capture sera désactivée.</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="345"/>
+        <location filename="QLWin.cpp" line="344"/>
         <source>
 To enable start JACK and restart the application</source>
         <translation>
 Pour activer démarrer JACK et redémarrer l&apos;application</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="360"/>
+        <location filename="QLWin.cpp" line="359"/>
         <source>Connect JACK ports before capturing!</source>
         <translation>Connectez les ports JACK avant d&apos;enregistrer !</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="395"/>
+        <location filename="QLWin.cpp" line="394"/>
         <source>Maximum capture level: </source>
         <translation>Niveau maximum de capture : </translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="397"/>
+        <location filename="QLWin.cpp" line="396"/>
         <source>
 Give a meaningful description for the measurement</source>
         <translation>
 Donnez une description utile pour la mesure</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="398"/>
+        <location filename="QLWin.cpp" line="397"/>
         <source>
 (“Cancel” will ignore this measurement)</source>
         <translation>
 (&quot;Annuler&quot; annulera cette mesure)</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="399"/>
+        <location filename="QLWin.cpp" line="398"/>
         <source>Measurement description</source>
         <translation>Description de la mesure</translation>
     </message>
