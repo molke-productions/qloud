@@ -73,7 +73,8 @@ void Plotter::appendSeries(QLineSeries *series, QAbstractAxis* xaxis, Qt::Alignm
 void Plotter::removeSeries(QLineSeries *series, QAbstractAxis* yattached)
 {
     list.removeAll(series);
-    chart->removeAxis(yattached);
+    if (yattached)
+        chart->removeAxis(yattached);
     chart->removeSeries(series);
 }
 
@@ -83,6 +84,7 @@ bool Plotter::gnuplotSeries(const QString &filename)
 
     QString f("# QLoud plot: ");
     f += getTitle() + "\n";
+    f += "# x, y [, y2 ...]\n";
 
     int len = list.at(0)->points().size();
 
