@@ -1,8 +1,6 @@
-unix {
-    isEmpty(PREFIX): PREFIX = /usr/local
-    isEmpty(BINDIR): BINDIR = $$PREFIX/bin
-    isEmpty(DATADIR): DATADIR = $$PREFIX/share
-}
+isEmpty(PREFIX): PREFIX = /usr/local
+isEmpty(BINDIR): BINDIR = $$PREFIX/bin
+isEmpty(DATADIR): DATADIR = $$PREFIX/share
 
 win32-g++ {
     isEmpty(PREFIX): PREFIX = "C:/Program Files/QLoud"
