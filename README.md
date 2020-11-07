@@ -2,7 +2,8 @@
 
 QLoud is a tool to measure a loudspeaker frequency response and distortions.
 
-This was just an attempt of porting it to QT5.
+This was just an attempt of porting it to QT5. It now uses Qt Charts instead of Qwt for plotting.
+
 The original app page is here:
 
 http://gaydenko.com/qloud/
