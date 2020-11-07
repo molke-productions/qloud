@@ -26,34 +26,29 @@
 #include "IR.h"
 #include "IRInfo.h"
 
-class QwtPlotCurve;
-class QwtPlotMarker;
-
 class Plotter: public QChartView {
 	Q_OBJECT
 
 public:
 	static constexpr double DEFAULT_SMOOTH = 6.0; // 1/6 octave
 
-    Plotter(QWidget *parent = 0);
-    ~Plotter();
+	Plotter(QWidget *parent = 0);
+	~Plotter();
 
-    void setTitle(const QString& title);
-    QString getTitle();
+	void setTitle(const QString& title);
+	QString getTitle();
 
-    void appendSeries(QLineSeries* series, QAbstractAxis* xaxis, Qt::Alignment xalign, QAbstractAxis* yaxis, Qt::Alignment yalign);
-    void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
+	void appendSeries(
+		QLineSeries* series,
+		QAbstractAxis* xaxis, Qt::Alignment xalign,
+		QAbstractAxis* yaxis, Qt::Alignment yalign
+	);
+	void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
 
-    virtual bool gnuplotSeries(const QString &filename);
+	virtual bool exportSeries(const QString &filename);
 
-    virtual bool octaveOutput(const QString& filename, const QString& dir, const IRInfo& ii)
-    {
-        qDebug() << dir << ii.key << filename << "Not implemented";
-        return false;
-    }
-
-    QChart *chart;
-    QList<QLineSeries*> list;
+	QChart *chart;
+	QList<QLineSeries*> list;
 };
 
 #endif

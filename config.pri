@@ -9,7 +9,7 @@ win32-g++ {
 }
 
 
-isEmpty(QMAKE_LRELEASE):QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+isEmpty(QMAKE_LRELEASE): QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
 
 VERSION = 1.4
 REVISION = $$system(git describe --long --tags 2>/dev/null || echo "stable")

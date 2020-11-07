@@ -16,9 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #include "IRInfo.h"
-
 
 void IRInfo::fill(const ExcitCfg& ecfg) {
 	this->length = ecfg.length;
@@ -28,14 +26,12 @@ void IRInfo::fill(const ExcitCfg& ecfg) {
 	this->fMax = ecfg.fMax;
 }
 
-
 QString IRInfo::maxLevelAsString() const {
 	int iLevel = int(this->maxLevel * 10000.0 + 0.5);
 	double dLevel = double(iLevel) / 10000.0;
 	QString rounded = QVariant(dLevel).toString();
 	return rounded;
 }
-
 
 QString IRInfo::format() const {
 	QString s;

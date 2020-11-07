@@ -37,14 +37,15 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 	int fileLength = length + cfg.rate; // + 1 second for sound delay/decay
 	double* buf = new double[fileLength];
 	// log sine at first
-	for(int i=0; i < length; i++) {
+	for(int i = 0; i < length; i++) {
 		double t = ((double)i) / cfg.rate;
-		buf[i] = sin(K * (exp(t/L) - 1.0)) * 0.9999; // to be sure our float is below 0db
+		// to be sure our float is below 0db
+		buf[i] = sin(K * (exp(t/L) - 1.0)) * 0.9999;
 	}
 	// apply start smoothing window...
 	int winLength = (int)(START_SMOOTH * length);
 	Weights* w = new Weights("hanning", winLength * 2 + 1);
-	for(int i=0; i <= winLength; i++)
+	for(int i = 0; i <= winLength; i++)
 		buf[i] = buf[i] * w->getPoint(i);
 	delete w;
 	// ... and finish smoothing window
@@ -52,7 +53,7 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 	w = new Weights("hanning", winLength * 2 + 1);
 	int bufIdx = length - winLength -1;
 	int winIdx = winLength;
-	for(int i=0; i <= winLength; i++)
+	for(int i = 0; i <= winLength; i++)
 		buf[bufIdx + i] = buf[bufIdx + i] * w->getPoint(winIdx + i);
 	delete w;
 
@@ -67,7 +68,9 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 	wavInfo.channels = 1;
 	wavInfo.bitDepth = cfg.depth;
 
-	WavOut* excitOut = new WavOut(dirPath + "/" + Excitation::excitationFileName());
+	WavOut* excitOut = new WavOut(
+		dirPath + "/" + Excitation::excitationFileName()
+	);
 	try {
 		excitOut->writeDouble(wavInfo, buf);
 	} catch(QLE e) {
@@ -79,7 +82,7 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 
 	// write reverse filter file --------------------------------------------------
 	// revers the buf on place
-	for(int i=0; i < fileLength/2; i++) {
+	for(int i = 0; i < fileLength/2; i++) {
 		double t = buf[i];
 		buf[i] = buf[fileLength -  i - 1];
 		buf[fileLength -  i - 1] = t;

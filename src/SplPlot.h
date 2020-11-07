@@ -3,42 +3,41 @@
 
 #include "Plotter.h"
 
-class SplPlot : public Plotter
-{
-    Q_OBJECT
-public:
-    SplPlot(const QString& aDir, IRInfo anIi, QWidget *parent = 0);
-    ~SplPlot();
+class SplPlot : public Plotter {
+	Q_OBJECT
 
-    double getMaxTrimLength(); // secs
-    bool gnuplotSeries(const QString &filename) override;
-    bool octaveOutput(const QString &filename, const QString &dir, const IRInfo& ii) override;
+public:
+	SplPlot(const QString& aDir, IRInfo anIi, QWidget *parent = 0);
+	~SplPlot();
+
+	double getMaxTrimLength(); // secs
+	bool exportSeries(const QString &filename) override;
 
 public slots:
-    void setSmooth(double smoothFactor);
-    void setWinLength(double secs);
-    void enablePhase(int);
+	void setSmooth(double smoothFactor);
+	void setWinLength(double secs);
+	void enablePhase(int);
 
 private:
-    IR* ir;
-    QString dir;
-    IRInfo ii;
+	IR* ir;
+	QString dir;
+	IRInfo ii;
 
-    double* freqs;
-    double* amps;
-    double* phase;
+	double* freqs;
+	double* amps;
+	double* phase;
 
-    double winLength;
-    double smoothFactor;
+	double winLength;
+	double smoothFactor;
 
-    QLineSeries *ampCurve;
-    QLineSeries *phaseCurve;
+	QLineSeries *ampCurve;
+	QLineSeries *phaseCurve;
 
-    QAbstractAxis *XAxis;
-    QAbstractAxis *YAxis;
-    QAbstractAxis *YPAxis;
+	QAbstractAxis *XAxis;
+	QAbstractAxis *YAxis;
+	QAbstractAxis *YPAxis;
 
-    void recalculate();
+	void recalculate();
 };
 
 #endif // SPLPLOT_H

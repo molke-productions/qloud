@@ -247,35 +247,21 @@ Are you sure you want to delete this measurement?</source>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="79"/>
-        <source>Export to Gnuplot</source>
-        <oldsource>Export Gnuplot</oldsource>
-        <translation>Exporter vers Gnuplot</translation>
-    </message>
-    <message>
-        <location filename="PlotWindow.cpp" line="85"/>
-        <source>Export to Octave</source>
-        <oldsource>Export Octave</oldsource>
-        <translation>Exporter vers Octave</translation>
+        <source>Export</source>
+        <translation>Exporter</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="154"/>
-        <source>Export for Gnuplot</source>
-        <translation>Export pour Gnuplot</translation>
+        <source>Export</source>
+        <translation>Exporter</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="154"/>
-        <source>Gnuplot data (*.dat)</source>
-        <translation>Données Gnuplot (*.dat)</translation>
-    </message>
-    <message>
-        <location filename="PlotWindow.cpp" line="170"/>
-        <source>Export for GNU Octave</source>
-        <translation>Export pour GNU Octave</translation>
-    </message>
-    <message>
-        <location filename="PlotWindow.cpp" line="170"/>
-        <source>GNU Octave data (*.m)</source>
-        <translation>Données GNU Octave (*.m)</translation>
+        <source>Text data (*.dat)</source>
+        <translation>Données text (*.dat)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="197"/>

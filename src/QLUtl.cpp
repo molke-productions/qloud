@@ -97,14 +97,12 @@ void QLUtl::checkFileError(const QFile& file) {
 }
 
 void QLUtl::showCritical(QWidget* parent, const QString& msg) {
-    QMessageBox::critical(parent, "Error", msg);
+	QMessageBox::critical(parent, "Error", msg);
 }
-
 
 void QLUtl::showInfo(QWidget* parent, const QString& msg) {
 	QMessageBox::information(parent, "Information", msg);
 }
-
 
 bool QLUtl::setComboToData(QComboBox* combo, int data) {
 	for(int i=0; i < combo->count(); i++) {
@@ -119,7 +117,6 @@ bool QLUtl::setComboToData(QComboBox* combo, int data) {
 
 
 void QLUtl::toDbInPlace(double* in, int length, bool normToZero) {
-
 	if( normToZero ) {
 		double max = 0.0;
 		double shift = 0.0;
@@ -129,11 +126,11 @@ void QLUtl::toDbInPlace(double* in, int length, bool normToZero) {
 				max = tmp;
 		}
 		shift = QLUtl::toDb(max);
-		for(int i=0; i < length; i++)
+		for(int i = 0; i < length; i++)
 			in[i] = QLUtl::toDb(in[i]) - shift;
 		return;
 	}
-	for(int i=0; i < length; i++)
+	for(int i = 0; i < length; i++)
 		in[i] = QLUtl::toDb(in[i]);
 }
 
@@ -146,7 +143,7 @@ double* QLUtl::fastSmooth(double* in, double smoothFactor, int length) {
 	int left;
 	int right;
 	double tmp;
-	for(int i=0; i < length; i++) {
+	for(int i = 0; i < length; i++) {
 		left = int(leftFactor * i + 0.5);
 		if(left < 0)
 			left = 0;
@@ -160,7 +157,7 @@ double* QLUtl::fastSmooth(double* in, double smoothFactor, int length) {
 		if(right - left > 2048)
 			increment = (right - left) / 2048;
 		int count = 0;
-		for(int j=left; j <= right; j += increment) {
+		for(int j = left; j <= right; j += increment) {
 			tmp += in[j];
 			count++;
 		}
@@ -179,7 +176,7 @@ double* QLUtl::smooth(double* in, double smoothFactor, int length) {
 	int left;
 	int right;
 	double tmp;
-	for(int i=0; i < length; i++) {
+	for(int i = 0; i < length; i++) {
 		left = int(leftFactor * i + 0.5);
 		if(left < 0)
 			left = 0;
@@ -189,7 +186,7 @@ double* QLUtl::smooth(double* in, double smoothFactor, int length) {
 			right = length -1;
 
 		tmp = 0.0;
-		for(int j=left; j <= right; j++)
+		for(int j = left; j <= right; j++)
 			tmp += in[j];
 
 		smoothed[i]  = tmp / (right - left + 1);
@@ -219,7 +216,7 @@ double* QLUtl::smoothForLog(
 	int right;
 	double tmp;
 	int deltaInUse;
-	for(int i=0; i < length; i++) {
+	for(int i = 0; i < length; i++) {
 		deltaInUse = delta;
 
 		left = i - deltaInUse;
@@ -235,7 +232,7 @@ double* QLUtl::smoothForLog(
 		}
 
 		tmp = 0.0;
-		for(int j= left; j <= right; j++)
+		for(int j = left; j <= right; j++)
 			tmp += in[j];
 
 		smoothed[i]  = tmp / ((deltaInUse << 1) + 1);
@@ -249,7 +246,7 @@ double* QLUtl::logFreqs(int pointsAmount, double fMin, double fMax) {
 	double* freqs = new double[pointsAmount];
 	double ratio = log(double(fMax) / fMin);
 	ratio /= pointsAmount;
-	for(int i=0; i < pointsAmount; i++)
+	for(int i = 0; i < pointsAmount; i++)
 		freqs[i] = exp(ratio * i) * fMin;
 	return freqs;
 }
@@ -262,7 +259,7 @@ double* QLUtl::spaceAmpsToFreqs(
 	double* amps
 ) {
 	double* out = new double[pointsAmount];
-	for(int i=0; i < pointsAmount; i++) {
+	for(int i = 0; i < pointsAmount; i++) {
 		double freq = freqs[i];
 		int d1 = int(freq);
 		int d2 = d1 + 1;
@@ -286,46 +283,41 @@ fftw_complex* QLUtl::doFFT(
 		fftLength += rate - (fftLength % rate);
 
 	double* buf = new double[fftLength];
-	for(int i=0; i < fftLength; i++)
+	for(int i = 0; i < fftLength; i++)
 		buf[i] = 0.0;
 
-	for(int i=0; i < inLength; i++)
+	for(int i = 0; i < inLength; i++)
 		buf[i] = inBuf[i];
 
 	int secs = fftLength / rate;
 	int fftResultLength = rate / 2;
 
 	// here we shell accumulate one-second-length transformations
-	fftw_complex* fftResult
-		= (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * fftResultLength);
-	for(int i=0; i < fftResultLength; i++) {
+	fftw_complex* fftResult = (fftw_complex*)fftw_malloc(
+		sizeof(fftw_complex) * fftResultLength
+	);
+	for(int i = 0; i < fftResultLength; i++) {
 		fftResult[i][0] = 0.0;
 		fftResult[i][1] = 0.0;
 	}
 
-	fftw_complex* in
-		= (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * rate);
-	fftw_complex* out
-		= (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * rate);
+	fftw_complex* in = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * rate);
+	fftw_complex* out = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * rate);
 
-	for(int i=0; i < secs; i++) {
+	for(int i = 0; i < secs; i++) {
 		// take this second from inBuf ...
-		for(int j=0; j < rate; j++) {
+		for(int j = 0; j < rate; j++) {
 			in[j][0] = buf[i * rate + j];
 			in[j][1] = 0.0;
 		}
 		// ... transform it ...
 		fftw_plan plan = fftw_plan_dft_1d(
-			rate,
-			in,
-			out,
-			FFTW_FORWARD,
-			FFTW_ESTIMATE
+			rate, in, out, FFTW_FORWARD, FFTW_ESTIMATE
 		);
 		fftw_execute(plan);
 		fftw_destroy_plan(plan);
 		// ... and sum with other seconds
-		for(int j=0; j < fftResultLength; j++) {
+		for(int j = 0; j < fftResultLength; j++) {
 			fftResult[j][0] += out[j][0];
 			fftResult[j][1] += out[j][1];
 		}
@@ -333,7 +325,7 @@ fftw_complex* QLUtl::doFFT(
 
 	fftw_free(in);
 	fftw_free(out);
-    delete[] buf;
+	delete[] buf;
 
 	return fftResult;
 }

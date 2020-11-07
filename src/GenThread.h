@@ -23,7 +23,6 @@
 #include "IRInfo.h"
 
 class GenThread : public QThread {
-
 	Q_OBJECT
 
 public:

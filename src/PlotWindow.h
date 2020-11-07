@@ -16,7 +16,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef PLOTWINDOW_H
 #define PLOTWINDOW_H
 
@@ -39,40 +38,38 @@ public:
 	~PlotWindow();
 
 public slots:
-    void onPrintClicked();
-    void onGnuplotClicked();
-    void onOctaveClicked();
+	void onPrintClicked();
+	void onExportClicked();
 
-    void onTabChanged(int index);  
+	void onTabChanged(int index);
 
 protected:
-    bool print(QPrinter *printer);
-    bool gnuplot(const QString& filename);
-    bool octave(const QString &filename);
+	bool print(QPrinter *printer);
+	bool exportDat(const QString& filename);
 
 private:
 	QMap<PlotWindow*, QString>* plots;
 
 	// SPL plotting
-    QWidget* getSplTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	QWidget* getSplTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// IR itself plotting
-    QWidget* getIRTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	QWidget* getIRTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// IR power plotting
-    QWidget* getIRPTab(const QString& dir, const IRInfo& ii, Plotter** plot);
-	// Step Response plotting
-    QWidget* getStepTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	QWidget* getIRPTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	// Step response plotting
+	QWidget* getStepTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// Harmonics plotting
-    QWidget* getHarmTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	QWidget* getHarmTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 
-    Plotter *splplot;
-    Plotter *irplot;
-    Plotter *irpplot;
-    Plotter *stepplot;
-    Plotter *harmplot;
+	Plotter *splplot;
+	Plotter *irplot;
+	Plotter *irpplot;
+	Plotter *stepplot;
+	Plotter *harmplot;
 
-    Plotter *currentplot;
-    IRInfo ii;
-    QString dir;
+	Plotter *currentplot;
+	IRInfo ii;
+	QString dir;
 };
 
 #endif

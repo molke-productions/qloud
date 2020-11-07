@@ -16,21 +16,38 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #include "CapThread.h"
 #include "QLUtl.h"
 #include "QLCfg.h"
 
-
-CapThread::CapThread(QObject* parent, Capture* aCapture, TickPoster* aTicker, int playDb) : QThread(parent) {
+CapThread::CapThread(
+	QObject* parent,
+	Capture* aCapture,
+	TickPoster* aTicker,
+	int playDb
+) : QThread(parent) {
 	this->capture = aCapture;
 	this->ticker = aTicker;
 	this->playDbLevel = playDb;
-	connect(this, SIGNAL(showCritical(const QString&)), this->parent(), SLOT(showCritical(const QString&)));
-	connect(this, SIGNAL(showStatus(const QString&)), this->parent(), SLOT(showStatus(const QString&)));
-	connect(this, SIGNAL(showStatus(const QString&, int)), this->parent(), SLOT(showStatus(const QString&, int)));
+	connect(
+		this,
+		SIGNAL(showCritical(const QString&)),
+		this->parent(),
+		SLOT(showCritical(const QString&))
+	);
+	connect(
+		this,
+		SIGNAL(showStatus(const QString&)),
+		this->parent(),
+		SLOT(showStatus(const QString&))
+	);
+	connect(
+		this,
+		SIGNAL(showStatus(const QString&, int)),
+		this->parent(),
+		SLOT(showStatus(const QString&, int))
+	);
 }
-
 
 void CapThread::run() {
 	try {
@@ -38,7 +55,7 @@ void CapThread::run() {
 	} catch(QLE e) {
 		emit showCritical(e.msg);
 	}
-	emit workIsDone(); // for ticker and IR-management
+	emit workIsDone(); // for ticker and IR management
 
 	QString msg("Recording is done. Maximum response level is ");
 	msg += QVariant(QLUtl::toDb(this->capture->getMaxResponse())).toString();

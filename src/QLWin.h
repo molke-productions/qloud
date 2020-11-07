@@ -34,7 +34,7 @@ public:
 	static const int SMALL_SPACE = 15;
 	static QSize rightSize();
 
-    QLWin(const QString* wrkDir, QWidget* parent);
+	QLWin(const QString* wrkDir, QWidget* parent);
 	~QLWin();
 
 signals:
@@ -74,13 +74,13 @@ private:
 	Capture* capture;
 	TickPoster* ticker;
 	QLabel* excitInfoLbl;
-    QDoubleSpinBox* playDb;
+	QDoubleSpinBox* playDb;
 	QPushButton* capBtn;
 
 	bool jackConnected;
 
 	void saveMyState();
-    void restoreMyState(const QString *wrkDir);
+	void restoreMyState(const QString *wrkDir);
 	void createIrList();
 	bool initCapture();
 };

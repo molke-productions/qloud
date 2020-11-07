@@ -50,8 +50,12 @@ ExcitForm::ExcitForm(
 	this->lengthCombo->addItem("40");
 	this->lengthCombo->setCurrentIndex(2);
 	exTop->addWidget(this->lengthCombo);
-	connect(this->lengthCombo, SIGNAL(currentIndexChanged(const QString&)),
-			this, SLOT(lengthChanged(const QString&)));
+	connect(
+		this->lengthCombo,
+		SIGNAL(currentIndexChanged(const QString&)),
+		this,
+		SLOT(lengthChanged(const QString&))
+	);
 
 	exTop->addStretch(1);
 	exTop->addSpacing(QLWin::SMALL_SPACE);
@@ -69,8 +73,12 @@ ExcitForm::ExcitForm(
 	this->rateCombo->addItem("192000");
 	this->rateCombo->setCurrentIndex(2);
 	exTop->addWidget(this->rateCombo);
-	connect(this->rateCombo, SIGNAL(currentIndexChanged(const QString&)),
-			this, SLOT(rateChanged(const QString&)));
+	connect(
+		this->rateCombo,
+		SIGNAL(currentIndexChanged(const QString&)),
+		this,
+		SLOT(rateChanged(const QString&))
+	);
 
 	exTop->addStretch(1);
 	exTop->addSpacing(QLWin::SMALL_SPACE);
@@ -82,8 +90,12 @@ ExcitForm::ExcitForm(
 	this->depthCombo->addItem("32");
 	this->depthCombo->setCurrentIndex(2);
 	exTop->addWidget(this->depthCombo);
-	connect(this->depthCombo, SIGNAL(currentIndexChanged(const QString&)),
-			this, SLOT(depthChanged(const QString&)));
+	connect(
+		this->depthCombo,
+		SIGNAL(currentIndexChanged(const QString&)),
+		this,
+		SLOT(depthChanged(const QString&))
+	);
 
 	exTop->addSpacing(QLWin::BIG_SPACE);
 	QWidget* excitLabel = new QLabel(tr("<b>Excitation</b>"));
@@ -106,8 +118,12 @@ ExcitForm::ExcitForm(
 	);
 	delete tmp;
 	exBottom->addWidget(this->fMinCnt, 5);
-	connect(this->fMinCnt, SIGNAL(valueChanged(double)),
-			this, SLOT(fMinChanged(double)));
+	connect(
+		this->fMinCnt,
+		SIGNAL(valueChanged(double)),
+		this,
+		SLOT(fMinChanged(double))
+	);
 
 	exBottom->addStretch(1);
 	exBottom->addSpacing(QLWin::SMALL_SPACE);
@@ -123,8 +139,12 @@ ExcitForm::ExcitForm(
 	);
 	delete tmp;
 	exBottom->addWidget(this->fMaxCnt, 5);
-	connect(this->fMaxCnt, SIGNAL(valueChanged(double)),
-			this, SLOT(fMaxChanged(double)));
+	connect(
+		this->fMaxCnt,
+		SIGNAL(valueChanged(double)),
+		this,
+		SLOT(fMaxChanged(double))
+	);
 
 	exBottom->addSpacing(QLWin::BIG_SPACE);
 	QPushButton* genBtn = new QPushButton(tr("Generate"));
@@ -140,16 +160,37 @@ ExcitForm::ExcitForm(
 	this->layout()->setMargin(0);
 
 	// Signals
-	connect(this, SIGNAL(setStatus(const QString&)),
-			this->feedback, SLOT(showStatus(const QString&)));
-	connect(this, SIGNAL(setStatus(const QString&, int)),
-			this->feedback, SLOT(showStatus(const QString&, int)));
-	connect(this->feedback, SIGNAL(forceRate(int)),
-			this, SLOT(forceRate(int)), Qt::QueuedConnection);
-	connect(this->feedback, SIGNAL(workDirChanged(const QString&)),
-			this, SLOT(setWorkDir(const QString&)));
-	connect(this, SIGNAL(excitInfoChanged(const QString&)),
-			this->feedback, SLOT(changeExcitInfo(const QString&)));
+	connect(
+		this,
+		SIGNAL(setStatus(const QString&)),
+		this->feedback,
+		SLOT(showStatus(const QString&))
+	);
+	connect(
+		this,
+		SIGNAL(setStatus(const QString&, int)),
+		this->feedback,
+		SLOT(showStatus(const QString&, int))
+	);
+	connect(
+		this->feedback,
+		SIGNAL(forceRate(int)),
+		this,
+		SLOT(forceRate(int)),
+		Qt::QueuedConnection
+	);
+	connect(
+		this->feedback,
+		SIGNAL(workDirChanged(const QString&)),
+		this,
+		SLOT(setWorkDir(const QString&))
+	);
+	connect(
+		this,
+		SIGNAL(excitInfoChanged(const QString&)),
+		this->feedback,
+		SLOT(changeExcitInfo(const QString&))
+	);
 
 	this->setWorkDir(aWorkDir);
 }

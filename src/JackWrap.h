@@ -42,8 +42,8 @@ public:
 private:
 	volatile FSMState fsmState;
 
-		float* playBuf;
-		float playDb;
+	float* playBuf;
+	float playDb;
 	float* capBuf;
 	unsigned length;
 

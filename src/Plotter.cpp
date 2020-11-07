@@ -19,95 +19,86 @@
 #include "Plotter.h"
 #include "QLCfg.h"
 
-
-
-Plotter::Plotter(QWidget *parent)
-    : QChartView(parent)
-{
-    chart = new QChart();
-    chart->legend()->hide();
-    this->setChart(chart);
-    this->setRenderHint(QPainter::Antialiasing);
-    this->setRubberBand(QChartView::RectangleRubberBand);
-
+Plotter::Plotter(QWidget *parent) : QChartView(parent) {
+	chart = new QChart();
+	chart->legend()->hide();
+	this->setChart(chart);
+	this->setRenderHint(QPainter::Antialiasing);
+	this->setRubberBand(QChartView::RectangleRubberBand);
 }
 
-Plotter::~Plotter()
-{
-    delete chart;
+Plotter::~Plotter() {
+	delete chart;
 }
 
-void Plotter::setTitle(const QString &title)
-{
-    chart->setTitle(title);
+void Plotter::setTitle(const QString &title) {
+	chart->setTitle(title);
 }
 
-QString Plotter::getTitle()
-{
-    return chart->title();
+QString Plotter::getTitle() {
+	return chart->title();
 }
 
-void Plotter::appendSeries(QLineSeries *series, QAbstractAxis* xaxis, Qt::Alignment xalign, QAbstractAxis* yaxis, Qt::Alignment yalign)
-{
-    if (xaxis)
-        chart->addAxis(xaxis, xalign);
+void Plotter::appendSeries(
+	QLineSeries *series,
+	QAbstractAxis* xaxis, Qt::Alignment xalign,
+	QAbstractAxis* yaxis, Qt::Alignment yalign
+) {
+	if (xaxis)
+		chart->addAxis(xaxis, xalign);
+	if (yaxis)
+		chart->addAxis(yaxis, yalign);
 
-    if (yaxis)
-        chart->addAxis(yaxis, yalign);
+	chart->addSeries(series);
 
-    chart->addSeries(series);
+	if (xaxis)
+		series->attachAxis(xaxis);
+	else
+		series->attachAxis(chart->axes(Qt::Orientation::Horizontal)[0]);
+	if (yaxis)
+		series->attachAxis(yaxis);
+	else
+		series->attachAxis(chart->axes(Qt::Orientation::Vertical)[0]);
 
-    if (xaxis)
-        series->attachAxis(xaxis);
-    else
-        series->attachAxis(chart->axes(Qt::Orientation::Horizontal)[0]);
-
-    if (yaxis)
-        series->attachAxis(yaxis);
-    else
-        series->attachAxis(chart->axes(Qt::Orientation::Vertical)[0]);
-
-    list.append(series);
+	list.append(series);
 }
 
-void Plotter::removeSeries(QLineSeries *series, QAbstractAxis* yattached)
-{
-    list.removeAll(series);
-    if (yattached)
-        chart->removeAxis(yattached);
-    chart->removeSeries(series);
+void Plotter::removeSeries(QLineSeries *series, QAbstractAxis* yattached) {
+	list.removeAll(series);
+	if (yattached)
+		chart->removeAxis(yattached);
+	chart->removeSeries(series);
 }
 
-bool Plotter::gnuplotSeries(const QString &filename)
-{
-    QFile file(filename);
+bool Plotter::exportSeries(const QString &filename) {
+	QFile file(filename);
 
-    QString f("# QLoud plot: ");
-    f += getTitle() + "\n";
-    f += "# x, y [, y2 ...]\n";
+	QString f("# QLoud plot: ");
+	f += getTitle() + "\n";
+	f += "# x, y [, y2 ...]\n";
 
-    int len = list.at(0)->points().size();
+	int len = list.at(0)->points().size();
 
-    QString line;
-    for (int i = 0; i < len; i++) {
-        line.clear();
-        for (int s = 0; s < list.size(); s++ ) {
-            QVector<QPointF> points = list.at(s)->pointsVector();
-            QPointF p = points.at(i);
-            if (s == 0) {
-                line += QString("%1 %2 ").arg(p.x()).arg(p.y());
-            } else {
-                line += QString("%1 ").arg(p.y());
-            }
-        }
+	QString line;
+	for (int i = 0; i < len; i++) {
+		line.clear();
+		for (int s = 0; s < list.size(); s++ ) {
+			QVector<QPointF> points = list.at(s)->pointsVector();
+			QPointF p = points.at(i);
+			if (s == 0)
+				line += QString("%1 %2 ").arg(p.x()).arg(p.y());
+			else
+				line += QString("%1 ").arg(p.y());
+		}
 
-        line.chop(1);
-        line.append('\n');
-        f.append(line);
-    }
+		line.chop(1);
+		line.append('\n');
+		f.append(line);
+	}
 
-    file.open(QIODevice::WriteOnly);
-    file.write(f.toUtf8());
-    file.close();
-    return true;
+	file.open(QIODevice::WriteOnly);
+	file.write(f.toUtf8());
+	file.close();
+
+	return true;
 }

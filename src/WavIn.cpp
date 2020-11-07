@@ -87,14 +87,22 @@ void WavIn::read(int size) {
 	sf_count_t wasRead = 0;
 	if(size == sizeof(float)) {
 		this->buf = new char[this->length * sizeof(float)];
-		wasRead = sf_read_float(this->sfFile, (float*)this->buf, this->length);
+		wasRead = sf_read_float(
+			this->sfFile,
+			(float*)this->buf,
+			this->length
+		);
 	} else if(size == sizeof(double)) {
 		this->buf = new char[this->length * sizeof(double)];
-		wasRead = sf_read_double(this->sfFile, (double*)this->buf, this->length);
+		wasRead = sf_read_double(
+			this->sfFile,
+			(double*)this->buf,
+			this->length
+		);
 	}
 
 	if(wasRead != this->length) {
-		sf_close(this->sfFile); // for case destructor isn't called in catch{}
+		sf_close(this->sfFile); // in case destructor isn't called in catch{}
 		this->sfFile = 0;
 		throw QLE("Failed reading " + this->path + "!");
 	}

@@ -89,8 +89,7 @@ DESTDIR = .
 
 CONFIG += debug
 
-INCLUDEPATH += /usr/include/qwt \
-/usr/include/qt
+INCLUDEPATH += /usr/include/qt
 
 LIBS += -lsndfile \
 -lfftw3 \
@@ -108,12 +107,13 @@ TRANSLATIONS += \
 LOCALE_DIR = ../locale
 updateqm.input = TRANSLATIONS
 updateqm.output = $$LOCALE_DIR/${QMAKE_FILE_BASE}.qm
-updateqm.commands = $$QMAKE_LRELEASE ${QMAKE_FILE_IN} -qm $$LOCALE_DIR/${QMAKE_FILE_BASE}.qm
+updateqm.commands = $$QMAKE_LRELEASE ${QMAKE_FILE_IN} \
+    -qm $$LOCALE_DIR/${QMAKE_FILE_BASE}.qm
 updateqm.CONFIG += no_link target_predeps
 QMAKE_EXTRA_COMPILERS += updateqm
 
-win32-g++:HOST=__mswin
-unix:HOST=__unix
+win32-g++:HOST = __mswin
+unix:HOST = __unix
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 

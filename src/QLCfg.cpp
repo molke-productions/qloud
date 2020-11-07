@@ -37,7 +37,7 @@ void QLCfg::appendIr(IRInfo info) {
 
 	// check if such key exists
 	QDomNodeList nameList = names.childNodes();
-	for(int i=0; i < nameList.size(); i++) {
+	for(int i = 0; i < nameList.size(); i++) {
 		QDomElement e = nameList.at(i).toElement();
 		if(info.key == e.attribute("key", "-1"))
 			throw QLE(info.key + ": such key already exists!");
@@ -67,7 +67,7 @@ void QLCfg::removeIr(QString key) {
 
 	QDomNodeList nameList = names.childNodes();
 	bool found = false;
-	for(int i=0; i < nameList.size(); i++) {
+	for(int i = 0; i < nameList.size(); i++) {
 		QDomElement e = nameList.at(i).toElement();
 		if(key == e.attribute("key", "-1")) {
 			names.removeChild(e);
@@ -93,7 +93,7 @@ void QLCfg::replaceIr(IRInfo info) {
 
 	QDomNodeList nameList = names.childNodes();
 	bool found = false;
-	for(int i=0; i < nameList.size(); i++) {
+	for(int i = 0; i < nameList.size(); i++) {
 		QDomElement e = nameList.at(i).toElement();
 		if(info.key == e.attribute("key", "-1")) {
 			e.setAttribute("info", info.info);
@@ -139,7 +139,7 @@ QList<IRInfo> QLCfg::getIrs() {
 
 	QList<IRInfo> infos;
 	QDomNodeList nameList = names.childNodes();
-	for(int i=0; i < nameList.size(); i++) {
+	for(int i = 0; i < nameList.size(); i++) {
 		QDomElement e = nameList.at(i).toElement();
 		IRInfo ii;
 		ii.key = e.attribute("key", "-1");
@@ -265,7 +265,6 @@ void QLCfg::initFile() {
 	file.close();
 	QLUtl::checkFileError(file);
 }
-
 
 QDomDocument QLCfg::read() {
 	this->initFile();

@@ -45,14 +45,14 @@ HarmPlot::HarmPlot(
 
 	this->data = (HarmData**) new char[sizeof(HarmData*) * (MAX_HARM - 1)];
 
-    setTitle(tr("Harmonic Distortion"));
+	setTitle(tr("Harmonic Distortion"));
 
 	QLogValueAxis *XAxis = new QLogValueAxis(this->chart);
 	XAxis->setBase(10.0);
 	XAxis->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Frequency in Hz"));
 	XAxis->setRange(10, 10000);
-    XAxis->setMinorTickCount(8);
+	XAxis->setMinorTickCount(8);
 
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Distortion in dB"));
@@ -60,11 +60,10 @@ HarmPlot::HarmPlot(
 	YAxis->setMax(20);
 	YAxis->setMin(-120);
 	YAxis->setTickCount(8);
-    YAxis->setMinorTickCount(10);
+	YAxis->setMinorTickCount(10);
 
 	this->addCurves(XAxis, YAxis);
 }
-
 
 HarmPlot::~HarmPlot() {
 	for(int i = 0; i < MAX_HARM - 2; i++) {
@@ -75,10 +74,9 @@ HarmPlot::~HarmPlot() {
 	delete this->data;
 }
 
-
 void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 	Harmonics* harmonics = new Harmonics(this->dir, this->ii);
-    for(int i = 0; i <= MAX_HARM - 2; i++) {
+	for(int i = 0; i <= MAX_HARM - 2; i++) {
 		this->data[i] = harmonics->getHarm(i+2); // begin from second harmonic
 		if( ! this->data[i])
 			continue; // have not more harmonic in IR
@@ -87,10 +85,14 @@ void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 		name += i;
 		QLineSeries* curve = new QLineSeries(this->chart);
 		curve->setPen(QPen(HARM_COLORS[i]));
-        if (i == 0)
-            appendSeries(curve, x, Qt::AlignBottom, y, Qt::AlignLeft);
-        else
-            appendSeries(curve, nullptr, 0, nullptr, 0);
+		if (i == 0)
+			appendSeries(curve, x, Qt::AlignBottom, y, Qt::AlignLeft);
+		else
+			appendSeries(
+				curve,
+				nullptr, Qt::AlignBottom,
+				nullptr, Qt::AlignLeft
+			);
 
 		QList<QPointF> points;
 		for(int j = 0; j < this->data[i]->length; j++) {

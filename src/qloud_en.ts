@@ -241,34 +241,17 @@ Are you sure you want to delete this measurement?</source>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="79"/>
-        <source>Export to Gnuplot</source>
-        <oldsource>Export Gnuplot</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="PlotWindow.cpp" line="85"/>
-        <source>Export to Octave</source>
-        <oldsource>Export Octave</oldsource>
+        <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="154"/>
-        <source>Export for Gnuplot</source>
+        <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="PlotWindow.cpp" line="154"/>
-        <source>Gnuplot data (*.dat)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="PlotWindow.cpp" line="170"/>
-        <source>Export for GNU Octave</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="PlotWindow.cpp" line="170"/>
-        <source>GNU Octave data (*.m)</source>
+        <source>Text data (*.dat)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

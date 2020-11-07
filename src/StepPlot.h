@@ -25,9 +25,6 @@
 #include "IRInfo.h"
 #include "Plotter.h"
 
-class QwtPlotCurve;
-class QwtPlotMarker;
-
 class StepPlot: public Plotter {
 	Q_OBJECT
 

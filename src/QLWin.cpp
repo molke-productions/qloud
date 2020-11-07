@@ -110,8 +110,8 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->playDb->setValue(-6);
 	tmp = new QLabel("W-100W");
 	this->playDb->setFixedWidth(
-			this->playDb->sizeHint().width() + tmp->sizeHint().width()
-			);
+		this->playDb->sizeHint().width() + tmp->sizeHint().width()
+	);
 	capBottom->addWidget(this->playDb);
 	capBottom->addStretch(6);
 
@@ -149,32 +149,31 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->setCentralWidget(centralWidget);
 
 	// Connect
+	connect(
+		this,
+		SIGNAL(setStatus(const QString&)),
+		this->statusBar(),
+		SLOT(showMessage(const QString&))
+	);
+	connect(
+		this,
+		SIGNAL(setStatus(const QString&, int)),
+		this->statusBar(),
+		SLOT(showMessage(const QString&, int))
+	);
+	connect(
+		this,
+		SIGNAL(clearStatus()),
+		this->statusBar(),
+		SLOT(clearMessage())
+	);
 
 	connect(
-			this,
-			SIGNAL(setStatus(const QString&)),
-			this->statusBar(),
-			SLOT(showMessage(const QString&))
-		   );
-	connect(
-			this,
-			SIGNAL(setStatus(const QString&, int)),
-			this->statusBar(),
-			SLOT(showMessage(const QString&, int))
-		   );
-	connect(
-			this,
-			SIGNAL(clearStatus()),
-			this->statusBar(),
-			SLOT(clearMessage())
-		   );
-
-	connect(
-			this,
-			SIGNAL(workDirChanged(const QString&)),
-			this,
-			SLOT(updateWorkDir(const QString&))
-		   );
+		this,
+		SIGNAL(workDirChanged(const QString&)),
+		this,
+		SLOT(updateWorkDir(const QString&))
+	);
 
 	// Restore
 	this->restoreMyState(wrkDir);
@@ -249,11 +248,11 @@ void QLWin::dirDialog() {
 	QDir upDir(this->workDir);
 	upDir.cdUp();
 	QString s = QFileDialog::getExistingDirectory(
-			this,
-			"Choose project directory",
-			upDir.path(),
-			QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
-			);
+		this,
+		"Choose project directory",
+		upDir.path(),
+		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+	);
 	if(s.length())
 		emit workDirChanged(s);
 }
@@ -272,11 +271,10 @@ void QLWin::restoreMyState(const QString *wrkDir) {
 	QSettings settings("Andrew_Gaydenko", "QLoud");
 	settings.beginGroup("MainWindow");
 
-	if (wrkDir) {
+	if (wrkDir)
 		this->workDir = *wrkDir;
-	} else {
+	else
 		this->workDir = settings.value("workDir", QDir::homePath()).toString();
-	}
 
 	this->resize(settings.value("size", QSize(800, 800)).toSize());
 	this->move(settings.value("pos", QPoint(200, 200)).toPoint());
@@ -294,26 +292,26 @@ void QLWin::restoreMyState(const QString *wrkDir) {
 void QLWin::createIrList() {
 	this->irs = new IrsForm(this, this->workDir);
 	connect(
-			this,
-			SIGNAL(workDirChanged(const QString&)),
-			this->irs,
-			SLOT(updateWorkDir(const QString&))
-		   );
+		this,
+		SIGNAL(workDirChanged(const QString&)),
+		this->irs,
+		SLOT(updateWorkDir(const QString&))
+	);
 	connect(this, SIGNAL(irAdded()), this->irs, SLOT(updateIrList()));
 	connect(
-			this->irs,
-			SIGNAL(showCritical(const QString&)),
-			SLOT(showCritical(const QString&))
-		   );
+		this->irs,
+		SIGNAL(showCritical(const QString&)),
+		SLOT(showCritical(const QString&))
+	);
 	connect(this->irs,
-			SIGNAL(setStatus(const QString&)),
-			SLOT(showStatus(const QString&))
-		   );
+		SIGNAL(setStatus(const QString&)),
+		SLOT(showStatus(const QString&))
+	);
 	connect(
-			this->irs,
-			SIGNAL(setStatus(const QString&, int)),
-			SLOT(showStatus(const QString&, int))
-		   );
+		this->irs,
+		SIGNAL(setStatus(const QString&, int)),
+		SLOT(showStatus(const QString&, int))
+	);
 }
 
 void QLWin::updateWorkDir(const QString& newDir) {
@@ -374,11 +372,11 @@ void QLWin::startCapture() {
 
 void QLWin::startJacking() {
 	CapThread* cap = new CapThread(
-			this,
-			this->capture,
-			this->ticker,
-			this->playDb->value()
-			);
+		this,
+		this->capture,
+		this->ticker,
+		this->playDb->value()
+	);
 	connect(cap, SIGNAL(workIsDone()), this->ticker, SLOT(stopTick()));
 	connect(cap, SIGNAL(workIsDone()), this, SLOT(captureFinished()));
 	cap->start();
@@ -397,25 +395,16 @@ void QLWin::captureFinished() {
 	msg += tr("\n(“Cancel” will ignore this measurement)");
 	QString tmp = tr("Measurement description");
 	QString description = QInputDialog::getText(
-			this,
-			tmp,
-			msg,
-			QLineEdit::Normal,
-			stdDescription,
-			&ok
-			);
+		this, tmp, msg, QLineEdit::Normal, stdDescription, &ok
+	);
 	if( ! ok)
 		return;
 	// save this measurement
 	if( ! description.length() )
 		description = stdDescription;
 	GenThread* gen = new GenThread(
-			this,
-			this->workDir,
-			description,
-			maxLevel,
-			this
-			);
+		this, this->workDir, description, maxLevel, this
+	);
 	gen->start();
 }
 

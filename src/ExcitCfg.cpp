@@ -49,10 +49,17 @@ void ExcitCfg::check() const {
 		throw QLE("Excitation length is too long!");
 	if((this->depth != 32) && (this->depth != 24) && (this->depth != 16))
 		throw QLE("Excitation bit depth is invalid!");
-	if((this->rate != 32000) && (this->rate != 44100) && (this->rate != 48000) &&
-			(this->rate != 64000) && (this->rate != 88200) &&
-			(this->rate != 96000) && (this->rate != 128000) &&
-			(this->rate != 176400) && (this->rate != 192000))
+	if(
+		(this->rate != 32000) &&
+		(this->rate != 44100) &&
+		(this->rate != 48000) &&
+		(this->rate != 64000) &&
+		(this->rate != 88200) &&
+		(this->rate != 96000) &&
+		(this->rate != 128000) &&
+		(this->rate != 176400) &&
+		(this->rate != 192000)
+	)
 		throw QLE("Excitation rate is invalid!");
 	if(this->fMin <  1)
 		throw QLE("Excitation min. frequency is too small!");

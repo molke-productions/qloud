@@ -23,7 +23,6 @@
 #include "PlotWindow.h"
 #include "IrsView.h"
 
-
 IrsForm::IrsForm(
 	QWidget* aFeedback,
 	QString aWorkDir,

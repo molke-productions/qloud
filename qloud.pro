@@ -1,9 +1,7 @@
 include(config.pri)
 
 SUBDIRS += src
-CONFIG += warn_on \
- qt \
- thread
+CONFIG += warn_on qt thread
 
 TEMPLATE = subdirs
 

@@ -16,10 +16,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #include "ExcitThread.h"
 #include "Excitation.h"
-
 
 ExcitThread::ExcitThread(
 	QObject* parent,

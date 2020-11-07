@@ -23,7 +23,6 @@
 #include <QtWidgets>
 
 class TickPoster : public QWidget {
-
 	Q_OBJECT
 
 public:

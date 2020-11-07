@@ -78,7 +78,6 @@ void Harmonics::init() {
 	}
 }
 
-
 HarmData* Harmonics::getHarm(int num) {
 	int leftShift = int(
 		(this->getHarmIdx(num) - this->getHarmIdx(num+1)) * 0.2 + 0.5
@@ -94,7 +93,7 @@ HarmData* Harmonics::getHarm(int num) {
 	HarmData* harm = this->doHarmonicFFT(num, leftShift, rightShift);
 	if( ! harm)
 		return 0; // have not more harmonics
-	for(int i=0; i < Harmonics::POINTS_AMOUNT; i++)
+	for(int i = 0; i < Harmonics::POINTS_AMOUNT; i++)
 		harm->values[i] -= tone->getValue(harm->freqs[i]);
 
 	return harm;
@@ -133,17 +132,17 @@ HarmData* Harmonics::doHarmonicFFT(int num, int leftShift, int rightShift) {
 
 	int length = right - left + 1;
 	double* samples = new double[length];
-	for(int i=0; i < length; i++)
+	for(int i = 0; i < length; i++)
 		samples[i] = this->irSamples[left + i];
 
 	// apply windows at edges
 	Weights* w = new Weights("hanning", leftShift * 2 + 1);
-	for(int i=0; i <= leftShift; i++)
+	for(int i = 0; i <= leftShift; i++)
 		samples[i] *= w->getPoint(i);
 	delete w;
 
 	w = new Weights("hanning", rightShift * 2 + 1);
-	for(int i=0; i <= rightShift; i++)
+	for(int i = 0; i <= rightShift; i++)
 		samples[i + leftShift] *= w->getPoint(rightShift + i);
 	delete w;
 
@@ -154,15 +153,18 @@ HarmData* Harmonics::doHarmonicFFT(int num, int leftShift, int rightShift) {
 
 	int fftResultLength = this->wavInfo->rate / 2;
 	double* linAmps = new double[fftResultLength];
-	for(int i=0; i < fftResultLength; i++)
+	for(int i = 0; i < fftResultLength; i++)
 		linAmps[i] = sqrt( fft[i][0] * fft[i][0] + fft[i][1] * fft[i][1] );
 	fftw_free(fft);
 
 	QLUtl::toDbInPlace(linAmps, fftResultLength, false);
 
-	double* freqs = QLUtl::logFreqs(Harmonics::POINTS_AMOUNT, minFreq, maxFreq);
-	double* logAmps = QLUtl::spaceAmpsToFreqs(Harmonics::POINTS_AMOUNT, freqs,
-											  fftResultLength, linAmps);
+	double* freqs = QLUtl::logFreqs(
+		Harmonics::POINTS_AMOUNT, minFreq, maxFreq
+	);
+	double* logAmps = QLUtl::spaceAmpsToFreqs(
+		Harmonics::POINTS_AMOUNT, freqs, fftResultLength, linAmps
+	);
 	delete linAmps;
 
 	if(num != 1)
@@ -170,10 +172,7 @@ HarmData* Harmonics::doHarmonicFFT(int num, int leftShift, int rightShift) {
 			freqs[i] /=num;
 
 	double* smoothed = QLUtl::smoothForLog(
-		logAmps,
-		freqs,
-		1.0/12.0,
-		Harmonics::POINTS_AMOUNT
+		logAmps, freqs, 1.0/12.0, Harmonics::POINTS_AMOUNT
 	);
 	delete logAmps;
 

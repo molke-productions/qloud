@@ -1,8 +1,8 @@
 # About
 
 QLoud is a tool to measure a loudspeaker frequency response and distortions.
-This is just an attempt of porting it to QT5.
-On the branch __qtcharts__, this tool _does not need_ __libQwt__, but __QtCharts__.
+
+This was just an attempt of porting it to QT5.
 The original app page is here:
 
 http://gaydenko.com/qloud/
@@ -23,7 +23,7 @@ http://pcfarina.eng.unipr.it/Public/Papers/134-AES00.PDF
 
 # Target use
 
-* loudspeakers DIY-ing (crossover tuning).
+* loudspeaker DIY (crossover tuning).
 
 
 # Measurement chain
@@ -31,8 +31,8 @@ http://pcfarina.eng.unipr.it/Public/Papers/134-AES00.PDF
 * the app, generating excitation signal
 * sound card line out
 * power amplifier
-* loudspeaker under testing
-* measurement microphone (with mic preamp)
+* loudspeaker under test
+* measurement microphone (with microphone preamp)
 * sound card line in
 * the app, capturing loudspeaker response
 
@@ -54,7 +54,6 @@ is calculated. Currently, these IR-aware analysis outcomes are available:
 
 The IR power plot is useful to see room reflections behavior.
 The step response plot is useful for speakers time alignment in multiway loudspeakers.
-All plots support zooming with history and panning.
 
 
 # A few hints

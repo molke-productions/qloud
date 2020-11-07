@@ -59,7 +59,7 @@ GenThread::GenThread(
 }
 
 void GenThread::run() {
-    emit showStatus(tr("Calculating IR file …"));
+	emit showStatus(tr("Calculating IR file …"));
 	try {
 		QLCfg* qlCfg = new QLCfg(this->workDir);
 		QString prefix  = qlCfg->nextIrKey();
@@ -77,11 +77,11 @@ void GenThread::run() {
 
 		delete qlCfg;
 	} catch(QLE e) {
-        QString msg = tr("IR-file calculation failed:\n\n");
+		QString msg = tr("IR-file calculation failed:\n\n");
 		msg += e.msg;
 		emit showCritical(msg);
 		return;
 	}
-    emit showStatus(tr("IR-file calculated successfully."), 2000);
+	emit showStatus(tr("IR-file calculated successfully."), 2000);
 	emit generated();
 }
