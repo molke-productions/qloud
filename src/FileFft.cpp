@@ -58,7 +58,7 @@ double* FileFft::getAmps(double smoothFactor) {
 		this->fftResultLength,
 		linAmps
 	);
-	delete linAmps;
+    delete[] linAmps;
 
 	double* smoothed = QLUtl::smoothForLog(
 		logAmps,
@@ -89,7 +89,7 @@ double* FileFft::getPhase(double smoothFactor) {
 		smoothFactor,
 		this->fftResultLength
 	);
-	delete linPhase;
+    delete[] linPhase;
 
 	double* logPhase = QLUtl::spaceAmpsToFreqs(
 		FileFft::POINTS_AMOUNT,

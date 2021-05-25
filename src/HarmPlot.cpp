@@ -19,11 +19,6 @@
 #include "Plotter.h"
 #include "HarmPlot.h"
 #include "Harmonics.h"
-
-static const QColor BG_COLOR(245, 245, 232);
-static const QColor MAJ_PEN_COLOR(175, 175, 152);
-static const QColor MIN_PEN_COLOR(175, 175, 152);
-static const QColor CURVE_COLOR(0, 0, 172);
 static const QColor HARM_COLORS[] = {
 	QColor(0, 172, 0),
 	QColor(192, 0, 0),

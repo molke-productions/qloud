@@ -75,7 +75,7 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 		excitOut->writeDouble(wavInfo, buf);
 	} catch(QLE e) {
 		delete excitOut;
-		delete buf;
+        delete[] buf;
 		throw QLE(e.msg);
 	}
 	delete excitOut;
@@ -97,9 +97,9 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 		filterOut->writeDouble(wavInfo, buf);
 	} catch(QLE e) {
 		delete filterOut;
-		delete buf;
+        delete[] buf;
 		throw QLE(e.msg);
 	}
 	delete filterOut;
-	delete buf;
+    delete[] buf;
 }

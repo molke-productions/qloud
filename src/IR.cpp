@@ -204,7 +204,7 @@ void IR::generate() {
 		if( tmpAbs > max )
 			max = tmpAbs;
 	}
-	delete irBuf;
+    delete[] irBuf;
 	for(unsigned i = 0; i < fftLength; i++)
 		realIr[i] /= max;
 

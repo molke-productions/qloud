@@ -25,9 +25,6 @@
 #include "WavInfo.h"
 #include "StepPlot.h"
 
-static const QColor BG_COLOR(245, 245, 232);
-static const QColor MAJ_PEN_COLOR(175, 175, 152);
-static const QColor MIN_PEN_COLOR(175, 175, 152);
 static const QColor AMP_CURVE_COLOR(0, 0, 172);
 static const QColor AMP_MARKER_COLOR(Qt::black);
 

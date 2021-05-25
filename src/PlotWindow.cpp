@@ -110,7 +110,7 @@ void PlotWindow::onPrintClicked() {
 	QPrinter printer;
 	printer.setCreator("QLoud");
 	printer.setDocName("qloud");
-	printer.setOrientation(QPrinter::Landscape);
+    printer.setPageOrientation(QPageLayout::Landscape);
 	QPrintDialog dialog(&printer, this);
 	if (dialog.exec() == QDialog::Accepted) {
 		if (printer.isValid()) {
@@ -131,7 +131,7 @@ bool PlotWindow::print(QPrinter* printer) {
 	if (!painter.begin(printer))
 		return false;
 
-	QRect page = printer->pageRect();
+    QRect page = printer->pageLayout().paintRectPixels(printer->resolution());
 	currentplot->render(
 		&painter,
 		QRectF(page.left(), page.top(), page.width(), page.height())
