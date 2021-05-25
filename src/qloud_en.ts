@@ -14,37 +14,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ExcitForm.cpp" line="58"/>
+        <location filename="ExcitForm.cpp" line="62"/>
         <source>Sample rate [Hz]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ExcitForm.cpp" line="77"/>
+        <location filename="ExcitForm.cpp" line="85"/>
         <source>Bit depth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ExcitForm.cpp" line="89"/>
+        <location filename="ExcitForm.cpp" line="101"/>
         <source>&lt;b&gt;Excitation&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ExcitForm.cpp" line="98"/>
+        <location filename="ExcitForm.cpp" line="110"/>
         <source>Min. freq. [Hz]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ExcitForm.cpp" line="115"/>
+        <location filename="ExcitForm.cpp" line="131"/>
         <source>Max. freq. [Hz]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ExcitForm.cpp" line="130"/>
+        <location filename="ExcitForm.cpp" line="150"/>
         <source>Generate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ExcitForm.cpp" line="197"/>
+        <location filename="ExcitForm.cpp" line="238"/>
         <source>Failed accepting JACK rate!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -90,17 +90,17 @@
 <context>
     <name>IRPPlot</name>
     <message>
-        <location filename="IRPPlot.cpp" line="52"/>
+        <location filename="IRPPlot.cpp" line="47"/>
         <source>IR Power</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IRPPlot.cpp" line="56"/>
+        <location filename="IRPPlot.cpp" line="51"/>
         <source>Time in ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IRPPlot.cpp" line="62"/>
+        <location filename="IRPPlot.cpp" line="57"/>
         <source>Power in dB</source>
         <translation type="unfinished"></translation>
     </message>
@@ -118,7 +118,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IRPlot.cpp" line="57"/>
+        <location filename="IRPlot.cpp" line="56"/>
         <source>Amplitude</source>
         <translation type="unfinished"></translation>
     </message>
@@ -126,22 +126,22 @@
 <context>
     <name>IrsForm</name>
     <message>
-        <location filename="IrsForm.cpp" line="36"/>
+        <location filename="IrsForm.cpp" line="35"/>
         <source>Measurements set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsForm.cpp" line="73"/>
+        <location filename="IrsForm.cpp" line="72"/>
         <source>&lt;b&gt;Response&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsForm.cpp" line="77"/>
+        <location filename="IrsForm.cpp" line="76"/>
         <source>Plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsForm.cpp" line="96"/>
+        <location filename="IrsForm.cpp" line="95"/>
         <source>Valid selection not found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -149,33 +149,33 @@
 <context>
     <name>IrsModel</name>
     <message>
-        <location filename="IrsModel.cpp" line="91"/>
+        <location filename="IrsModel.cpp" line="87"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsModel.cpp" line="93"/>
+        <location filename="IrsModel.cpp" line="88"/>
         <source>Used excitation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsModel.cpp" line="95"/>
+        <location filename="IrsModel.cpp" line="89"/>
         <source>Max. level [dB]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsModel.cpp" line="146"/>
+        <location filename="IrsModel.cpp" line="139"/>
         <source>Close plot window with this measurement before deleting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsModel.cpp" line="168"/>
-        <location filename="IrsModel.cpp" line="176"/>
+        <location filename="IrsModel.cpp" line="163"/>
+        <location filename="IrsModel.cpp" line="173"/>
         <source>Failed removing </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="IrsModel.cpp" line="190"/>
+        <location filename="IrsModel.cpp" line="188"/>
         <source>&quot; measurement is deleted</source>
         <translation type="unfinished"></translation>
     </message>
@@ -225,64 +225,60 @@ Are you sure you want to delete this measurement?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="65"/>
+        <location filename="PlotWindow.cpp" line="67"/>
         <source>Step response [amp/ms]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="66"/>
+        <location filename="PlotWindow.cpp" line="69"/>
         <source>Harmonics [dB/Hz]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="73"/>
+        <location filename="PlotWindow.cpp" line="82"/>
         <source>Print</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="79"/>
-        <source>Export</source>
+        <location filename="PlotWindow.cpp" line="156"/>
+        <source>*.dat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="PlotWindow.cpp" line="76"/>
         <location filename="PlotWindow.cpp" line="154"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="154"/>
-        <source>Text data (*.dat)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="PlotWindow.cpp" line="197"/>
+        <location filename="PlotWindow.cpp" line="180"/>
         <source>Mouse using:
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="198"/>
+        <location filename="PlotWindow.cpp" line="181"/>
         <source>Left button drag – zoom in
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="199"/>
+        <location filename="PlotWindow.cpp" line="182"/>
         <source>Right button click – zoom out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="206"/>
+        <location filename="PlotWindow.cpp" line="189"/>
         <source>Octave smoothing, 1/x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="225"/>
+        <location filename="PlotWindow.cpp" line="208"/>
         <source>Window [ms]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="PlotWindow.cpp" line="247"/>
+        <location filename="PlotWindow.cpp" line="230"/>
         <source>Phase</source>
         <translation type="unfinished"></translation>
     </message>
@@ -345,54 +341,54 @@ Are you sure you want to delete this measurement?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="195"/>
+        <location filename="QLWin.cpp" line="194"/>
         <source>Impulse response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="341"/>
+        <location filename="QLWin.cpp" line="339"/>
         <source>Failed connecting with JACK server. The error is:
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="343"/>
+        <location filename="QLWin.cpp" line="341"/>
         <source>
 
 Capturing will be disabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="344"/>
+        <location filename="QLWin.cpp" line="342"/>
         <source>
 To enable start JACK and restart the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="359"/>
+        <location filename="QLWin.cpp" line="357"/>
         <source>Connect JACK ports before capturing!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="394"/>
+        <location filename="QLWin.cpp" line="392"/>
         <source>Maximum capture level: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="396"/>
+        <location filename="QLWin.cpp" line="394"/>
         <source>
 Give a meaningful description for the measurement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="397"/>
+        <location filename="QLWin.cpp" line="395"/>
         <source>
 (“Cancel” will ignore this measurement)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="398"/>
+        <location filename="QLWin.cpp" line="396"/>
         <source>Measurement description</source>
         <translation type="unfinished"></translation>
     </message>
@@ -400,7 +396,7 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="main.cpp" line="48"/>
+        <location filename="main.cpp" line="51"/>
         <source>Loudspeaker response measurement program.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -408,22 +404,22 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>SplPlot</name>
     <message>
-        <location filename="SplPlot.cpp" line="29"/>
+        <location filename="SplPlot.cpp" line="31"/>
         <source>Frequency Response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="34"/>
+        <location filename="SplPlot.cpp" line="36"/>
         <source>Frequency in Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="39"/>
+        <location filename="SplPlot.cpp" line="41"/>
         <source>Amplitude in dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="52"/>
+        <location filename="SplPlot.cpp" line="54"/>
         <source>Phase in degrees</source>
         <translation type="unfinished"></translation>
     </message>
@@ -431,17 +427,17 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>StepPlot</name>
     <message>
-        <location filename="StepPlot.cpp" line="50"/>
+        <location filename="StepPlot.cpp" line="47"/>
         <source>Step Response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="StepPlot.cpp" line="54"/>
+        <location filename="StepPlot.cpp" line="51"/>
         <source>Time in ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="StepPlot.cpp" line="60"/>
+        <location filename="StepPlot.cpp" line="57"/>
         <source>Amplitude</source>
         <translation type="unfinished"></translation>
     </message>
@@ -449,7 +445,7 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>main</name>
     <message>
-        <location filename="main.cpp" line="51"/>
+        <location filename="main.cpp" line="57"/>
         <source>Project directory to work on.</source>
         <translation type="unfinished"></translation>
     </message>
