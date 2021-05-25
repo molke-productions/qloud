@@ -20,12 +20,13 @@
 #define HARMPLOT_H
 
 #include <QtWidgets>
-#include <qwt_plot.h>
+#include <QtCharts/QtCharts>
 #include "QLE.h"
 #include "IRInfo.h"
 #include "HarmData.h"
+#include "Plotter.h"
 
-class HarmPlot: public QwtPlot {
+class HarmPlot: public Plotter {
 	Q_OBJECT
 
 public:
@@ -37,7 +38,7 @@ private:
 	IRInfo ii;
 
 	HarmData** data;
-	void addCurves();
+	void addCurves(QAbstractAxis *x, QAbstractAxis *y);
 };
 
 #endif

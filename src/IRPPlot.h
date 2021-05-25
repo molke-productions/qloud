@@ -20,14 +20,11 @@
 #define IRPPLOT_H
 
 #include <QtCore>
-#include <qwt_plot.h>
+#include "Plotter.h"
 #include "QLE.h"
 #include "IRInfo.h"
 
-class QwtPlotCurve;
-class QwtPlotMarker;
-
-class IRPPlot: public QwtPlot {
+class IRPPlot: public Plotter {
 	Q_OBJECT
 
 public:

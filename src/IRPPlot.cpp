@@ -16,9 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qwt_plot_grid.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
+#include <QtCharts/QtCharts>
 
 #include "FileFft.h"
 #include "QLUtl.h"
@@ -33,44 +31,45 @@ static const QColor MIN_PEN_COLOR(175, 175, 152);
 static const QColor AMP_CURVE_COLOR(0, 0, 172);
 static const QColor AMP_MARKER_COLOR(Qt::black);
 
-
 IRPPlot::IRPPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : QwtPlot(parent) {
+) : Plotter(parent) {
 	this->dir = aDir;
 	this->ii = anIi;
 
 	this->time = 0;
 	this->amps = 0;
 
-	this->setAutoReplot(false);
-	this->setCanvasBackground(BG_COLOR);
-
 	unsigned curveLength = this->calculate();
 
-	this->setAxisScale( xBottom, this->time[0], this->time[curveLength-1]);
-	this->setAxisAutoScale( xBottom);
-	this->setAxisScale( yLeft, -100.0, 20.0);
+	setTitle(tr("IR Power"));
 
-	QwtPlotGrid *grid = new QwtPlotGrid;
-	grid->enableXMin(true);
-	grid->setMajorPen(QPen(MAJ_PEN_COLOR, 0, Qt::DotLine));
-	grid->setMinorPen(QPen(MIN_PEN_COLOR, 0 , Qt::DotLine));
-	grid->attach(this);
+	QValueAxis *XAxis = new QValueAxis(this->chart);
+	XAxis->setLabelFormat("%d");
+	XAxis->setTitleText(tr("Time in ms"));
+	XAxis->setMax(this->time[curveLength-1]);
+	XAxis->setMin(this->time[0]);
+	XAxis->applyNiceNumbers();
 
-	QwtPlotCurve* ampCurve = new QwtPlotCurve("IR_Plot");
+	QValueAxis *YAxis = new QValueAxis(this->chart);
+	YAxis->setTitleText(tr("Power in dB"));
+	YAxis->setLabelFormat("%d");
+	YAxis->setMax(20);
+	YAxis->setMin(-100);
+	YAxis->setTickCount(7);
+	YAxis->setMinorTickCount(10);
+
+	QLineSeries* ampCurve = new QLineSeries(this->chart);
 	ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	ampCurve->setYAxis(QwtPlot::yLeft);
-	ampCurve->attach(this);
-	ampCurve->setSamples(this->time, this->amps, curveLength);
+	appendSeries(ampCurve, XAxis, Qt::AlignBottom, YAxis, Qt::AlignLeft);
 
-	QwtPlotPanner* panner = new QwtPlotPanner(this->canvas());
-	panner->setMouseButton(Qt::MidButton);
-	panner->setEnabled(true);
-
-	this->setAutoReplot(true);
+	QList<QPointF> points;
+	for (unsigned int i = 0; i < curveLength; i++) {
+		points.append(QPointF(this->time[i], this->amps[i]));
+	}
+	ampCurve->replace(points);
 }
 
 IRPPlot::~IRPPlot() {
@@ -81,8 +80,6 @@ IRPPlot::~IRPPlot() {
 }
 
 unsigned IRPPlot::calculate() {
-	this->setAutoReplot(false);
-
 	WavIn* irWav = new WavIn(this->dir + "/" + this->ii.key + IR::irFileName());
 	try {
 		this->amps = irWav->readDouble();
@@ -97,12 +94,12 @@ unsigned IRPPlot::calculate() {
 	WavInfo* wavInfo = irWav->getWavInfo();
 	delete irWav;
 
-	for(unsigned i=0; i < wavInfo->length; i++)
+	for(unsigned i = 0; i < wavInfo->length; i++)
 		this->amps[i] = this->amps[i] * this->amps[i];
 
 	// find peak
 	unsigned peakIdx = 0;
-	for(unsigned i=0; i < wavInfo->length; i++)
+	for(unsigned i = 0; i < wavInfo->length; i++)
 		if(this->amps[i] > this->amps[peakIdx])
 			peakIdx = i;
 
@@ -119,14 +116,14 @@ unsigned IRPPlot::calculate() {
 
 	// find peak again to define time zero
 	peakIdx = 0;
-	for(int i=0; i < length; i++)
+	for(int i = 0; i < length; i++)
 		if(this->amps[left + i] > this->amps[left + peakIdx])
 			peakIdx = i;
 
 	this->time = new double[length];
 	double* newAmps = new double[length];
 
-	for(int i=0; i < length; i++) {
+	for(int i = 0; i < length; i++) {
 		this->time[i] = 1000.0 * double(i - int(peakIdx)) / wavInfo->rate;
 		newAmps[i] = this->amps[left + i];
 	}
@@ -137,6 +134,5 @@ unsigned IRPPlot::calculate() {
 
 	QLUtl::toDbInPlace(this->amps, length, true);
 
-	this->setAutoReplot(true);
 	return unsigned(length);
 }

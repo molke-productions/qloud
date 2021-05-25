@@ -20,7 +20,7 @@
 #define QLWIN_H
 
 #include <QtWidgets>
-#include <qwt_counter.h>
+#include <QDoubleSpinBox>
 #include "ExcitForm.h"
 #include "Capture.h"
 #include "TickPoster.h"
@@ -34,7 +34,7 @@ public:
 	static const int SMALL_SPACE = 15;
 	static QSize rightSize();
 
-	QLWin(QWidget* parent);
+	QLWin(const QString* wrkDir, QWidget* parent);
 	~QLWin();
 
 signals:
@@ -74,13 +74,13 @@ private:
 	Capture* capture;
 	TickPoster* ticker;
 	QLabel* excitInfoLbl;
-	QwtCounter* playDb;
+	QDoubleSpinBox* playDb;
 	QPushButton* capBtn;
 
 	bool jackConnected;
 
 	void saveMyState();
-	void restoreMyState();
+	void restoreMyState(const QString *wrkDir);
 	void createIrList();
 	bool initCapture();
 };

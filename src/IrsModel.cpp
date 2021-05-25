@@ -64,12 +64,9 @@ QVariant IrsModel::data(const QModelIndex& index, int role) const {
 	if(role == Qt::DisplayRole) {
 		IRInfo ii = this->list.at(index.row());
 		switch(index.column()) {
-			case 0:
-				return ii.info;
-			case 1:
-				return ii.format();
-			case 2:
-				return ii.maxLevelAsString();
+			case 0: return ii.info;
+			case 1: return ii.format();
+			case 2: return ii.maxLevelAsString();
 		}
 	}
 
@@ -87,12 +84,9 @@ QVariant IrsModel::headerData(
 		return QAbstractTableModel::headerData(section, orientation, role);
 
 	switch(section) {
-		case 0:
-			return "Description";
-		case 1:
-			return "Used excitation";
-		case 2:
-			return "Max. level [dB]";
+		case 0: return tr("Description");
+		case 1: return tr("Used excitation");
+		case 2: return tr("Max. level [dB]");
 	}
 	return QVariant();
 }
@@ -123,14 +117,12 @@ bool IrsModel::setData(
 	return true;
 }
 
-
 Qt::ItemFlags IrsModel::flags(const QModelIndex& index) const {
 	Qt::ItemFlags flag = QAbstractTableModel::flags(index);
 	if(index.column() == 0)
 		flag |= Qt::ItemIsEditable;
 	return flag;
 }
-
 
 bool IrsModel::removeRows(int row, int count, const QModelIndex& parent) {
 	Q_UNUSED(parent)
@@ -143,7 +135,9 @@ bool IrsModel::removeRows(int row, int count, const QModelIndex& parent) {
 	IRInfo ii = this->list.at(row);
 	foreach(QString plotDigest, this->plots->values()) {
 		if(plotDigest == this->workDir + "@" + ii.key) {
-			emit showCritical("Close plot window with this measurement before deleting");
+			emit showCritical(
+				tr("Close plot window with this measurement before deleting")
+			);
 			return false;
 		}
 	}
@@ -165,7 +159,9 @@ bool IrsModel::removeRows(int row, int count, const QModelIndex& parent) {
 		QFile excitFile(excitPath);
 		if(excitFile.exists())
 			if( ! excitFile.remove()) {
-				emit showCritical("Failed removing " + excitFile.fileName());
+				emit showCritical(
+					tr("Failed removing ") + excitFile.fileName()
+				);
 				return false;
 			}
 		QLUtl::checkFileError(excitFile);
@@ -173,7 +169,9 @@ bool IrsModel::removeRows(int row, int count, const QModelIndex& parent) {
 		QFile trimFile(trimPath);
 		if(trimFile.exists())
 			if( ! trimFile.remove()) {
-				emit showCritical("Failed removing " + trimFile.fileName());
+				emit showCritical(
+					tr("Failed removing ") + trimFile.fileName()
+				);
 				return false;
 			}
 		QLUtl::checkFileError(trimFile);
@@ -187,11 +185,10 @@ bool IrsModel::removeRows(int row, int count, const QModelIndex& parent) {
 
 	QString status = "\"";
 	status += ii.info;
-	status += "\" measurement is deleted";
+	status += tr("\" measurement is deleted");
 	emit showStatus(status, 3000);
 	return true;
 }
-
 
 void IrsModel::irListChanged() {
 	try {
@@ -206,9 +203,7 @@ void IrsModel::irListChanged() {
 	endResetModel();
 }
 
-
 void IrsModel::updateWorkDir(const QString& newDir) {
 	this->workDir = newDir;
 	this->irListChanged();
 }
-

@@ -1,9 +1,7 @@
 include(config.pri)
 
 SUBDIRS += src
-CONFIG += warn_on \
- qt \
- thread
+CONFIG += warn_on qt thread
 
 TEMPLATE = subdirs
 
@@ -13,4 +11,7 @@ desktop.path = $$PREFIX/share/applications
 icon.files = qloud.xpm
 icon.path = $$PREFIX/share/pixmaps
 
-INSTALLS += desktop icon
+translations.path = $$PREFIX/share/$${TARGET}
+translations.files = locale
+
+INSTALLS += desktop icon translations

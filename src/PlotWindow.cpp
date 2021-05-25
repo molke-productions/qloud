@@ -17,20 +17,21 @@
 */
 
 #include <QtWidgets>
-
-#include <qwt_counter.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_canvas.h>
+#include <QtCharts/QtCharts>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QPrinterInfo>
+#include <QPainter>
 
 #include "PlotWindow.h"
 #include "Plotter.h"
 #include "QLUtl.h"
 #include "QLCfg.h"
+#include "SplPlot.h"
 #include "IRPlot.h"
 #include "IRPPlot.h"
 #include "StepPlot.h"
 #include "HarmPlot.h"
-#include "RoundedZoomer.h"
 
 PlotWindow::PlotWindow(
 	const QString& dir,
@@ -38,6 +39,8 @@ PlotWindow::PlotWindow(
 	QMap<PlotWindow*, QString>* aPlots,
 	QWidget *parent
 ) : QWidget(parent) {
+	this->dir = dir;
+	this->ii = ii;
 	this->plots = aPlots;
 	this->plots->insert(this, dir + "@" + ii.key);
 
@@ -52,14 +55,36 @@ PlotWindow::PlotWindow(
 	// laying out
 	QVBoxLayout* mainLayout = new QVBoxLayout();
 	mainLayout->setMargin(2);
+
 	QTabWidget* tab = new QTabWidget();
 	tab->setTabPosition(QTabWidget::North);
-	tab->addTab(this->getSplTab(dir, ii), "SPL [dB/Hz]");
-	tab->addTab(this->getIRTab(dir, ii), "IR [amp/ms]");
-	tab->addTab(this->getIRPTab(dir, ii), "IR power [dB/ms]");
-	tab->addTab(this->getStepTab(dir, ii), "Step response [amp/ms]");
-	tab->addTab(this->getHarmTab(dir, ii), "Harmonics [dB/Hz]");
+	tab->addTab(this->getSplTab(dir, ii, &splplot), tr("SPL [dB/Hz]"));
+	this->currentplot = splplot;
+	tab->addTab(this->getIRTab(dir, ii, &irplot), tr("IR [amp/ms]"));
+	tab->addTab(this->getIRPTab(dir, ii, &irpplot), tr("IR power [dB/ms]"));
+	tab->addTab(
+		this->getStepTab(dir, ii, &stepplot),
+		tr("Step response [amp/ms]")
+	);
+	tab->addTab(this->getHarmTab(dir, ii, &harmplot), tr("Harmonics [dB/Hz]"));
+	connect(tab, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 	mainLayout->addWidget(tab);
+
+	QHBoxLayout* actions = new QHBoxLayout();
+
+	QPushButton* exportDat = new QPushButton();
+	exportDat->setText(tr("Export"));
+	exportDat->setMaximumWidth(exportDat->sizeHint().width());
+	connect(exportDat, SIGNAL(clicked()), this, SLOT(onExportClicked()));
+	actions->addWidget(exportDat, 1, Qt::AlignRight);
+
+	QPushButton* print = new QPushButton();
+	print->setText(tr("Print"));
+	print->setMaximumWidth(print->sizeHint().width());
+	connect(print, SIGNAL(clicked()), this, SLOT(onPrintClicked()));
+	actions->addWidget(print, 0);
+
+	mainLayout->addLayout(actions, 0);
 	this->setLayout(mainLayout);
 }
 
@@ -67,34 +92,82 @@ PlotWindow::~PlotWindow() {
 	this->plots->remove(this);
 }
 
+void PlotWindow::onTabChanged(int index) {
+	switch (index) {
+		case 0: currentplot = splplot; break;
+		case 1: currentplot = irplot; break;
+		case 2: currentplot = irpplot; break;
+		case 3: currentplot = stepplot; break;
+		case 4: currentplot = harmplot; break;
+		default: currentplot = nullptr;
+	}
+}
+
+void PlotWindow::onPrintClicked() {
+	if (!currentplot)
+		return;
+
+	QPrinter printer;
+	printer.setCreator("QLoud");
+	printer.setDocName("qloud");
+	printer.setOrientation(QPrinter::Landscape);
+	QPrintDialog dialog(&printer, this);
+	if (dialog.exec() == QDialog::Accepted) {
+		if (printer.isValid()) {
+			if (!print(&printer)) {
+				QPrinterInfo info(printer);
+				qWarning() << "printerinfo definition null:"
+					<< info.isNull();
+				qWarning() << "printerinfo state error:"
+					<< (info.state() == QPrinter::Error);
+			}
+		} else
+			qWarning() << "invalid printer object";
+	}
+}
+
+bool PlotWindow::print(QPrinter* printer) {
+	QPainter painter;
+	if (!painter.begin(printer))
+		return false;
+
+	QRect page = printer->pageRect();
+	currentplot->render(
+		&painter,
+		QRectF(page.left(), page.top(), page.width(), page.height())
+	);
+	painter.end();
+	return true;
+}
+
+void PlotWindow::onExportClicked() {
+	if (!currentplot)
+		return;
+
+	QString home = QStandardPaths::writableLocation(
+		QStandardPaths::HomeLocation
+	);
+	QString f = QString("QLoud-%1").arg(currentplot->getTitle());
+	f.replace(" ", "");
+	QString fileName = QFileDialog::getSaveFileName(
+		this,
+		tr("Export"),
+		home + QDir::separator() + f + ".dat",
+		tr("*.dat")
+	);
+	exportDat(fileName);
+}
+
+bool PlotWindow::exportDat(const QString& filename) {
+	return currentplot->exportSeries(filename);
+}
+
 QWidget* PlotWindow::getSplTab(
 	const QString& dir,
-	const IRInfo& ii
+	const IRInfo& ii,
+	Plotter **ref
 ) {
-	Plotter* plotter = new Plotter(dir, ii);
-	this->zoomizePlotter(plotter, 1, 3);
-	if(QLCfg::USE_PAHSE) {
-		// as we have additional curve/scale (phase), add a zoomer
-		RoundedZoomer* zoomer2 = new RoundedZoomer(
-			QwtPlot::xTop,
-			QwtPlot::yRight,
-			plotter->canvas()
-		);
-		zoomer2->setRound(1, 3);
-		zoomer2->setTrackerMode(QwtPicker::AlwaysOff);
-		zoomer2->setRubberBand(QwtPicker::NoRubberBand);
-		zoomer2->setMousePattern(
-			QwtEventPattern::MouseSelect2,
-			Qt::RightButton,
-			Qt::ControlModifier
-		);
-		zoomer2->setMousePattern(
-			QwtEventPattern::MouseSelect3,
-			Qt::RightButton
-		);
-		zoomer2->setEnabled(true);
-		zoomer2->zoom(0);
-	}
+	SplPlot* plotter = new SplPlot(dir, ii);
 
 	QWidget* splWidget = new QWidget();
 	QVBoxLayout* splLayout = new QVBoxLayout();
@@ -104,25 +177,19 @@ QWidget* PlotWindow::getSplTab(
 	topLayout->addSpacing(15);
 
 	QLabel* hlp = new QLabel("<b>?</b>");
-	QString tip = "Mouse using:\n";
-	tip += "Left button drag – zoom in\n";
-	tip += "Right button click – go back in zoom history\n";
-	tip += "Shift + middle button click – go forward in zoom history\n";
-	tip += "Ctrl + right button click – go to zoom history start\n";
-	tip += "Middle button drag – move window";
+	QString tip = tr("Mouse using:\n");
+	tip += tr("Left button drag – zoom in\n");
+	tip += tr("Right button click – zoom out");
 	hlp->setToolTip(tip);
 	topLayout->addWidget(hlp);
 
 	topLayout->addStretch(1);
 
 	topLayout->addSpacing(15);
-	topLayout->addWidget(new QLabel("Octave smoothing, 1/x"));
-	QwtCounter* cntSmooth = new QwtCounter();
+	topLayout->addWidget(new QLabel(tr("Octave smoothing, 1/x")));
+	QDoubleSpinBox* cntSmooth = new QDoubleSpinBox();
 	cntSmooth->setRange(0.25, 256.0);
 	cntSmooth->setSingleStep(0.25);
-	cntSmooth->setNumButtons(2);
-	cntSmooth->setIncSteps(QwtCounter::Button1, 1);
-	cntSmooth->setIncSteps(QwtCounter::Button2, 12);
 	cntSmooth->setValue(Plotter::DEFAULT_SMOOTH); // 1/6 octave
 	QWidget* tmp = new QLabel("W9999.99W");
 	cntSmooth->setFixedWidth(
@@ -138,15 +205,12 @@ QWidget* PlotWindow::getSplTab(
 	);
 
 	topLayout->addSpacing(15);
-	topLayout->addWidget(new QLabel("Window [ms]"));
-	QwtCounter* cntWindow = new QwtCounter();
+	topLayout->addWidget(new QLabel(tr("Window [ms]")));
+	QDoubleSpinBox* cntWindow = new QDoubleSpinBox();
 	// s to ms, right window width
 	double maxMilliSecs = plotter->getMaxTrimLength() * 1000.0;
 	cntWindow->setRange(1.0, maxMilliSecs);
 	cntWindow->setSingleStep(1);
-	cntWindow->setNumButtons(2);
-	cntWindow->setIncSteps(QwtCounter::Button1, 1);
-	cntWindow->setIncSteps(QwtCounter::Button2, 100);
 	cntWindow->setValue(500);
 	tmp = new QLabel("W25999.0W");
 	cntWindow->setFixedWidth(
@@ -161,9 +225,9 @@ QWidget* PlotWindow::getSplTab(
 		SLOT(setWinLength(double))
 	);
 
-	if(QLCfg::USE_PAHSE) {
+	if(QLCfg::USE_PHASE) {
 		topLayout->addSpacing(15);
-		QCheckBox* phaseCheck = new QCheckBox("Phase");
+		QCheckBox* phaseCheck = new QCheckBox(tr("Phase"));
 		phaseCheck->setChecked(false);
 		topLayout->addWidget(phaseCheck, 0);
 		connect(
@@ -183,67 +247,47 @@ QWidget* PlotWindow::getSplTab(
 	// layout final
 	splLayout->setMargin(1);
 	splWidget->setLayout(splLayout);
+
+	*ref = static_cast<Plotter*>(plotter);
 	return splWidget;
 }
 
 QWidget* PlotWindow::getIRTab(
 	const QString& dir,
-	const IRInfo& ii
+	const IRInfo& ii,
+	Plotter **ref
 ) {
-	QwtPlot* irPlot = new IRPlot(dir, ii);
-	this->zoomizePlotter(irPlot, 2, 3);
+	QWidget* irPlot = new IRPlot(dir, ii);
+	*ref = static_cast<Plotter*>(irPlot);
 	return irPlot;
 }
 
 QWidget* PlotWindow::getIRPTab(
 	const QString& dir,
-	const IRInfo& ii
+	const IRInfo& ii,
+	Plotter **ref
 ) {
-	QwtPlot* irpPlot = new IRPPlot(dir, ii);
-	this->zoomizePlotter(irpPlot, 2, 3);
+	QWidget* irpPlot = new IRPPlot(dir, ii);
+	*ref = static_cast<Plotter*>(irpPlot);
 	return irpPlot;
 }
 
 QWidget* PlotWindow::getStepTab(
 	const QString& dir,
-	const IRInfo& ii
+	const IRInfo& ii,
+	Plotter **ref
 ) {
-	QwtPlot* stepPlot = new StepPlot(dir, ii);
-	this->zoomizePlotter(stepPlot, 2, 3);
+	QWidget* stepPlot = new StepPlot(dir, ii);
+	*ref = static_cast<Plotter*>(stepPlot);
 	return stepPlot;
 }
 
 QWidget* PlotWindow::getHarmTab(
 	const QString& dir,
-	const IRInfo& ii
+	const IRInfo& ii,
+	Plotter **ref
 ) {
-	QwtPlot* harmPlot = new HarmPlot(dir, ii);
-	this->zoomizePlotter(harmPlot, 1, 3);
+	QWidget* harmPlot = new HarmPlot(dir, ii);
+	*ref = static_cast<Plotter*>(harmPlot);
 	return harmPlot;
 }
-
-void PlotWindow::zoomizePlotter(
-	QwtPlot* plotter,
-	int roundX,
-	int roundY
-) {
-	RoundedZoomer* zoomer1 = new RoundedZoomer(
-		QwtPlot::xBottom,
-		QwtPlot::yLeft,
-		plotter->canvas()
-	);
-	zoomer1->setRound(roundX, roundY);
-	zoomer1->setRubberBand(QwtPicker::RectRubberBand);
-	zoomer1->setRubberBandPen(QColor(192, 0, 0));
-	zoomer1->setTrackerMode(QwtPicker::AlwaysOn);
-	zoomer1->setTrackerPen(QColor(0, 0, 0));
-	zoomer1->setMousePattern(
-		QwtEventPattern::MouseSelect2,
-		Qt::RightButton,
-		Qt::ControlModifier
-	);
-	zoomer1->setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
-	zoomer1->setEnabled(true);
-	zoomer1->zoom(0);
-}
-

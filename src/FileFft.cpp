@@ -44,7 +44,7 @@ FileFft::~FileFft() {
 
 double* FileFft::getAmps(double smoothFactor) {
 	double* linAmps = new double[this->fftResultLength];
-	for(int i=0; i < this->fftResultLength; i++) {
+	for(int i = 0; i < this->fftResultLength; i++) {
 		double tmp = this->fftResult[i][0] * this->fftResult[i][0];
 		tmp += this->fftResult[i][1] * this->fftResult[i][1];
 		linAmps[i] = sqrt(tmp);
@@ -52,16 +52,24 @@ double* FileFft::getAmps(double smoothFactor) {
 
 	QLUtl::toDbInPlace(linAmps, this->fftResultLength, true);
 
-	double* logAmps = QLUtl::spaceAmpsToFreqs(FileFft::POINTS_AMOUNT, this->freqs,
-											  this->fftResultLength, linAmps);
+	double* logAmps = QLUtl::spaceAmpsToFreqs(
+		FileFft::POINTS_AMOUNT,
+		this->freqs,
+		this->fftResultLength,
+		linAmps
+	);
 	delete linAmps;
 
-	double* smoothed = QLUtl::smoothForLog(logAmps, this->freqs, smoothFactor,
-										   FileFft::POINTS_AMOUNT);
+	double* smoothed = QLUtl::smoothForLog(
+		logAmps,
+		this->freqs,
+		smoothFactor,
+		FileFft::POINTS_AMOUNT
+	);
 	delete logAmps;
 
 	// amplitudes must be scaled to max recorded level. Do it on place.
-	for(int i=0; i < FileFft::POINTS_AMOUNT; i++)
+	for(int i = 0; i < FileFft::POINTS_AMOUNT; i++)
 		smoothed[i] += this->ii.maxLevel;
 
 	return smoothed;
@@ -71,15 +79,24 @@ double* FileFft::getPhase(double smoothFactor) {
 	double* linPhase = new double[this->fftResultLength];
 	double factor = 180.0 / M_PI;
 
-	for(int i=0; i < this->fftResultLength; i++) {
+	for(int i = 0; i < this->fftResultLength; i++) {
 		double tmp = atan2(this->fftResult[i][1], this->fftResult[i][0]);
 		linPhase[i] = tmp * factor;
 	}
 
-	double* smoothed = QLUtl::fastSmooth(linPhase, smoothFactor, this->fftResultLength);
+	double* smoothed = QLUtl::fastSmooth(
+		linPhase,
+		smoothFactor,
+		this->fftResultLength
+	);
 	delete linPhase;
 
-	double* logPhase = QLUtl::spaceAmpsToFreqs(FileFft::POINTS_AMOUNT, this->freqs, this->fftResultLength, smoothed);
+	double* logPhase = QLUtl::spaceAmpsToFreqs(
+		FileFft::POINTS_AMOUNT,
+		this->freqs,
+		this->fftResultLength,
+		smoothed
+	);
 
 	delete smoothed;
 
@@ -88,7 +105,7 @@ double* FileFft::getPhase(double smoothFactor) {
 
 double* FileFft::getFreqs() {
 	double* tmp = new double[FileFft::POINTS_AMOUNT];
-	for(int i=0; i < FileFft::POINTS_AMOUNT; i++)
+	for(int i = 0; i < FileFft::POINTS_AMOUNT; i++)
 		tmp[i] = this->freqs[i];
 	return tmp;
 }

@@ -16,13 +16,7 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qwt_math.h>
-#include <qwt_scale_engine.h>
-#include <qwt_symbol.h>
-#include <qwt_plot_grid.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
-
+#include "Plotter.h"
 #include "HarmPlot.h"
 #include "Harmonics.h"
 
@@ -43,7 +37,7 @@ HarmPlot::HarmPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : QwtPlot(parent) {
+) : Plotter(parent) {
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	this->dir = aDir;
@@ -51,37 +45,28 @@ HarmPlot::HarmPlot(
 
 	this->data = (HarmData**) new char[sizeof(HarmData*) * (MAX_HARM - 1)];
 
-	this->setAutoReplot(false);
-	this->setCanvasBackground(BG_COLOR);
+	setTitle(tr("Harmonic Distortion"));
 
-	this->setAxisScale(QwtPlot::yLeft, -120.0, 20.0);
-	this->setAxisMaxMajor(QwtPlot::yLeft, 7);
-	this->setAxisMaxMinor(QwtPlot::yLeft, 10);
+	QLogValueAxis *XAxis = new QLogValueAxis(this->chart);
+	XAxis->setBase(10.0);
+	XAxis->setLabelFormat("%d");
+	XAxis->setTitleText(tr("Frequency in Hz"));
+	XAxis->setRange(10, 10000);
+	XAxis->setMinorTickCount(8);
 
-	this->setAxisMaxMajor(QwtPlot::xBottom, 6);
-	this->setAxisMaxMinor(QwtPlot::xBottom, 10);
-	QwtLogScaleEngine* logEngine = new QwtLogScaleEngine(10.0);
-	this->setAxisScaleEngine(QwtPlot::xBottom, logEngine);
+	QValueAxis *YAxis = new QValueAxis(this->chart);
+	YAxis->setTitleText(tr("Distortion in dB"));
+	YAxis->setLabelFormat("%d");
+	YAxis->setMax(20);
+	YAxis->setMin(-120);
+	YAxis->setTickCount(8);
+	YAxis->setMinorTickCount(10);
 
-	QwtPlotGrid *grid = new QwtPlotGrid;
-	grid->enableXMin(true);
-	grid->setMajorPen(QPen(MAJ_PEN_COLOR, 0, Qt::DotLine));
-	grid->setMinorPen(QPen(MIN_PEN_COLOR, 0 , Qt::DotLine));
-	grid->attach(this);
-
-	this->addCurves();
-
-	QwtPlotPanner* panner = new QwtPlotPanner(this->canvas());
-	panner->setMouseButton(Qt::MidButton);
-	panner->setEnabled(true);
-
-	this->setAutoReplot(true);
-
+	this->addCurves(XAxis, YAxis);
 }
 
-
 HarmPlot::~HarmPlot() {
-	for( int i = 0; i < MAX_HARM - 2; i++) {
+	for(int i = 0; i < MAX_HARM - 2; i++) {
 		HarmData* data = this->data[i];
 		if( data )
 			delete data;
@@ -89,25 +74,33 @@ HarmPlot::~HarmPlot() {
 	delete this->data;
 }
 
-
-void HarmPlot::addCurves() {
+void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 	Harmonics* harmonics = new Harmonics(this->dir, this->ii);
-	for(int i=0; i <= MAX_HARM - 2; i++) {
+	for(int i = 0; i <= MAX_HARM - 2; i++) {
 		this->data[i] = harmonics->getHarm(i+2); // begin from second harmonic
 		if( ! this->data[i])
 			continue; // have not more harmonic in IR
 
 		QString name = "Harmonic";
 		name += i;
-		QwtPlotCurve* curve = new QwtPlotCurve(name);
+		QLineSeries* curve = new QLineSeries(this->chart);
 		curve->setPen(QPen(HARM_COLORS[i]));
-		curve->setYAxis(QwtPlot::yLeft);
-		curve->attach(this);
-		curve->setSamples(
-			this->data[i]->freqs,
-			this->data[i]->values,
-			this->data[i]->length
-		);
+		if (i == 0)
+			appendSeries(curve, x, Qt::AlignBottom, y, Qt::AlignLeft);
+		else
+			appendSeries(
+				curve,
+				nullptr, Qt::AlignBottom,
+				nullptr, Qt::AlignLeft
+			);
+
+		QList<QPointF> points;
+		for(int j = 0; j < this->data[i]->length; j++) {
+			points.append(
+				QPointF(this->data[i]->freqs[j], this->data[i]->values[j])
+			);
+		}
+		curve->replace(points);
 	}
 	delete harmonics;
 }

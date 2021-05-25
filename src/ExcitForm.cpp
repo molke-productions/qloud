@@ -32,13 +32,13 @@ ExcitForm::ExcitForm(
 	// Layout
 	QVBoxLayout* mainLayout = new QVBoxLayout();
 
-	QGroupBox* exGroup = new QGroupBox("Parameters for excitation signal");
+	QGroupBox* exGroup = new QGroupBox(tr("Parameters for excitation signal"));
 	QVBoxLayout* exLayout = new QVBoxLayout();
 
 	// Excitation top
 	QHBoxLayout* exTop = new QHBoxLayout();
 
-	exTop->addWidget(new QLabel("Length [s]"));
+	exTop->addWidget(new QLabel(tr("Length [s]")));
 	this->lengthCombo = new QComboBox();
 	this->lengthCombo->setEditable(false);
 	this->lengthCombo->addItem("3");
@@ -59,7 +59,7 @@ ExcitForm::ExcitForm(
 
 	exTop->addStretch(1);
 	exTop->addSpacing(QLWin::SMALL_SPACE);
-	exTop->addWidget(new QLabel("Sample rate [Hz]"));
+	exTop->addWidget(new QLabel(tr("Sample rate [Hz]")));
 	this->rateCombo = new QComboBox();
 	this->rateCombo->setEditable(false);
 	this->rateCombo->addItem("32000");
@@ -82,7 +82,7 @@ ExcitForm::ExcitForm(
 
 	exTop->addStretch(1);
 	exTop->addSpacing(QLWin::SMALL_SPACE);
-	exTop->addWidget(new QLabel("Bit depth"));
+	exTop->addWidget(new QLabel(tr("Bit depth")));
 	this->depthCombo = new QComboBox();
 	this->depthCombo->setEditable(false);
 	this->depthCombo->addItem("16");
@@ -98,7 +98,7 @@ ExcitForm::ExcitForm(
 	);
 
 	exTop->addSpacing(QLWin::BIG_SPACE);
-	QWidget* excitLabel = new QLabel("<b>Excitation</b>");
+	QWidget* excitLabel = new QLabel(tr("<b>Excitation</b>"));
 	excitLabel->setFixedWidth(QLWin::rightSize().width());
 	exTop->addWidget(excitLabel);
 
@@ -107,34 +107,31 @@ ExcitForm::ExcitForm(
 	// Excitation bottom
 	QHBoxLayout* exBottom = new QHBoxLayout();
 
-	exBottom->addWidget(new QLabel("Min. freq. [Hz]"));
-	this->fMinCnt = new QwtCounter();
+	exBottom->addWidget(new QLabel(tr("Min. freq. [Hz]")));
+	this->fMinCnt = new QDoubleSpinBox(this);
 	this->fMinCnt->setRange(1, 100000);
 	this->fMinCnt->setSingleStep(1);
-	this->fMinCnt->setNumButtons(2);
-	this->fMinCnt->setIncSteps(QwtCounter::Button1, 1);
-	this->fMinCnt->setIncSteps(QwtCounter::Button2, 10);
-
-	this->fMinCnt->setNumButtons(2);
-	this->fMinCnt->setIncSteps(QwtCounter::Button1, 1);
-	this->fMinCnt->setIncSteps(QwtCounter::Button2, 10);
 	this->fMinCnt->setValue(100);
 	QWidget* tmp = new QLabel("W100000W");
-	this->fMinCnt->setFixedWidth(this->fMinCnt->sizeHint().width() + tmp->sizeHint().width());
+	this->fMinCnt->setFixedWidth(
+		this->fMinCnt->sizeHint().width() + tmp->sizeHint().width()
+	);
 	delete tmp;
 	exBottom->addWidget(this->fMinCnt, 5);
-	connect(this->fMinCnt, SIGNAL(valueChanged(double)), this, SLOT(fMinChanged(double)));
+	connect(
+		this->fMinCnt,
+		SIGNAL(valueChanged(double)),
+		this,
+		SLOT(fMinChanged(double))
+	);
 
 	exBottom->addStretch(1);
 	exBottom->addSpacing(QLWin::SMALL_SPACE);
 
-	exBottom->addWidget(new QLabel("Max. freq. [Hz]"));
-	this->fMaxCnt = new QwtCounter();
+	exBottom->addWidget(new QLabel(tr("Max. freq. [Hz]")));
+	this->fMaxCnt = new QDoubleSpinBox(this);
 	this->fMaxCnt->setRange(1, 100000);
 	this->fMaxCnt->setSingleStep(1);
-	this->fMaxCnt->setNumButtons(2);
-	this->fMaxCnt->setIncSteps(QwtCounter::Button1, 10);
-	this->fMaxCnt->setIncSteps(QwtCounter::Button2, 1000);
 	this->fMaxCnt->setValue(10000);
 	tmp = new QLabel("W1000000W");
 	this->fMaxCnt->setFixedWidth(
@@ -150,7 +147,7 @@ ExcitForm::ExcitForm(
 	);
 
 	exBottom->addSpacing(QLWin::BIG_SPACE);
-	QPushButton* genBtn = new QPushButton("Generate");
+	QPushButton* genBtn = new QPushButton(tr("Generate"));
 	genBtn->setFixedWidth(QLWin::rightSize().width());
 	exBottom->addWidget(genBtn);
 	connect(genBtn, SIGNAL(clicked()), this, SLOT(generate()));
@@ -163,15 +160,37 @@ ExcitForm::ExcitForm(
 	this->layout()->setMargin(0);
 
 	// Signals
-	connect(this, SIGNAL(setStatus(const QString&)),
-			this->feedback, SLOT(showStatus(const QString&)));
-	connect(this, SIGNAL(setStatus(const QString&, int)),
-			this->feedback, SLOT(showStatus(const QString&, int)));
-	connect(this->feedback, SIGNAL(forceRate(int)), this, SLOT(forceRate(int)), Qt::QueuedConnection);
-	connect(this->feedback, SIGNAL(workDirChanged(const QString&)),
-			this, SLOT(setWorkDir(const QString&)));
-	connect(this, SIGNAL(excitInfoChanged(const QString&)),
-			this->feedback, SLOT(changeExcitInfo(const QString&)));
+	connect(
+		this,
+		SIGNAL(setStatus(const QString&)),
+		this->feedback,
+		SLOT(showStatus(const QString&))
+	);
+	connect(
+		this,
+		SIGNAL(setStatus(const QString&, int)),
+		this->feedback,
+		SLOT(showStatus(const QString&, int))
+	);
+	connect(
+		this->feedback,
+		SIGNAL(forceRate(int)),
+		this,
+		SLOT(forceRate(int)),
+		Qt::QueuedConnection
+	);
+	connect(
+		this->feedback,
+		SIGNAL(workDirChanged(const QString&)),
+		this,
+		SLOT(setWorkDir(const QString&))
+	);
+	connect(
+		this,
+		SIGNAL(excitInfoChanged(const QString&)),
+		this->feedback,
+		SLOT(changeExcitInfo(const QString&))
+	);
 
 	this->setWorkDir(aWorkDir);
 }
@@ -216,7 +235,7 @@ void ExcitForm::forceRate(int newRate) {
 	if(QLUtl::setComboToData(this->rateCombo, newRate))
 		this->newCfg.rate = newRate;
 	else
-		this->showCritical("Failed accepting JACK rate!");
+        this->showCritical(tr("Failed accepting JACK rate!"));
 }
 
 void ExcitForm::generated() {

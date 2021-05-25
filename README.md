@@ -1,7 +1,9 @@
 # About
 
 QLoud is a tool to measure a loudspeaker frequency response and distortions.
-This is just an attempt of porting it to QT5.
+
+This was just an attempt of porting it to QT5. It now uses Qt Charts instead of Qwt for plotting.
+
 The original app page is here:
 
 http://gaydenko.com/qloud/
@@ -22,46 +24,45 @@ http://pcfarina.eng.unipr.it/Public/Papers/134-AES00.PDF
 
 # Target use
 
-* loudspeakers DIY-ing (xover tuning).
+* loudspeaker DIY (crossover tuning).
 
 
 # Measurement chain
 
-* the app, generating excitation signal,
-* sound card line out,
-* power amplifier,
-* loudspeaker under testing,
-* measurement microphone (with mic preamp),
-* sound card line in,
-* the app, capturing loudspeaker response.
+* the app, generating excitation signal
+* sound card line out
+* power amplifier
+* loudspeaker under test
+* measurement microphone (with microphone preamp)
+* sound card line in
+* the app, capturing loudspeaker response
 
 
 # Result
 
-After audio system response capturing is done, IR (Impulse Response)
-is calculated. Currently these IR-aware analysis outcomes are available:
+After audio system response capturing is done, an IR (impulse response)
+is calculated. Currently, these IR-aware analysis outcomes are available:
 
-* plotting of SPL (Sound Pressure Level) as function of frequency (dB/Hz scale),
-* plotting of IR-power as function of time (dB/s),
-* plotting of Step Response as function of time (amp/s),
-* plotting of harmonics as function of frequency (dB/Hz scale):
+* plotting of SPL (sound pressure level) as a function of frequency (dB/Hz)
+* plotting of IR power as a function of time (dB/s)
+* plotting of step response as a function of time (amp/s)
+* plotting of harmonics as a function of frequency (dB/Hz):
 	* 2nd – green
 	* 3rd – red
 	* 4th – light green
 	* 5th – light red
 
 
-IR-power plot is useful to see a room reflections behaviour.
-Step Response plot is useful for speakers time alignment in multiway loudspeakers.
-All plots support zooming with history and panning.
+The IR power plot is useful to see room reflections behavior.
+The step response plot is useful for speakers time alignment in multiway loudspeakers.
 
 
 # A few hints
 
-* move mouse above “?” sign at plot window and wait,
-* to change a measurement description double-click it,
-* to delete a measurement, use context menu on measurements table,
-* to see what the app do, just connect app’s JACK ports directly and try,
-* to see what your sound card do, use loopback for line in/out,
+* move mouse above “?” sign at plot window and wait
+* to change a measurement description double-click it
+* to delete a measurement, use the context menu on the measurements table
+* to see what the app does, just connect the app’s JACK ports directly and try
+* to see what your sound card does, use loopback for line in/out
 * take into account your measurement mic slope at high frequencies when
-  observing harmonics plot.
+  observing harmonics plot

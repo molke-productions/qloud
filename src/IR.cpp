@@ -35,7 +35,6 @@ IR::IR(QString aDirPath, QString aPrefix) {
 	this->maxTrimLength = -1.0;
 }
 
-
 double IR::getMaxTrimLength() {
 	if(this->maxTrimLength > 0.0)
 		return this->maxTrimLength;
@@ -59,7 +58,7 @@ double IR::getMaxTrimLength() {
 	// find peak
 	double max = 0.0;
 	double tmp = 0.0;
-	for(unsigned i=0; i < wavInfo->length; i++) {
+	for(unsigned i = 0; i < wavInfo->length; i++) {
 		tmp = fabs(irSamples[i]);
 		if(tmp > max) {
 			max = tmp;
@@ -127,10 +126,12 @@ void IR::generate() {
 	// convert input samples to complex
 	unsigned fftLength = wavInfo->length * 2;
 
-	fftw_complex* filterBuf =
-		(fftw_complex*) fftw_malloc(sizeof(fftw_complex) * fftLength);
-	fftw_complex* respBuf =
-		(fftw_complex*) fftw_malloc(sizeof(fftw_complex) * fftLength);
+	fftw_complex* filterBuf = (fftw_complex*) fftw_malloc(
+		sizeof(fftw_complex) * fftLength
+	);
+	fftw_complex* respBuf = (fftw_complex*) fftw_malloc(
+		sizeof(fftw_complex) * fftLength
+	);
 	for(unsigned i = 0; i < wavInfo->length; i++) {
 		filterBuf[i][0] = realFilter[i];
 		filterBuf[i][1] = 0.0;
@@ -148,25 +149,37 @@ void IR::generate() {
 	delete realResp;
 
 	// do forward FFT transform
-	fftw_complex* filterFft = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * fftLength);
-	fftw_plan plan = fftw_plan_dft_1d(fftLength, filterBuf, filterFft, FFTW_FORWARD, FFTW_ESTIMATE);
+	fftw_complex* filterFft = (fftw_complex*)fftw_malloc(
+		sizeof(fftw_complex) * fftLength
+	);
+	fftw_plan plan = fftw_plan_dft_1d(
+		fftLength, filterBuf, filterFft, FFTW_FORWARD, FFTW_ESTIMATE
+	);
 	fftw_execute(plan);
 	fftw_destroy_plan(plan);
 	fftw_free(filterBuf);
 
-	fftw_complex* respFft = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * fftLength);
-	plan = fftw_plan_dft_1d(fftLength, respBuf, respFft, FFTW_FORWARD, FFTW_ESTIMATE);
+	fftw_complex* respFft = (fftw_complex*)fftw_malloc(
+		sizeof(fftw_complex) * fftLength
+	);
+	plan = fftw_plan_dft_1d(
+		fftLength, respBuf, respFft, FFTW_FORWARD, FFTW_ESTIMATE
+	);
 	fftw_execute(plan);
 	fftw_destroy_plan(plan);
 	fftw_free(respBuf);
 
 	// multiply ----------------------------------------------------------------
-	fftw_complex* product = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * fftLength);
+	fftw_complex* product = (fftw_complex*)fftw_malloc(
+		sizeof(fftw_complex) * fftLength
+	);
 	double normFactor = 1.0 / fftLength;
 	for(unsigned i = 0; i < fftLength; i++) {
-		product[i][0] = filterFft[i][0] * respFft[i][0] - filterFft[i][1] * respFft[i][1];
+		product[i][0] = filterFft[i][0] * respFft[i][0]
+			- filterFft[i][1] * respFft[i][1];
 		product[i][0] *= normFactor;
-		product[i][1] = filterFft[i][0] * respFft[i][1] + filterFft[i][1] * respFft[i][0];
+		product[i][1] = filterFft[i][0] * respFft[i][1]
+			+ filterFft[i][1] * respFft[i][0];
 		product[i][1] *= normFactor;
 	}
 	fftw_free(filterFft);
@@ -174,7 +187,9 @@ void IR::generate() {
 
 	// inverse complex to complex transform, here we get IR at last :-) --------
 	fftw_complex* irBuf = new fftw_complex[fftLength];
-	plan = fftw_plan_dft_1d(fftLength, product, irBuf, FFTW_BACKWARD, FFTW_ESTIMATE);
+	plan = fftw_plan_dft_1d(
+		fftLength, product, irBuf, FFTW_BACKWARD, FFTW_ESTIMATE
+	);
 	fftw_execute(plan);
 	fftw_destroy_plan(plan);
 	fftw_free(product);
@@ -183,38 +198,41 @@ void IR::generate() {
 	double* realIr = new double[fftLength];
 	double max = 0.0;
 	double tmpAbs = 0.0;
-	for(unsigned i=0; i < fftLength; i++) {
+	for(unsigned i = 0; i < fftLength; i++) {
 		realIr[i] = irBuf[i][0];
 		tmpAbs = fabs(realIr[i]);
 		if( tmpAbs > max )
 			max = tmpAbs;
 	}
 	delete irBuf;
-	for(unsigned i=0; i < fftLength; i++)
+	for(unsigned i = 0; i < fftLength; i++)
 		realIr[i] /= max;
 
 	// save IR -----------------------------------------------------------------
-	WavOut* wavOut = new WavOut(this->dirPath + "/" + this->prefix + IR::irFileName());
+	WavOut* wavOut = new WavOut(
+		this->dirPath + "/" + this->prefix + IR::irFileName()
+	);
 	wavInfo->length = fftLength;
 	try {
 		wavOut->writeDouble(*wavInfo, realIr);
 	} catch(QLE e) {
 		delete wavOut;
-		delete realIr;
+		delete[] realIr;
 		throw QLE(e.msg);
 	}
 	delete wavOut;
 	delete wavInfo;
-	delete realIr;
+	delete[] realIr;
 }
-
 
 void IR::trim(double secs) {
 	if(secs < 0.0001)
 		throw QLE("window width too small");
 
 	// read ir.wav file --------------------------------------------------------
-	WavIn* irWav = new WavIn(this->dirPath + "/" + this->prefix + IR::irFileName());
+	WavIn* irWav = new WavIn(
+		this->dirPath + "/" + this->prefix + IR::irFileName()
+	);
 	double* irSamples =0;
 	try {
 		irSamples = irWav->readDouble();
@@ -231,7 +249,7 @@ void IR::trim(double secs) {
 	if(this->maxIdx < 0) {
 		double max = 0.0;
 		double tmp = 0.0;
-		for(unsigned i=0; i < wavInfo->length; i++) {
+		for(unsigned i = 0; i < wavInfo->length; i++) {
 			tmp = fabs(irSamples[i]);
 			if(tmp > max) {
 				max = tmp;
@@ -239,7 +257,10 @@ void IR::trim(double secs) {
 			}
 		}
 	}
-	if((this->maxIdx < (wavInfo->length * 0.3)) || (this->maxIdx > (wavInfo->length * 0.7))) {
+	if(
+		(this->maxIdx < (wavInfo->length * 0.3)) ||
+		(this->maxIdx > (wavInfo->length * 0.7))
+	) {
 		delete irSamples;
 		throw QLE("peak position is very strange!");
 	}
@@ -257,7 +278,7 @@ void IR::trim(double secs) {
 		leftShift = maxIdx;
 	int left = maxIdx - leftShift;
 	Weights* w = new Weights("hanning", leftShift * 2 + 1);
-	for(int i=0; i <= leftShift; i++)
+	for(int i = 0; i <= leftShift; i++)
 		irSamples[left + i] *= w->getPoint(i);
 	delete w;
 
@@ -267,27 +288,29 @@ void IR::trim(double secs) {
 	if(right > int(wavInfo->length))
 		throw QLE("Window too wide");
 	w = new Weights("hanning", rightShift * 2 + 1);
-	for(int i=0; i <= rightShift; i++)
+	for(int i = 0; i <= rightShift; i++)
 		irSamples[maxIdx + i] *= w->getPoint(i + rightShift);
 	delete w;
 
 	// save result -------------------------------------------------------------
 	int winLength = right - left + 1;
 	double* trimmed = new double[winLength];
-	for(int i=0; i < winLength; i++)
+	for(int i = 0; i < winLength; i++)
 		trimmed[i] = irSamples[left + i];
 	delete irSamples;
 
 	wavInfo->length = winLength;
-	WavOut* trimOut = new WavOut(this->dirPath + "/" + this->prefix + IR::trimmedIrFileName());
+	WavOut* trimOut = new WavOut(
+		this->dirPath + "/" + this->prefix + IR::trimmedIrFileName()
+	);
 	try {
 		trimOut->writeDouble(*wavInfo, trimmed);
 	} catch(QLE e) {
 		delete trimOut;
-		delete trimmed;
+		delete[] trimmed;
 		throw QLE(e.msg);
 	}
 	delete trimOut;
 	delete wavInfo;
-	delete trimmed;
+	delete[] trimmed;
 }

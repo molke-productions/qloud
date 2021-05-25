@@ -47,7 +47,7 @@ IrsView::IrsView(
 	this->setColumnWidth(2, columnWidth);
 
 	this->menu = new QMenu();
-	QAction* delAction = this->menu->addAction("Delete measurement");
+	QAction* delAction = this->menu->addAction(tr("Delete measurement"));
 	connect(delAction, SIGNAL(triggered()), this, SLOT(deleteMeasure()));
 }
 
@@ -64,12 +64,12 @@ void IrsView::deleteMeasure() {
 	QModelIndex infoIndex = this->model()->index(index.row(), 0);
 	QString info = this->model()->data(infoIndex, Qt::DisplayRole).toString();
 
-	QString msg = "Measurement description:\n\n";
+	QString msg = tr("Measurement description:\n\n");
 	msg += info;
-	msg += "\n\nAre you sure you want to delete this measurement?";
+	msg += tr("\n\nAre you sure you want to delete this measurement?");
 	int doDelete = QMessageBox::question(
 		this,
-		"Delete measurement permanently",
+		tr("Delete measurement permanently"),
 		msg,
 		QMessageBox::Yes,
 		QMessageBox::Cancel

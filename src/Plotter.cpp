@@ -16,163 +16,89 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qwt_math.h>
-#include <qwt_scale_engine.h>
-#include <qwt_symbol.h>
-#include <qwt_plot_grid.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
-
-#include "IR.h"
-#include "FileFft.h"
 #include "Plotter.h"
-#include "QLUtl.h"
 #include "QLCfg.h"
 
-static const QColor BG_COLOR(245, 245, 232);
-static const QColor MAJ_PEN_COLOR(175, 175, 152);
-static const QColor MIN_PEN_COLOR(175, 175, 152);
-static const QColor AMP_CURVE_COLOR(0, 0, 172);
-static const QColor PHASE_CURVE_COLOR(0, 150, 0);
-
-Plotter::Plotter(
-	const QString& aDir,
-	IRInfo anIi,
-	QWidget *parent
-) : QwtPlot(parent) {
-	this->setAttribute(Qt::WA_DeleteOnClose);
-
-	this->dir = aDir;
-	this->ii = anIi;
-
-	this->freqs = 0;
-	this->amps = 0;
-	this->phase = 0;
-	this->phaseCurve = 0;
-
-	this->ir = new IR(dir, ii.key);
-
-	this->setAutoReplot(false);
-	this->setCanvasBackground(BG_COLOR);
-
-	this->setAxisScale(QwtPlot::yLeft, -80.0, 20.0);
-	this->setAxisMaxMajor(QwtPlot::yLeft, 7);
-	this->setAxisMaxMinor(QwtPlot::yLeft, 10);
-
-	if(QLCfg::USE_PAHSE) {
-		this->enableAxis(QwtPlot::yRight);
-		this->setAxisScale(QwtPlot::yRight, -180.0, 180.0);
-	}
-
-	this->setAxisMaxMajor(QwtPlot::xBottom, 6);
-	this->setAxisMaxMinor(QwtPlot::xBottom, 10);
-	QwtLogScaleEngine* logEngine = new QwtLogScaleEngine(10.0);
-	this->setAxisScaleEngine(QwtPlot::xBottom, logEngine);
-
-	QwtPlotGrid *grid = new QwtPlotGrid;
-	grid->enableXMin(true);
-	grid->setMajorPen(QPen(MAJ_PEN_COLOR, 0, Qt::DotLine));
-	grid->setMinorPen(QPen(MIN_PEN_COLOR, 0 , Qt::DotLine));
-	grid->attach(this);
-
-	// curves
-	this->ampCurve = new QwtPlotCurve("Amplitude");
-	this->ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	this->ampCurve->setYAxis(QwtPlot::yLeft);
-	this->ampCurve->attach(this);
-
-	if(QLCfg::USE_PAHSE) {
-		this->phaseCurve = new QwtPlotCurve("Phase");
-		this->phaseCurve->setPen(QPen(PHASE_CURVE_COLOR));
-		this->phaseCurve->setYAxis(QwtPlot::yRight);
-	}
-
-	QwtPlotPanner* panner = new QwtPlotPanner(this->canvas());
-	panner->setMouseButton(Qt::MidButton);
-	panner->setEnabled(true);
-
-	this->smoothFactor = Plotter::DEFAULT_SMOOTH; // 1/6 octave
-	this->winLength = 0.5; // 500 ms for right window
-	this->recalculate();
-	this->setAutoReplot(true);
+Plotter::Plotter(QWidget *parent) : QChartView(parent) {
+	chart = new QChart();
+	chart->legend()->hide();
+	this->setChart(chart);
+	this->setRenderHint(QPainter::Antialiasing);
+	this->setRubberBand(QChartView::RectangleRubberBand);
 }
 
 Plotter::~Plotter() {
-	if(this->freqs)
-		delete this->freqs;
-	if(this->amps)
-		delete this->amps;
-	if(this->phase)
-		delete this->phase;
-	if(this->ir)
-		delete ir;
-	if(this->phaseCurve)
-		delete this->phaseCurve; // may be detached
+	delete chart;
 }
 
-double Plotter::getMaxTrimLength() {
-	return this->ir->getMaxTrimLength();
+void Plotter::setTitle(const QString &title) {
+	chart->setTitle(title);
 }
 
-void Plotter::setSmooth(double aSmoothFactor) {
-	this->smoothFactor = aSmoothFactor;
-	this->recalculate();
+QString Plotter::getTitle() {
+	return chart->title();
 }
 
-void Plotter::setWinLength(double msecs) {
-	this->winLength = msecs / 1000.0;
-	this->recalculate();
-}
+void Plotter::appendSeries(
+	QLineSeries *series,
+	QAbstractAxis* xaxis, Qt::Alignment xalign,
+	QAbstractAxis* yaxis, Qt::Alignment yalign
+) {
+	if (xaxis)
+		chart->addAxis(xaxis, xalign);
+	if (yaxis)
+		chart->addAxis(yaxis, yalign);
 
-void Plotter::enablePhase(int state) {
-	if( ! QLCfg::USE_PAHSE)
-		return;
+	chart->addSeries(series);
 
-	if(state)
-		this->phaseCurve->attach(this);
+	if (xaxis)
+		series->attachAxis(xaxis);
 	else
-		this->phaseCurve->detach();
-	this->replot();
+		series->attachAxis(chart->axes(Qt::Orientation::Horizontal)[0]);
+	if (yaxis)
+		series->attachAxis(yaxis);
+	else
+		series->attachAxis(chart->axes(Qt::Orientation::Vertical)[0]);
+
+	list.append(series);
 }
 
-// private
-void Plotter::recalculate() {
-	this->setAutoReplot(false);
+void Plotter::removeSeries(QLineSeries *series, QAbstractAxis* yattached) {
+	list.removeAll(series);
+	if (yattached)
+		chart->removeAxis(yattached);
+	chart->removeSeries(series);
+}
 
-	this->ir->trim(this->winLength);
+bool Plotter::exportSeries(const QString &filename) {
+	QFile file(filename);
 
-	FileFft* ff = new FileFft(
-		this->dir + "/" + this->ii.key + IR::trimmedIrFileName(), this->ii
-	);
+	QString f("# QLoud plot: ");
+	f += getTitle() + "\n";
+	f += "# x, y [, y2 ...]\n";
 
-	if(this->freqs)
-		delete this->freqs;
-	this->freqs = ff->getFreqs();
+	int len = list.at(0)->points().size();
 
-	if(this->amps)
-		delete this->amps;
-	this->amps = ff->getAmps(1.0 / this->smoothFactor);
+	QString line;
+	for (int i = 0; i < len; i++) {
+		line.clear();
+		for (int s = 0; s < list.size(); s++ ) {
+			QVector<QPointF> points = list.at(s)->pointsVector();
+			QPointF p = points.at(i);
+			if (s == 0)
+				line += QString("%1 %2 ").arg(p.x()).arg(p.y());
+			else
+				line += QString("%1 ").arg(p.y());
+		}
 
-	if(QLCfg::USE_PAHSE) {
-		if(this->phase)
-			delete this->phase;
-		this->phase = ff->getPhase(1.0 / this->smoothFactor);
+		line.chop(1);
+		line.append('\n');
+		f.append(line);
 	}
 
-	delete ff;
+	file.open(QIODevice::WriteOnly);
+	file.write(f.toUtf8());
+	file.close();
 
-	this->ampCurve->setSamples(
-		this->freqs,
-		this->amps,
-		FileFft::POINTS_AMOUNT
-	);
-	if(QLCfg::USE_PAHSE)
-		this->phaseCurve->setSamples(
-			this->freqs,
-			this->phase,
-			FileFft::POINTS_AMOUNT
-		);
-
-	this->setAutoReplot(true);
-	this->replot();
+	return true;
 }

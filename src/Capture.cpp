@@ -33,14 +33,12 @@ Capture::Capture(QString aDirPath) {
 	this->maxResponse = 0.0f;
 }
 
-
 Capture::~Capture() {
 	this->closeJack();
 	this->freeBuffers();
 	if(this->wavInfo)
 		delete this->wavInfo;
 }
-
 
 void Capture::openJack() {
 	if(this->jack)
@@ -50,10 +48,11 @@ void Capture::openJack() {
 	this->jack = new JackWrap();
 }
 
-
 void Capture::initBuffers() {
 	this->freeBuffers();
-	WavIn* excitWav = new WavIn(this->dirPath + "/" + Excitation::excitationFileName());
+	WavIn* excitWav = new WavIn(
+		this->dirPath + "/" + Excitation::excitationFileName()
+	);
 	this->wavInfo = excitWav->getWavInfo();
 	if(this->wavInfo->rate != this->jack->getRate())
 		throw QLE("Excitation and JACK sample rates are not equal!");
@@ -69,7 +68,6 @@ void Capture::initBuffers() {
 	delete excitWav;
 	this->capBuf = new float[this->wavInfo->length];
 }
-
 
 void Capture::doJob(int playDbLevel) {
 	if( ! this->jackIsConnected())
@@ -94,13 +92,14 @@ void Capture::doJob(int playDbLevel) {
 
 	this->maxResponse = this->jack->getMaxResponse();
 
-	WavOut* respWav = new WavOut(this->dirPath + "/" + Capture::responseFileName());
+	WavOut* respWav = new WavOut(
+		this->dirPath + "/" + Capture::responseFileName()
+	);
 	respWav->writeFloat(*this->wavInfo, this->capBuf);
 	delete respWav;
 
 	this->freeBuffers();
 }
-
 
 void Capture::closeJack() {
 	if(this->jack) {
@@ -109,18 +108,15 @@ void Capture::closeJack() {
 	}
 }
 
-
 bool Capture::jackIsConnected() {
 	if(this->jack )
 		return this->jack->isConnected();
 	return false;
 }
 
-
 float Capture::getMaxResponse() {
 	return this->maxResponse;
 }
-
 
 int Capture::getJackRate() {
 	if(this->jack)
@@ -128,9 +124,7 @@ int Capture::getJackRate() {
 	return -1;
 }
 
-
 //////////////////////////////// privates //////////////////////////////////////
-
 void Capture::freeBuffers() {
 	if(this->playBuf) {
 		delete this->playBuf;

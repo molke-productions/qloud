@@ -21,45 +21,34 @@
 #define PLOTTER_H
 
 #include <QtWidgets>
-#include <qwt_plot.h>
+#include <QtCharts/QtCharts>
 #include "QLE.h"
 #include "IR.h"
 #include "IRInfo.h"
 
-class QwtPlotCurve;
-class QwtPlotMarker;
-
-class Plotter: public QwtPlot {
+class Plotter: public QChartView {
 	Q_OBJECT
 
 public:
 	static constexpr double DEFAULT_SMOOTH = 6.0; // 1/6 octave
 
-	Plotter(const QString& dir, IRInfo ii, QWidget *parent = 0);
+	Plotter(QWidget *parent = 0);
 	~Plotter();
-	double getMaxTrimLength(); // secs
 
-public slots:
-	void setSmooth(double smoothFactor);
-	void setWinLength(double secs);
-	void enablePhase(int);
+	void setTitle(const QString& title);
+	QString getTitle();
 
-private:
-	IR* ir;
-	QString dir;
-	IRInfo ii;
+	void appendSeries(
+		QLineSeries* series,
+		QAbstractAxis* xaxis, Qt::Alignment xalign,
+		QAbstractAxis* yaxis, Qt::Alignment yalign
+	);
+	void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
 
-	double* freqs;
-	double* amps;
-	double* phase;
+	virtual bool exportSeries(const QString &filename);
 
-	double winLength;
-	double smoothFactor;
-
-	QwtPlotCurve *ampCurve;
-	QwtPlotCurve *phaseCurve;
-
-	void recalculate();
+	QChart *chart;
+	QList<QLineSeries*> list;
 };
 
 #endif

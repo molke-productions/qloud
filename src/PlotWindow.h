@@ -16,13 +16,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef PLOTWINDOW_H
 #define PLOTWINDOW_H
 
 #include <QtWidgets>
-#include <qwt_plot.h>
-#include <qwt_counter.h>
+#include <QPrinter>
 #include "QLE.h"
 #include "IRInfo.h"
 #include "Plotter.h"
@@ -39,25 +37,39 @@ public:
 	);
 	~PlotWindow();
 
+public slots:
+	void onPrintClicked();
+	void onExportClicked();
+
+	void onTabChanged(int index);
+
+protected:
+	bool print(QPrinter *printer);
+	bool exportDat(const QString& filename);
+
 private:
 	QMap<PlotWindow*, QString>* plots;
 
 	// SPL plotting
-	QWidget* getSplTab(const QString& dir, const IRInfo& ii);
+	QWidget* getSplTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// IR itself plotting
-	QWidget* getIRTab(const QString& dir, const IRInfo& ii);
+	QWidget* getIRTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// IR power plotting
-	QWidget* getIRPTab(const QString& dir, const IRInfo& ii);
-	// Step Response plotting
-	QWidget* getStepTab(const QString& dir, const IRInfo& ii);
+	QWidget* getIRPTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	// Step response plotting
+	QWidget* getStepTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 	// Harmonics plotting
-	QWidget* getHarmTab(const QString& dir, const IRInfo& ii);
+	QWidget* getHarmTab(const QString& dir, const IRInfo& ii, Plotter** plot);
 
-	void zoomizePlotter(
-		QwtPlot* plotter,
-		int roundX,
-		int roundY
-	);
+	Plotter *splplot;
+	Plotter *irplot;
+	Plotter *irpplot;
+	Plotter *stepplot;
+	Plotter *harmplot;
+
+	Plotter *currentplot;
+	IRInfo ii;
+	QString dir;
 };
 
 #endif

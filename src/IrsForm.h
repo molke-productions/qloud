@@ -50,7 +50,6 @@ private:
 	QTableView* view;
 	QPushButton* btnPlot;
 	QMap<PlotWindow*,QString> plots;
-
 };
 
 #endif

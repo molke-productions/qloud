@@ -32,7 +32,7 @@ HarmData::~HarmData() {
 }
 
 double HarmData::getValue(double freq) {
-	if( (freq < this->freqs[0]) || (freq > this->freqs[this->length -1]))
+	if( (freq < this->freqs[0]) || (freq > this->freqs[this->length -1]) )
 		throw QLE("frequency is out of range");
 
 	for(int i=0; i < this->length; i++)

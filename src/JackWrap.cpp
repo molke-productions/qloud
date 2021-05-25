@@ -31,7 +31,9 @@ JackWrap::JackWrap() {
 	this->currentPosition = 0;
 	this->maxResponse = 0.0;
 
-	this->client = jack_client_open("qloud", JackNoStartServer, &this->status, 0);
+	this->client = jack_client_open(
+		"qloud", JackNoStartServer, &this->status, 0
+	);
 	if ( ! this->client )
 		throw QLE("Failed to open JACK client");
 
@@ -44,11 +46,7 @@ JackWrap::JackWrap() {
 		0
 	);
 	this->outPort = jack_port_register(
-		client,
-		"out",
-		JACK_DEFAULT_AUDIO_TYPE,
-		JackPortIsOutput,
-		0
+		client, "out", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0
 	);
 
 	if(( ! this->inPort) || ( ! this->outPort))
@@ -105,7 +103,9 @@ int JackWrap::getRate() {
 int JackWrap::processJack(jack_nframes_t nframes) {
 	jack_default_audio_sample_t *in, *out;
 	if(this->fsmState == IDLE) {
-		out = (jack_default_audio_sample_t*)jack_port_get_buffer(this->outPort, nframes);
+		out = (jack_default_audio_sample_t*)jack_port_get_buffer(
+			this->outPort, nframes
+		);
 		for(jack_nframes_t i = 0; i < nframes; i++)
 			out[i] = 0.0; // keep silent
 		return 0;
@@ -120,8 +120,12 @@ int JackWrap::processJack(jack_nframes_t nframes) {
 	}
 
 
-	in = (jack_default_audio_sample_t*)jack_port_get_buffer(this->inPort, nframes);
-	out = (jack_default_audio_sample_t*)jack_port_get_buffer(this->outPort, nframes);
+	in = (jack_default_audio_sample_t*)jack_port_get_buffer(
+		this->inPort, nframes
+	);
+	out = (jack_default_audio_sample_t*)jack_port_get_buffer(
+		this->outPort, nframes
+	);
 
 	for(jack_nframes_t i = 0; i < samplesToProcess; i++) {
 		out[i] = this->playBuf[this->currentPosition + i] * this->playDb;

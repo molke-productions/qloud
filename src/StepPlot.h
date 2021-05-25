@@ -20,14 +20,12 @@
 #define STEPPLOT_H
 
 #include <QtCore>
-#include <qwt_plot.h>
+#include <QtCharts/QtCharts>
 #include "QLE.h"
 #include "IRInfo.h"
+#include "Plotter.h"
 
-class QwtPlotCurve;
-class QwtPlotMarker;
-
-class StepPlot: public QwtPlot {
+class StepPlot: public Plotter {
 	Q_OBJECT
 
 public:
