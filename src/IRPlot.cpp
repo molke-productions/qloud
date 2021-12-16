@@ -45,6 +45,7 @@ IRPlot::IRPlot(
 
 	setTitle(tr("Impulse Response"));
 
+	setXUnit("ms");
 	QValueAxis *XAxis = new QValueAxis(this->chart);
 	XAxis->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Time in ms"));

@@ -112,7 +112,7 @@ void Plotter::mouseMoveEvent(QMouseEvent *event)
 	QPoint pos = event->pos();
 	QPointF val = chart->mapToValue(pos);
 	double y = curveYfromX(val.x());
-	QString label = QString(tr("%1 @ %2")).arg(y, 0, 'f', 2).arg(round(val.x()));
+	QString label = QString(tr("%1 %2 @ %3 %4")).arg(y, 0, 'f', 2).arg(yUnit).arg(round(val.x())).arg(xUnit);
 
 	if (!pointerLabel)
 		pointerLabel = this->scene()->addSimpleText(label);
@@ -139,4 +139,14 @@ double Plotter::curveYfromX(double x)
 	}
 
 	return y;
+}
+
+void Plotter::setYUnit(const QString &newYUnit)
+{
+	yUnit = newYUnit;
+}
+
+void Plotter::setXUnit(const QString &newXUnit)
+{
+	xUnit = newXUnit;
 }

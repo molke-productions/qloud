@@ -27,6 +27,7 @@ SplPlot::SplPlot(
 
 	setTitle(tr("Frequency Response"));
 
+	setXUnit("Hz");
 	XAxis = new QLogValueAxis(this->chart);
 	((QLogValueAxis*) XAxis)->setBase(10.0);
 	((QLogValueAxis*) XAxis)->setLabelFormat("%d");
@@ -34,6 +35,7 @@ SplPlot::SplPlot(
 	XAxis->setRange(10, 100000);
 	((QLogValueAxis *) XAxis)->setMinorTickCount(8);
 
+	setYUnit("dB");
 	YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Amplitude in dB"));
 	((QValueAxis *) YAxis)->setLabelFormat("%d");

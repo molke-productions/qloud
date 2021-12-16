@@ -49,10 +49,16 @@ public:
 
 	QChart *chart;
 	QList<QLineSeries*> list;
+
+	void setXUnit(const QString &newXUnit);
+	void setYUnit(const QString &newYUnit);
+
 protected:
 	void mouseMoveEvent(QMouseEvent *event);
 	QGraphicsSimpleTextItem *pointerLabel;
 	double curveYfromX(double x);
+	QString xUnit;
+	QString yUnit;
 };
 
 #endif

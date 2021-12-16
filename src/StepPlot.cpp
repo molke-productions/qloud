@@ -43,6 +43,7 @@ StepPlot::StepPlot(
 
 		setTitle(tr("Step Response"));
 
+		setXUnit("ms");
 		QValueAxis *XAxis = new QValueAxis(this->chart);
 		XAxis->setLabelFormat("%d");
 		XAxis->setTitleText(tr("Time in ms"));

@@ -46,6 +46,7 @@ IRPPlot::IRPPlot(
 
 	setTitle(tr("IR Power"));
 
+	setXUnit("ms");
 	QValueAxis *XAxis = new QValueAxis(this->chart);
 	XAxis->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Time in ms"));
@@ -53,6 +54,7 @@ IRPPlot::IRPPlot(
 	XAxis->setMin(this->time[0]);
 	XAxis->applyNiceNumbers();
 
+	setYUnit("dB");
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Power in dB"));
 	YAxis->setLabelFormat("%d");
