@@ -107,13 +107,12 @@ bool Plotter::exportSeries(const QString &filename) {
 
 void Plotter::mouseMoveEvent(QMouseEvent *event)
 {
-	if (event->buttons() != Qt::NoButton)
-		QChartView::mouseMoveEvent(event);
+	QChartView::mouseMoveEvent(event);
 
 	QPoint pos = event->pos();
 	QPointF val = chart->mapToValue(pos);
 	double y = curveYfromX(val.x());
-	QString label = QString(tr("%1 @ %2")).arg(y).arg(val.x());
+	QString label = QString(tr("%1 @ %2")).arg(y, 0, 'f', 2).arg(round(val.x()));
 
 	if (!pointerLabel)
 		pointerLabel = this->scene()->addSimpleText(label);
