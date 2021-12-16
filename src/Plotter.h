@@ -49,6 +49,10 @@ public:
 
 	QChart *chart;
 	QList<QLineSeries*> list;
+protected:
+	void mouseMoveEvent(QMouseEvent *event);
+	QGraphicsSimpleTextItem *pointerLabel;
+	double curveYfromX(double x);
 };
 
 #endif

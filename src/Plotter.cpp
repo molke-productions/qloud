@@ -19,7 +19,9 @@
 #include "Plotter.h"
 #include "QLCfg.h"
 
-Plotter::Plotter(QWidget *parent) : QChartView(parent) {
+Plotter::Plotter(QWidget *parent) :
+	QChartView(parent),
+	pointerLabel(nullptr) {
 	chart = new QChart();
 	chart->legend()->hide();
 	this->setChart(chart);
@@ -101,4 +103,41 @@ bool Plotter::exportSeries(const QString &filename) {
 	file.close();
 
 	return true;
+}
+
+void Plotter::mouseMoveEvent(QMouseEvent *event)
+{
+	if (event->buttons() != Qt::NoButton)
+		QChartView::mouseMoveEvent(event);
+
+	QPoint pos = event->pos();
+	QPointF val = chart->mapToValue(pos);
+	double y = curveYfromX(val.x());
+	QString label = QString(tr("%1 @ %2")).arg(y).arg(val.x());
+
+	if (!pointerLabel)
+		pointerLabel = this->scene()->addSimpleText(label);
+	else
+		pointerLabel->setText(label);
+
+	pointerLabel->setPos(pos.x() - pointerLabel->boundingRect().width(),
+			pos.y() - pointerLabel->boundingRect().height());
+	event->accept();
+}
+
+double Plotter::curveYfromX(double x)
+{
+
+	double y = 0.0;
+	QList<QPointF> points = list.at(0)->points();
+	for (int i = 0; i < points.size() - 1; i++) {
+		QPointF p1 = points.at(i);
+		QPointF p2 = points.at(i+1);
+		if (p1.x() <= x && p2.x() > x) {
+			y = p1.y();
+			break;
+		}
+	}
+
+	return y;
 }
