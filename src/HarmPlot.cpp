@@ -77,7 +77,7 @@ void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 			continue; // have not more harmonic in IR
 
 		QString name = "Harmonic";
-		name += i;
+		name += QString::number(i);
 		QLineSeries* curve = new QLineSeries(this->chart);
 		curve->setPen(QPen(HARM_COLORS[i]));
 		if (i == 0)

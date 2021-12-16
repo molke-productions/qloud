@@ -27,9 +27,9 @@ WavInfo::WavInfo() {}
 WavInfo::~WavInfo() {}
 
 void WavInfo::show() {
-	QLUtl::d(QString("Length: ") + this->length);
-	QLUtl::d(QString("Rate: ") + this->rate);
-	QLUtl::d(QString("Bit depth: ") + this->bitDepth);
+    QLUtl::d(QString("Length: ") + QString::number(this->length));
+    QLUtl::d(QString("Rate: ") + QString::number(this->rate));
+    QLUtl::d(QString("Bit depth: ") + QString::number(this->bitDepth));
 }
 
 int WavInfo::getFormat() {

@@ -83,7 +83,7 @@ bool Plotter::exportSeries(const QString &filename) {
 	for (int i = 0; i < len; i++) {
 		line.clear();
 		for (int s = 0; s < list.size(); s++ ) {
-			QVector<QPointF> points = list.at(s)->pointsVector();
+			QList<QPointF> points = list.at(s)->points();
 			QPointF p = points.at(i);
 			if (s == 0)
 				line += QString("%1 %2 ").arg(p.x()).arg(p.y());

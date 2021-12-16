@@ -30,21 +30,25 @@ int main(int argc, char *argv[]) {
 
 	QString locale = QLocale::system().name();
 	QTranslator qtTranslator;
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+	if (qtTranslator.load(QLocale::system(), u"qtbase"_qs, u"_"_qs,
+				QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
+		app.installTranslator(&qtTranslator);
+#else
 	qtTranslator.load("qt_" + locale,
 			QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	app.installTranslator(&qtTranslator);
+#endif
 
 	QTranslator qloudTranslator;
-	if (!qloudTranslator.load(TARGET "_" + locale, "locale"))
+	if (qloudTranslator.load(TARGET "_" + locale, "../locale"))
+		app.installTranslator(&qloudTranslator);
 #ifdef __mswin
-		qloudTranslator.load(
-			TARGET "_" + locale,
-			QCoreApplication::applicationDirPath() + QDir::separator() + "locale"
-		);
+	else if (qloudTranslator.load(TARGET "_" + locale, QCoreApplication::applicationDirPath() + QDir::separator() + "locale"))
 #else
-		qloudTranslator.load(TARGET "_" + locale, DATADIR "/" TARGET "/locale");
+	else if (qloudTranslator.load(TARGET "_" + locale, DATADIR "/" TARGET "/locale"))
 #endif
-	app.installTranslator(&qloudTranslator);
+		app.installTranslator(&qloudTranslator);
 
 	QCommandLineParser parser;
 	parser.setApplicationDescription(

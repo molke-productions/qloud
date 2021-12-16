@@ -54,7 +54,7 @@ PlotWindow::PlotWindow(
 
 	// laying out
 	QVBoxLayout* mainLayout = new QVBoxLayout();
-	mainLayout->setMargin(2);
+	mainLayout->setContentsMargins(2,2,2,2);
 
 	QTabWidget* tab = new QTabWidget();
 	tab->setTabPosition(QTabWidget::North);
@@ -110,7 +110,7 @@ void PlotWindow::onPrintClicked() {
 	QPrinter printer;
 	printer.setCreator("QLoud");
 	printer.setDocName("qloud");
-    printer.setPageOrientation(QPageLayout::Landscape);
+	printer.setPageOrientation(QPageLayout::Landscape);
 	QPrintDialog dialog(&printer, this);
 	if (dialog.exec() == QDialog::Accepted) {
 		if (printer.isValid()) {
@@ -131,7 +131,7 @@ bool PlotWindow::print(QPrinter* printer) {
 	if (!painter.begin(printer))
 		return false;
 
-    QRect page = printer->pageLayout().paintRectPixels(printer->resolution());
+	QRect page = printer->pageLayout().paintRectPixels(printer->resolution());
 	currentplot->render(
 		&painter,
 		QRectF(page.left(), page.top(), page.width(), page.height())
@@ -245,7 +245,7 @@ QWidget* PlotWindow::getSplTab(
 	splLayout->addWidget(plotter, 1);
 
 	// layout final
-	splLayout->setMargin(1);
+	splLayout->setContentsMargins(1,1,1,1);
 	splWidget->setLayout(splLayout);
 
 	*ref = static_cast<Plotter*>(plotter);

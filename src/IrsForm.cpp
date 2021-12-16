@@ -82,7 +82,7 @@ IrsForm::IrsForm(
 	group->setLayout(hLay);
 	mainLayout->addWidget(group);
 	this->setLayout(mainLayout);
-	this->layout()->setMargin(0);
+	this->layout()->setContentsMargins(0,0,0,0);
 
 	connect(this->btnPlot, SIGNAL(clicked()), this, SLOT(newPlot()));
 }

@@ -95,8 +95,6 @@ LIBS += -lsndfile \
 -lfftw3 \
 -ljack
 
-QMAKE_CXXFLAGS += -std=c++11
-
 INSTALLS += target
 target.path = $$PREFIX/bin
 

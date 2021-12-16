@@ -383,8 +383,8 @@ void QLWin::startJacking() {
 }
 
 void QLWin::captureFinished() {
-	QString stdDescription = QDate::currentDate().toString(Qt::LocalDate);
-	stdDescription = QDate::currentDate().toString(Qt::LocalDate);
+	QString stdDescription = QDate::currentDate().toString(Qt::ISODate);
+	stdDescription = QDate::currentDate().toString(Qt::ISODate);
 	stdDescription += "-" + QTime::currentTime().toString();
 
 	double maxLevel = QLUtl::toDb(this->capture->getMaxResponse());

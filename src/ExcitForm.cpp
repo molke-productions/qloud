@@ -52,7 +52,7 @@ ExcitForm::ExcitForm(
 	exTop->addWidget(this->lengthCombo);
 	connect(
 		this->lengthCombo,
-		SIGNAL(currentIndexChanged(const QString&)),
+		SIGNAL(currentTextChanged(const QString&)),
 		this,
 		SLOT(lengthChanged(const QString&))
 	);
@@ -75,7 +75,7 @@ ExcitForm::ExcitForm(
 	exTop->addWidget(this->rateCombo);
 	connect(
 		this->rateCombo,
-		SIGNAL(currentIndexChanged(const QString&)),
+		SIGNAL(currentTextChanged(const QString&)),
 		this,
 		SLOT(rateChanged(const QString&))
 	);
@@ -92,7 +92,7 @@ ExcitForm::ExcitForm(
 	exTop->addWidget(this->depthCombo);
 	connect(
 		this->depthCombo,
-		SIGNAL(currentIndexChanged(const QString&)),
+		SIGNAL(currentTextChanged(const QString&)),
 		this,
 		SLOT(depthChanged(const QString&))
 	);
@@ -157,7 +157,7 @@ ExcitForm::ExcitForm(
 	exGroup->setLayout(exLayout);
 	mainLayout->addWidget(exGroup);
 	this->setLayout(mainLayout);
-	this->layout()->setMargin(0);
+	this->layout()->setContentsMargins(0,0,0,0);
 
 	// Signals
 	connect(
