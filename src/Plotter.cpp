@@ -66,10 +66,15 @@ void Plotter::appendSeries(
 }
 
 void Plotter::removeSeries(QLineSeries *series, QAbstractAxis* yattached) {
+	int i = list.indexOf(series);
+
 	list.removeAll(series);
 	if (yattached)
 		chart->removeAxis(yattached);
 	chart->removeSeries(series);
+
+	xUnits.removeAt(i);
+	yUnits.removeAt(i);
 }
 
 bool Plotter::exportSeries(const QString &filename) {
