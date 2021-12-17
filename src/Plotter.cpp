@@ -25,6 +25,7 @@ Plotter::Plotter(QWidget *parent) : QChartView(parent) {
 	this->setChart(chart);
 	this->setRenderHint(QPainter::Antialiasing);
 	this->setRubberBand(QChartView::RectangleRubberBand);
+	setCursor(Qt::CrossCursor);
 }
 
 Plotter::~Plotter() {
