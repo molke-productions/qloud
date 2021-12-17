@@ -142,15 +142,18 @@ void Plotter::mouseMoveEvent(QMouseEvent *event)
 
 	/* draw dashed vertical line */
 	double x = val.x();
-	double ymin = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical, list.at(0)).at(0))->min();
-	double ymax = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical, list.at(0)).at(0))->max();
+	QValueAxis* yaxis0 = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical, list.at(0)).at(0));
+	double ymin = yaxis0->min();
+	double ymax = yaxis0->max();
 	QPointF value1(x, ymin);
 	QPointF point1 = chart->mapToPosition(value1);
 	QPointF value2(x, ymax);
 	QPointF point2 = chart->mapToPosition(value2);
 	QLineF line (point1, point2);
-	if (vLine)
+	if (vLine) {
 		this->scene()->removeItem(vLine);
+		delete vLine;
+	}
 	vLine = this->scene()->addLine(line, QPen(Qt::DashLine));
 
 	event->accept();
