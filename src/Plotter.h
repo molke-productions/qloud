@@ -54,6 +54,7 @@ protected:
 	double curveYfromX(double x, QLineSeries* series);
 	QList<QString> xUnits;
 	QList<QString> yUnits;
+	QGraphicsLineItem *vLine;
 };
 
 #endif

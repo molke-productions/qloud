@@ -19,7 +19,7 @@
 #include "Plotter.h"
 #include "QLCfg.h"
 
-Plotter::Plotter(QWidget *parent) : QChartView(parent) {
+Plotter::Plotter(QWidget *parent) : QChartView(parent), vLine(nullptr) {
 	chart = new QChart();
 	chart->legend()->hide();
 	this->setChart(chart);
@@ -137,7 +137,22 @@ void Plotter::mouseMoveEvent(QMouseEvent *event)
 			label.append("\n");
 	}
 
+	/* draw tooltip */
 	QToolTip::showText(event->globalPos(), label, this, QRect(), 10000);
+
+	/* draw dashed vertical line */
+	double x = val.x();
+	double ymin = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical, list.at(0)).at(0))->min();
+	double ymax = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical, list.at(0)).at(0))->max();
+	QPointF value1(x, ymin);
+	QPointF point1 = chart->mapToPosition(value1);
+	QPointF value2(x, ymax);
+	QPointF point2 = chart->mapToPosition(value2);
+	QLineF line (point1, point2);
+	if (vLine)
+		this->scene()->removeItem(vLine);
+	vLine = this->scene()->addLine(line, QPen(Qt::DashLine));
+
 	event->accept();
 }
 
