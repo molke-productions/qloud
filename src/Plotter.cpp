@@ -19,9 +19,7 @@
 #include "Plotter.h"
 #include "QLCfg.h"
 
-Plotter::Plotter(QWidget *parent) :
-	QChartView(parent),
-	pointerLabel(nullptr) {
+Plotter::Plotter(QWidget *parent) : QChartView(parent) {
 	chart = new QChart();
 	chart->legend()->hide();
 	this->setChart(chart);
@@ -105,30 +103,36 @@ bool Plotter::exportSeries(const QString &filename) {
 	return true;
 }
 
+bool Plotter::viewportEvent(QEvent *event)
+{
+	switch (event->type()) {
+		case QEvent::ToolTip:
+			return false;
+		default:
+			break;
+	}
+
+	return QChartView::viewportEvent(event);
+}
+
 void Plotter::mouseMoveEvent(QMouseEvent *event)
 {
 	QChartView::mouseMoveEvent(event);
 
 	QPoint pos = event->pos();
 	QPointF val = chart->mapToValue(pos);
-	double y = curveYfromX(val.x());
+	double y = curveYfromX(val.x(), list.at(0));
 	QString label = QString(tr("%1 %2 @ %3 %4")).arg(y, 0, 'f', 2).arg(yUnit).arg(round(val.x())).arg(xUnit);
 
-	if (!pointerLabel)
-		pointerLabel = this->scene()->addSimpleText(label);
-	else
-		pointerLabel->setText(label);
-
-	pointerLabel->setPos(pos.x() - pointerLabel->boundingRect().width(),
-			pos.y() - pointerLabel->boundingRect().height());
+	QToolTip::showText(event->globalPos(), label, this, QRect(), 10000);
 	event->accept();
 }
 
-double Plotter::curveYfromX(double x)
+double Plotter::curveYfromX(double x, QLineSeries* series)
 {
 
 	double y = 0.0;
-	QList<QPointF> points = list.at(0)->points();
+	QList<QPointF> points = series->points();
 	for (int i = 0; i < points.size() - 1; i++) {
 		QPointF p1 = points.at(i);
 		QPointF p2 = points.at(i+1);

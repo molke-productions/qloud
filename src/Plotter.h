@@ -54,9 +54,9 @@ public:
 	void setYUnit(const QString &newYUnit);
 
 protected:
+	bool viewportEvent(QEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
-	QGraphicsSimpleTextItem *pointerLabel;
-	double curveYfromX(double x);
+	double curveYfromX(double x, QLineSeries* series);
 	QString xUnit;
 	QString yUnit;
 };
