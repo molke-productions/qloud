@@ -42,9 +42,8 @@ QString Plotter::getTitle() {
 
 void Plotter::appendSeries(
 	QLineSeries *series,
-	QAbstractAxis* xaxis, Qt::Alignment xalign,
-	QAbstractAxis* yaxis, Qt::Alignment yalign
-) {
+	QAbstractAxis* xaxis, Qt::Alignment xalign, const QString& xunit,
+	QAbstractAxis* yaxis, Qt::Alignment yalign, const QString& yunit) {
 	if (xaxis)
 		chart->addAxis(xaxis, xalign);
 	if (yaxis)
@@ -62,6 +61,8 @@ void Plotter::appendSeries(
 		series->attachAxis(chart->axes(Qt::Orientation::Vertical)[0]);
 
 	list.append(series);
+	xUnits.append(xunit);
+	yUnits.append(yunit);
 }
 
 void Plotter::removeSeries(QLineSeries *series, QAbstractAxis* yattached) {
@@ -122,8 +123,14 @@ void Plotter::mouseMoveEvent(QMouseEvent *event)
 
 	QPoint pos = event->pos();
 	QPointF val = chart->mapToValue(pos);
-	double y = curveYfromX(val.x(), list.at(0));
-	QString label = QString(tr("%1 %2 @ %3 %4")).arg(y, 0, 'f', 2).arg(yUnit).arg(round(val.x())).arg(xUnit);
+	QString label;
+	for (int i = 0; i < list.size(); i++) {
+		double y = curveYfromX(val.x(), list.at(i));
+		label += QString(tr("%1 %2 @ %3 %4")).arg(y, 0, 'f', 2)
+			.arg(yUnits.at(i)).arg(round(val.x())).arg(xUnits.at(i));
+		if (i < list.size() -1)
+			label.append("\n");
+	}
 
 	QToolTip::showText(event->globalPos(), label, this, QRect(), 10000);
 	event->accept();
@@ -144,14 +151,4 @@ double Plotter::curveYfromX(double x, QLineSeries* series)
 	}
 
 	return y;
-}
-
-void Plotter::setYUnit(const QString &newYUnit)
-{
-	yUnit = newYUnit;
-}
-
-void Plotter::setXUnit(const QString &newXUnit)
-{
-	xUnit = newXUnit;
 }

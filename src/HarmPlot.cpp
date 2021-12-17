@@ -42,7 +42,6 @@ HarmPlot::HarmPlot(
 
 	setTitle(tr("Harmonic Distortion"));
 
-	setXUnit("Hz");
 	QLogValueAxis *XAxis = new QLogValueAxis(this->chart);
 	XAxis->setBase(10.0);
 	XAxis->setLabelFormat("%d");
@@ -50,7 +49,6 @@ HarmPlot::HarmPlot(
 	XAxis->setRange(10, 10000);
 	XAxis->setMinorTickCount(8);
 
-	setYUnit("dB");
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Distortion in dB"));
 	YAxis->setLabelFormat("%d");
@@ -83,12 +81,12 @@ void HarmPlot::addCurves(QAbstractAxis *x, QAbstractAxis *y) {
 		QLineSeries* curve = new QLineSeries(this->chart);
 		curve->setPen(QPen(HARM_COLORS[i]));
 		if (i == 0)
-			appendSeries(curve, x, Qt::AlignBottom, y, Qt::AlignLeft);
+			appendSeries(curve, x, Qt::AlignBottom, "Hz", y, Qt::AlignLeft, "dB");
 		else
 			appendSeries(
 				curve,
-				nullptr, Qt::AlignBottom,
-				nullptr, Qt::AlignLeft
+				nullptr, Qt::AlignBottom, "Hz",
+				nullptr, Qt::AlignLeft, "dB"
 			);
 
 		QList<QPointF> points;

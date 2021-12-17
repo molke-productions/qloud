@@ -43,7 +43,6 @@ StepPlot::StepPlot(
 
 		setTitle(tr("Step Response"));
 
-		setXUnit("ms");
 		QValueAxis *XAxis = new QValueAxis(this->chart);
 		XAxis->setLabelFormat("%d");
 		XAxis->setTitleText(tr("Time in ms"));
@@ -59,7 +58,7 @@ StepPlot::StepPlot(
 
 		QLineSeries* ampCurve = new QLineSeries(this->chart);
 		ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-		appendSeries(ampCurve, XAxis, Qt::AlignBottom, YAxis, Qt::AlignLeft);
+		appendSeries(ampCurve, XAxis, Qt::AlignBottom, "ms", YAxis, Qt::AlignLeft, "");
 
 		QList<QPointF> points;
 		for (unsigned int i = 0; i < curveLength; i++) {

@@ -46,7 +46,6 @@ IRPPlot::IRPPlot(
 
 	setTitle(tr("IR Power"));
 
-	setXUnit("ms");
 	QValueAxis *XAxis = new QValueAxis(this->chart);
 	XAxis->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Time in ms"));
@@ -54,7 +53,6 @@ IRPPlot::IRPPlot(
 	XAxis->setMin(this->time[0]);
 	XAxis->applyNiceNumbers();
 
-	setYUnit("dB");
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Power in dB"));
 	YAxis->setLabelFormat("%d");
@@ -65,7 +63,7 @@ IRPPlot::IRPPlot(
 
 	QLineSeries* ampCurve = new QLineSeries(this->chart);
 	ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	appendSeries(ampCurve, XAxis, Qt::AlignBottom, YAxis, Qt::AlignLeft);
+	appendSeries(ampCurve, XAxis, Qt::AlignBottom, "ms", YAxis, Qt::AlignLeft, "dB");
 
 	QList<QPointF> points;
 	for (unsigned int i = 0; i < curveLength; i++) {

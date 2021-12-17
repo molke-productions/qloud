@@ -27,7 +27,6 @@ SplPlot::SplPlot(
 
 	setTitle(tr("Frequency Response"));
 
-	setXUnit("Hz");
 	XAxis = new QLogValueAxis(this->chart);
 	((QLogValueAxis*) XAxis)->setBase(10.0);
 	((QLogValueAxis*) XAxis)->setLabelFormat("%d");
@@ -35,7 +34,6 @@ SplPlot::SplPlot(
 	XAxis->setRange(10, 100000);
 	((QLogValueAxis *) XAxis)->setMinorTickCount(8);
 
-	setYUnit("dB");
 	YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Amplitude in dB"));
 	((QValueAxis *) YAxis)->setLabelFormat("%d");
@@ -46,7 +44,7 @@ SplPlot::SplPlot(
 
 	this->ampCurve = new QLineSeries(this->chart);
 	this->ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	appendSeries(ampCurve, XAxis, Qt::AlignBottom, YAxis, Qt::AlignLeft);
+	appendSeries(ampCurve, XAxis, Qt::AlignBottom, "Hz", YAxis, Qt::AlignLeft, "dB");
 
 	if(QLCfg::USE_PHASE) {
 		YPAxis = new QValueAxis(this->chart);
@@ -131,8 +129,8 @@ void SplPlot::enablePhase(int state) {
 	if(state) {
 		appendSeries(
 			phaseCurve,
-			nullptr, Qt::AlignBottom,
-			YPAxis, Qt::AlignRight
+			nullptr, Qt::AlignBottom, "Hz",
+			YPAxis, Qt::AlignRight, "°"
 		);
 	} else {
 		removeSeries(phaseCurve, YPAxis);

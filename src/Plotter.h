@@ -38,11 +38,9 @@ public:
 	void setTitle(const QString& title);
 	QString getTitle();
 
-	void appendSeries(
-		QLineSeries* series,
-		QAbstractAxis* xaxis, Qt::Alignment xalign,
-		QAbstractAxis* yaxis, Qt::Alignment yalign
-	);
+	void appendSeries(QLineSeries* series,
+			QAbstractAxis* xaxis, Qt::Alignment xalign, const QString &xunit,
+			QAbstractAxis* yaxis, Qt::Alignment yalign, const QString &yunit);
 	void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
 
 	virtual bool exportSeries(const QString &filename);
@@ -50,15 +48,12 @@ public:
 	QChart *chart;
 	QList<QLineSeries*> list;
 
-	void setXUnit(const QString &newXUnit);
-	void setYUnit(const QString &newYUnit);
-
 protected:
 	bool viewportEvent(QEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	double curveYfromX(double x, QLineSeries* series);
-	QString xUnit;
-	QString yUnit;
+	QList<QString> xUnits;
+	QList<QString> yUnits;
 };
 
 #endif
