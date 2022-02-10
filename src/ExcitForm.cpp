@@ -24,9 +24,10 @@
 
 ExcitForm::ExcitForm(
 	QWidget* aFeedback,
-	QString aWorkDir,
+	const QString& aWorkDir,
 	QWidget* parent
-) : QWidget(parent) {
+) : QWidget(parent),
+	workDir(aWorkDir) {
 	this->feedback = aFeedback;
 
 	// Layout
@@ -215,8 +216,7 @@ void ExcitForm::showStatus(const QString& msg) {
 	emit setStatus(msg);
 }
 
-void ExcitForm::setWorkDir(const QString& dir) {
-	this->workDir = dir;
+void ExcitForm::setWorkDir(const QString& /*dir*/) {
 	this->qlCfg = new QLCfg(this->workDir);
 	try {
 		this->lastCfg = this->qlCfg->getExcit();

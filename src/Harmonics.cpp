@@ -25,8 +25,8 @@
 #include "IR.h"
 #include "QLUtl.h"
 
-Harmonics::Harmonics(QString aDirPath, IRInfo anInfo) {
-	this->dirPath = aDirPath;
+Harmonics::Harmonics(const QString& aDirPath, IRInfo anInfo)
+	: dirPath(aDirPath) {
 	this->info = anInfo;
 	this->irSamples =0;
 	this->tone = 0;

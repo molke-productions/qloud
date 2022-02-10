@@ -69,7 +69,7 @@ signals:
 	void showStatus(const QString&, int) const;
 
 private:
-	QString workDir;
+	const QString& workDir;
 	QList<IRInfo> list;
 	QMap<PlotWindow*,QString>* plots;
 };

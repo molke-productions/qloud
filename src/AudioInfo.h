@@ -16,16 +16,16 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef JACKINFO_H
-#define JACKINFO_H
+#ifndef AUDIOINFO_H
+#define AUDIOINFO_H
 
-class JackInfo{
+class AudioInfo{
 public:
-	float* playBuf;
-	float* capBuf;
-	unsigned length;
-	unsigned rate;
-	int playDb;
+	float* playBuf = nullptr;
+	float* capBuf = nullptr;
+	unsigned length = 0;
+	unsigned rate = 0;
+	int playDb = 0;
 };
 
 #endif

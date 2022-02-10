@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 Andrew Gaydenko <a@gaydenko.com>
+	Copyright (C) 2022 Manuel Weichselbaumer <mincequi@web.de>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,24 +16,33 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef PORTAUDIOWRAP_H
+#define PORTAUDIOWRAP_H
 
-#ifndef WAVINFO_H
-#define WAVINFO_H
+#include "IAudioIo.h"
 
-#include <QtCore>
-#include "QLE.h"
+#include <vector>
 
-class WavInfo {
+class PortAudioWrap : public IAudioIo {
 public:
-	WavInfo();
-	~WavInfo();
-	unsigned length;
-	uint32_t rate;
-	int bitDepth;
-	int channels;
+	PortAudioWrap();
+	~PortAudioWrap();
 
-	int getFormat();
-	void show();
+	QStringList inputDevices() const override;
+	void selectInputDevice(const QString& device) override;
+
+	QStringList outputDevices() const override;
+	void selectOutputDevice(const QString& device) override;
+
+	bool isIdle() override;
+	bool isConnected() override;
+	void process(const AudioInfo& info) override;
+	uint32_t getRate() override;
+
+private:
+	std::vector<float> playBuf;
+	float* capBuf = nullptr;
+	unsigned length = 0;
 };
 
-#endif
+#endif // PORTAUDIOWRAP_H

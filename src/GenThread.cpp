@@ -27,8 +27,8 @@ GenThread::GenThread(
 	const QString& aDescription,
 	double aMaxLevel,
 	QWidget* aFeedback
-) : QThread(parent) {
-	this->workDir = aWrkDir;
+) : QThread(parent),
+	workDir(aWrkDir) {
 	this->description = aDescription;
 	this->maxLevel = aMaxLevel;
 	this->feedback = aFeedback;

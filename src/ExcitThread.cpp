@@ -24,8 +24,8 @@ ExcitThread::ExcitThread(
 	const QString& aWrkDir,
 	const ExcitCfg& aCfg,
 	QWidget* aFeedback
-) : QThread(parent) {
-	this->wrkDir = aWrkDir;
+) : QThread(parent),
+	wrkDir(aWrkDir) {
 	this->cfg = aCfg;
 	this->feedback = aFeedback;
 	connect(

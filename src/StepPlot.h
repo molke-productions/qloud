@@ -33,7 +33,7 @@ public:
 	~StepPlot();
 
 private:
-	QString dir;
+	const QString& dir;
 	IRInfo ii;
 
 	double* time;

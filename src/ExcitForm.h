@@ -29,7 +29,7 @@ class ExcitForm : public QWidget {
 	Q_OBJECT
 
 public:
-	ExcitForm(QWidget* feedback, QString workDir, QWidget* parent = 0);
+	ExcitForm(QWidget* feedback, const QString& workDir, QWidget* parent = 0);
 	~ExcitForm();
 
 signals:
@@ -44,10 +44,10 @@ public slots:
 	void showStatus(const QString&);
 	void showStatus(const QString&, int);
 	void forceRate(int);
-	void setWorkDir(const QString&);
 	void generated();
 
 private slots:
+	void setWorkDir(const QString&);
 	void lengthChanged(const QString&);
 	void rateChanged(const QString&);
 	void depthChanged(const QString&);
@@ -57,7 +57,7 @@ private slots:
 
 private:
 	QWidget* feedback;
-	QString workDir;
+	const QString& workDir;
 	QLCfg* qlCfg;
 
 	ExcitCfg lastCfg;

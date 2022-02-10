@@ -21,7 +21,6 @@
 
 #include <QtCore>
 #include "Capture.h"
-#include "TickPoster.h"
 
 class CapThread: public QThread {
 	Q_OBJECT
@@ -30,7 +29,6 @@ public:
 	CapThread(
 		QObject* parent,
 		Capture* aCapture,
-		TickPoster* aPoster,
 		int playDb
 	);
 
@@ -41,11 +39,10 @@ signals:
 	void showStatus(const QString&, int);
 
 protected:
-	void run();
+	void run() override;
 
 private:
 	Capture* capture;
-	TickPoster* ticker;
 	int playDbLevel;
 };
 

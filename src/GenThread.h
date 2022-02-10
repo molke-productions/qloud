@@ -44,7 +44,7 @@ protected:
 	void run();
 
 private:
-	QString workDir;
+	const QString& workDir;
 	QString description;
 	double maxLevel; // in dB
 	QWidget* feedback;

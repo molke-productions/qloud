@@ -26,6 +26,8 @@
 #include "TickPoster.h"
 #include "IrsForm.h"
 
+class AudioIoManager;
+
 class QLWin : public QMainWindow {
 	Q_OBJECT
 
@@ -57,6 +59,7 @@ protected:
 	void closeEvent(QCloseEvent* event);
 
 private slots:
+	void onBackendChanged(const QString& text);
 	void dirDialog();
 	void updateWorkDir(const QString&);
 
@@ -67,10 +70,16 @@ private slots:
 
 private:
 	QString workDir;
+	QComboBox* backendCombo;
+	QLabel* inputLabel;
+	QComboBox* inputCombo;
+	QLabel* outputLabel;
+	QComboBox* outputCombo;
 	QComboBox* delayCombo;
 
 	ExcitForm* excit;
 	IrsForm* irs;
+	AudioIoManager* audioIo;
 	Capture* capture;
 	TickPoster* ticker;
 	QLabel* excitInfoLbl;

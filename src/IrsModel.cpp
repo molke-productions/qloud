@@ -26,8 +26,8 @@ IrsModel::IrsModel(
 	const QString& aWorkDir,
 	QMap<PlotWindow*, QString>* aPlots,
 	QObject* parent
-) : QAbstractTableModel(parent) {
-	this->workDir = aWorkDir;
+) : QAbstractTableModel(parent),
+	workDir(aWorkDir) {
 	this->plots = aPlots;
 
 	QLCfg cfg(this->workDir);
@@ -203,7 +203,6 @@ void IrsModel::irListChanged() {
 	endResetModel();
 }
 
-void IrsModel::updateWorkDir(const QString& newDir) {
-	this->workDir = newDir;
+void IrsModel::updateWorkDir(const QString& /*newDir*/) {
 	this->irListChanged();
 }

@@ -25,11 +25,11 @@
 
 IrsForm::IrsForm(
 	QWidget* aFeedback,
-	QString aWorkDir,
+	const QString& aWorkDir,
 	QWidget* parent
-) : QWidget(parent) {
+) : QWidget(parent),
+	workDir(aWorkDir) {
 	this->feedback = aFeedback;
-	this->workDir = aWorkDir;
 
 	QVBoxLayout* mainLayout = new QVBoxLayout();
 	QGroupBox* group = new QGroupBox(tr("Measurements set"));
@@ -111,7 +111,6 @@ void IrsForm::newPlot() {
 }
 
 void IrsForm::updateWorkDir(const QString& newDir) {
-	this->workDir = newDir;
 	emit workDirChanged(newDir);
 }
 

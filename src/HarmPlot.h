@@ -34,7 +34,7 @@ public:
 	~HarmPlot();
 
 private:
-	QString dir;
+	const QString& dir;
 	IRInfo ii;
 
 	HarmData** data;

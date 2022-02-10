@@ -35,8 +35,8 @@ IRPPlot::IRPPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : Plotter(parent) {
-	this->dir = aDir;
+) : Plotter(parent),
+	dir(aDir) {
 	this->ii = anIi;
 
 	this->time = 0;

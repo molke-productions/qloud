@@ -16,36 +16,27 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <unistd.h>
-
+#include "AudioIoManager.h"
 #include "Excitation.h"
 #include "Capture.h"
-#include "JackWrap.h"
+#include "IAudioIo.h"
 #include "WavIn.h"
 #include "WavOut.h"
 
-Capture::Capture(QString aDirPath) {
-	this->dirPath = aDirPath;
-	this->jack = 0;
-	this->playBuf = 0;
-	this->capBuf = 0;
-	this->wavInfo = 0;
-	this->maxResponse = 0.0f;
+Capture::Capture(const QString& aDirPath, IAudioIo* aAudioIo)
+	: dirPath(aDirPath),
+	  audioIo(aAudioIo) {
 }
 
 Capture::~Capture() {
-	this->closeJack();
+	this->closeAudioIo();
 	this->freeBuffers();
 	if(this->wavInfo)
 		delete this->wavInfo;
 }
 
-void Capture::openJack() {
-	if(this->jack)
-		throw QLE("JACK client is already opened!");
+void Capture::openAudioIo() {
 	this->freeBuffers();
-
-	this->jack = new JackWrap();
 }
 
 void Capture::initBuffers() {
@@ -54,8 +45,8 @@ void Capture::initBuffers() {
 		this->dirPath + "/" + Excitation::excitationFileName()
 	);
 	this->wavInfo = excitWav->getWavInfo();
-	if(this->wavInfo->rate != this->jack->getRate())
-		throw QLE("Excitation and JACK sample rates are not equal!");
+	if(this->wavInfo->rate != this->audioIo->getRate())
+		throw QLE("Excitation and device sample rates are not equal!");
 
 	try {
 		this->playBuf = excitWav->readFloat();
@@ -72,45 +63,39 @@ void Capture::initBuffers() {
 void Capture::doJob(int playDbLevel) {
 	if( ! this->jackIsConnected())
 		throw QLE("JACK ports are not connected!");
-	if( ! this->jack->isIdle())
+	if( ! this->audioIo->isIdle())
 		throw QLE("JACK client isn’t IDLE now!");
 
 	this->maxResponse = 0.0;
 
-	JackInfo info;
+	AudioInfo info;
 	info.playBuf = this->playBuf;
 	info.capBuf = this->capBuf;
 	info.length = this->wavInfo->length;
 	info.playDb = playDbLevel;
 
-	info.rate = this->jack->getRate(); // suppress gcc warning
+	info.rate = this->audioIo->getRate(); // suppress gcc warning
 
-	this->jack->start(info);
+	this->audioIo->process(info);
 
-	while( ! this->jack->isIdle() )
-		usleep(100000); // 0.1 sec
-
-	this->maxResponse = this->jack->getMaxResponse();
+	for (unsigned i = 0; i < this->wavInfo->length; ++i) {
+		this->maxResponse = std::max(this->maxResponse, fabsf(this->capBuf[i]));
+	}
+	qDebug() << "max response: " << this->maxResponse;
 
 	WavOut* respWav = new WavOut(
 		this->dirPath + "/" + Capture::responseFileName()
 	);
+	qDebug() << "write file: " << this->dirPath + "/" + Capture::responseFileName();
 	respWav->writeFloat(*this->wavInfo, this->capBuf);
 	delete respWav;
 
 	this->freeBuffers();
 }
 
-void Capture::closeJack() {
-	if(this->jack) {
-		delete this->jack;
-		this->jack = 0;
-	}
-}
-
 bool Capture::jackIsConnected() {
-	if(this->jack )
-		return this->jack->isConnected();
+	if(this->audioIo )
+		return this->audioIo->isConnected();
 	return false;
 }
 
@@ -118,13 +103,20 @@ float Capture::getMaxResponse() {
 	return this->maxResponse;
 }
 
-int Capture::getJackRate() {
-	if(this->jack)
-		return this->jack->getRate();
+int Capture::getAudioIoRate() {
+	if(this->audioIo)
+		return this->audioIo->getRate();
 	return -1;
 }
 
 //////////////////////////////// privates //////////////////////////////////////
+void Capture::closeAudioIo() {
+	if(this->audioIo) {
+		delete this->audioIo;
+		this->audioIo = nullptr;
+	}
+}
+
 void Capture::freeBuffers() {
 	if(this->playBuf) {
 		delete this->playBuf;

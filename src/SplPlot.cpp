@@ -12,10 +12,10 @@ SplPlot::SplPlot(
 	const QString& aDir,
 	IRInfo anIi,
 	QWidget *parent
-) : Plotter(parent) {
+) : Plotter(parent),
+	dir(aDir) {
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
-	this->dir = aDir;
 	this->ii = anIi;
 
 	this->freqs = 0;
