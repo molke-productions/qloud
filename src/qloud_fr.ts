@@ -74,17 +74,17 @@
 <context>
     <name>HarmPlot</name>
     <message>
-        <location filename="HarmPlot.cpp" line="48"/>
+        <location filename="HarmPlot.cpp" line="43"/>
         <source>Harmonic Distortion</source>
         <translation>Distorsion harmonique</translation>
     </message>
     <message>
-        <location filename="HarmPlot.cpp" line="53"/>
+        <location filename="HarmPlot.cpp" line="48"/>
         <source>Frequency in Hz</source>
         <translation>Fréquence en Hz</translation>
     </message>
     <message>
-        <location filename="HarmPlot.cpp" line="58"/>
+        <location filename="HarmPlot.cpp" line="53"/>
         <source>Distortion in dB</source>
         <translation>Distorsion en dB</translation>
     </message>
@@ -292,78 +292,90 @@ Are you sure you want to delete this measurement?</source>
     </message>
 </context>
 <context>
+    <name>Plotter</name>
+    <message>
+        <location filename="Plotter.cpp" line="134"/>
+        <source>%1 %2 @ %3 %4</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QLWin</name>
     <message>
-        <location filename="QLWin.cpp" line="43"/>
+        <location filename="QLWin.cpp" line="53"/>
         <source>All project files are here</source>
         <translation>Tous les fichiers du projet sont ici</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="46"/>
+        <location filename="QLWin.cpp" line="56"/>
         <source>Select working directory</source>
         <translation>Sélectionner le répertoire de travail</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="66"/>
+        <location filename="QLWin.cpp" line="76"/>
         <source>&lt;b&gt;Directory&lt;/b&gt;</source>
         <translation>&lt;b&gt;Répertoire&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="78"/>
+        <location filename="QLWin.cpp" line="88"/>
         <source>Capturing audiosystem response</source>
         <translation>Enregistrement de la réponse du système audio</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="85"/>
+        <location filename="QLWin.cpp" line="93"/>
+        <source>Backend:</source>
+        <translation>Système audio :</translation>
+    </message>
+    <message>
+        <location filename="QLWin.cpp" line="100"/>
         <source>Excitation:</source>
         <translation>Excitation :</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="91"/>
+        <location filename="QLWin.cpp" line="106"/>
         <source>Connect</source>
         <translation>Connecter</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="92"/>
+        <location filename="QLWin.cpp" line="107"/>
         <source>Disconnect</source>
         <translation>Déconnecter</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="95"/>
+        <location filename="QLWin.cpp" line="110"/>
         <source>&lt;b&gt;Capture&lt;/b&gt;</source>
         <translation>&lt;b&gt;Enregistrement&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="106"/>
+        <location filename="QLWin.cpp" line="121"/>
         <source>Playback level [dB]</source>
         <translation>Niveau de sortie [dB]</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="118"/>
+        <location filename="QLWin.cpp" line="133"/>
         <source>Delay before capture [s]</source>
         <translation>Délai avant l&apos;enregistrement [s]</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="132"/>
+        <location filename="QLWin.cpp" line="147"/>
         <source>Start recording</source>
         <translation>Démarrer l&apos;enregistrement</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="194"/>
+        <location filename="QLWin.cpp" line="209"/>
         <source>Impulse response</source>
         <translation>Réponse impulsionnelle</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="339"/>
         <source>Failed connecting with JACK server. The error is:
 
 </source>
-        <translation>Impossible de se connecter au serveur JACK. L&apos;erreur est :
+        <translation type="vanished">Impossible de se connecter au serveur JACK. L&apos;erreur est :
 
 </translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="341"/>
+        <location filename="QLWin.cpp" line="41"/>
         <source>
 
 Capturing will be disabled.</source>
@@ -372,38 +384,46 @@ Capturing will be disabled.</source>
 L&apos;enregistrement sera désactivé.</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="342"/>
+        <location filename="QLWin.cpp" line="39"/>
+        <source>Failed to init audio backends. The error is:
+
+</source>
+        <translation>Impossible d&apos;initialiser un système audio. L&apos;erreur est :
+
+</translation>
+    </message>
+    <message>
         <source>
 To enable start JACK and restart the application</source>
-        <translation>
+        <translation type="vanished">
 Pour activer, démarrer JACK et redémarrer l&apos;application</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="357"/>
+        <location filename="QLWin.cpp" line="363"/>
         <source>Connect JACK ports before capturing!</source>
         <translation>Connectez les ports JACK avant d&apos;enregistrer !</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="392"/>
+        <location filename="QLWin.cpp" line="398"/>
         <source>Maximum capture level: </source>
         <translation>Niveau maximum de l&apos;enregistrement : </translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="394"/>
+        <location filename="QLWin.cpp" line="400"/>
         <source>
 Give a meaningful description for the measurement</source>
         <translation>
 Donnez une description utile pour la mesure</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="395"/>
+        <location filename="QLWin.cpp" line="401"/>
         <source>
 (“Cancel” will ignore this measurement)</source>
         <translation>
 (&quot;Annuler&quot; annulera cette mesure)</translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="396"/>
+        <location filename="QLWin.cpp" line="402"/>
         <source>Measurement description</source>
         <translation>Description de la mesure</translation>
     </message>
@@ -411,7 +431,7 @@ Donnez une description utile pour la mesure</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="main.cpp" line="51"/>
+        <location filename="main.cpp" line="55"/>
         <source>Loudspeaker response measurement program.</source>
         <translation>Programme de mesure de réponse de haut-parleur.</translation>
     </message>
@@ -419,22 +439,22 @@ Donnez une description utile pour la mesure</translation>
 <context>
     <name>SplPlot</name>
     <message>
-        <location filename="SplPlot.cpp" line="31"/>
+        <location filename="SplPlot.cpp" line="28"/>
         <source>Frequency Response</source>
         <translation>Réponse fréquentielle</translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="36"/>
+        <location filename="SplPlot.cpp" line="33"/>
         <source>Frequency in Hz</source>
         <translation>Fréquence en Hz</translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="41"/>
+        <location filename="SplPlot.cpp" line="38"/>
         <source>Amplitude in dB</source>
         <translation>Amplitude en dB</translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="54"/>
+        <location filename="SplPlot.cpp" line="51"/>
         <source>Phase in degrees</source>
         <translation>Phase en degrés</translation>
     </message>
@@ -442,17 +462,17 @@ Donnez une description utile pour la mesure</translation>
 <context>
     <name>StepPlot</name>
     <message>
-        <location filename="StepPlot.cpp" line="47"/>
+        <location filename="StepPlot.cpp" line="44"/>
         <source>Step Response</source>
         <translation>Réponse transitoire</translation>
     </message>
     <message>
-        <location filename="StepPlot.cpp" line="51"/>
+        <location filename="StepPlot.cpp" line="48"/>
         <source>Time in ms</source>
         <translation>Temps en ms</translation>
     </message>
     <message>
-        <location filename="StepPlot.cpp" line="57"/>
+        <location filename="StepPlot.cpp" line="54"/>
         <source>Amplitude</source>
         <translation>Amplitude</translation>
     </message>
@@ -460,7 +480,7 @@ Donnez une description utile pour la mesure</translation>
 <context>
     <name>main</name>
     <message>
-        <location filename="main.cpp" line="57"/>
+        <location filename="main.cpp" line="61"/>
         <source>Project directory to work on.</source>
         <translation>Répertoire du projet où travailler.</translation>
     </message>

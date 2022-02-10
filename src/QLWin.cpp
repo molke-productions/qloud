@@ -17,6 +17,7 @@
 */
 
 #include <QtWidgets>
+#include "AudioIoManager.h"
 #include "QLWin.h"
 #include "QLE.h"
 #include "QLUtl.h"
@@ -31,6 +32,15 @@
 
 QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->workDir = QDir::homePath();
+
+	try {
+		this->audioIo = new AudioIoManager();
+	} catch(QLE e) {
+		QString s = tr("Failed to init audio backends. The error is:\n\n");
+		s += e.msg;
+		s += tr("\n\nCapturing will be disabled.");
+		this->showCritical(s);
+	}
 
 	this->setWindowTitle("QLoud");
 	QVBoxLayout* mainLayout = new QVBoxLayout();
@@ -80,6 +90,11 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 
 	// Capture top
 	QHBoxLayout* capTop = new QHBoxLayout();
+	capTop->addWidget(new QLabel(tr("Backend:")));
+	this->backendCombo = new QComboBox();
+	this->backendCombo->addItems(this->audioIo->backends());
+	connect(this->backendCombo, &QComboBox::currentTextChanged, this->audioIo, &AudioIoManager::selectBackend);
+	capTop->addWidget(this->backendCombo);
 
 	capTop->addStretch(2);
 	capTop->addWidget(new QLabel(tr("Excitation:")));
@@ -224,11 +239,11 @@ void QLWin::changeExcitInfo(const QString& in) {
 		QLCfg cfg(this->workDir);
 		try {
 			ExcitCfg eCfg = cfg.getExcit();
-			if(eCfg.rate == this->capture->getJackRate())
+			if(eCfg.rate == this->capture->getAudioIoRate())
 				this->capBtn->setEnabled(true);
 			else {
 				this->capBtn->setEnabled(false);
-				emit forceRate(this->capture->getJackRate());
+				emit forceRate(this->capture->getAudioIoRate());
 			}
 		} catch(QLE e) {
 			emit showCritical(e.msg);
@@ -320,29 +335,17 @@ void QLWin::updateWorkDir(const QString& newDir) {
 	emit irAdded();
 	if( ! this->jackConnected)
 		return;
-	if(this->capture)
-		delete this->capture;
-	this->capBtn->setEnabled(this->initCapture());
 	if(this->jackConnected)
-		emit forceRate(this->capture->getJackRate());
+		emit forceRate(this->capture->getAudioIoRate());
 }
 
 // returns true if JACK is running
 bool QLWin::initCapture() {
-	try {
-		this->capture = new Capture(this->workDir);
-		this->capture->openJack();
-		this->jackConnected = true;
-		emit forceRate(this->capture->getJackRate());
-		return true;
-	} catch(QLE e) {
-		QString s = tr("Failed connecting with JACK server. The error is:\n\n");
-		s += e.msg;
-		s += tr("\n\nCapturing will be disabled.");
-		s += tr("\nTo enable start JACK and restart the application");
-		this->showCritical(s);
-	}
-	return false;
+	this->capture = new Capture(this->workDir, this->audioIo);
+	this->capture->openAudioIo();
+	this->jackConnected = true;
+	emit forceRate(this->capture->getAudioIoRate());
+	return !this->audioIo->backends().isEmpty();
 }
 
 void QLWin::startCapture() {

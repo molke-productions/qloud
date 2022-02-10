@@ -16,8 +16,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <cmath>
 #include "JackWrap.h"
+
+#include <cstring>
+#include <unistd.h>
+
+#include "QLE.h"
 
 // class-friend
 int processJackWrap(jack_nframes_t nframes, void *arg) {
@@ -26,11 +30,6 @@ int processJackWrap(jack_nframes_t nframes, void *arg) {
 }
 
 JackWrap::JackWrap() {
-	this->client = 0;
-	this->fsmState = IDLE;
-	this->currentPosition = 0;
-	this->maxResponse = 0.0;
-
 	this->client = jack_client_open(
 		"qloud", JackNoStartServer, &this->status, 0
 	);
@@ -70,20 +69,21 @@ bool JackWrap::isConnected() {
 	);
 }
 
-void JackWrap::start(JackInfo info) {
+void JackWrap::process(AudioInfo info) {
 	if( ! this->isConnected() )
 		throw QLE("Connect JACK ports before capturing!");
-	this->playBuf = info.playBuf;
 	this->capBuf = info.capBuf;
-	this->playDb = pow(10.0, info.playDb/20.0);
 	this->length = info.length;
-	this->maxResponse = 0.0;
+	this->playBuf.resize(info.length);
+	const float playDb = pow(10.0f, info.playDb/20.0f);
+	for (uint i = 0; i < this->length; ++i) {
+		this->playBuf[i] = info.playBuf[i] * playDb;
+	}
 
 	this->fsmState = CAPTURE;
-}
 
-float JackWrap::getMaxResponse() {
-	return this->maxResponse;
+	while( ! this->isIdle() )
+		usleep(100000); // 0.1 sec
 }
 
 void JackWrap::closeClient() {
@@ -127,12 +127,8 @@ int JackWrap::processJack(jack_nframes_t nframes) {
 		this->outPort, nframes
 	);
 
-	for(jack_nframes_t i = 0; i < samplesToProcess; i++) {
-		out[i] = this->playBuf[this->currentPosition + i] * this->playDb;
-		this->capBuf[this->currentPosition + i] = in[i];
-		if(fabs(in[i]) > this->maxResponse)
-			this->maxResponse = fabs(in[i]);
-	}
+	std::memcpy(out, this->playBuf.data() + this->currentPosition, samplesToProcess*4);
+	std::memcpy(this->capBuf + this->currentPosition, in, samplesToProcess*4);
 
 	this->currentPosition += samplesToProcess;
 

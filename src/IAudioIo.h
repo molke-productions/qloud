@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 Andrew Gaydenko <a@gaydenko.com>
+	Copyright (C) 2022 Manuel Weichselbaumer <mincequi@web.de>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,16 +16,18 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef JACKINFO_H
-#define JACKINFO_H
+#ifndef IAUDIOIO_H
+#define IAUDIOIO_H
 
-class JackInfo{
+#include "AudioInfo.h"
+
+class IAudioIo {
 public:
-	float* playBuf;
-	float* capBuf;
-	unsigned length;
-	unsigned rate;
-	int playDb;
+	virtual ~IAudioIo() {};
+	virtual bool isIdle() = 0;
+	virtual bool isConnected() = 0;
+	virtual void process(AudioInfo info) = 0;
+	virtual int getRate() = 0;
 };
 
-#endif
+#endif // IAUDIOIO_H

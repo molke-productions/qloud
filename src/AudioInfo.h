@@ -16,43 +16,16 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef JACKWRAP_H
-#define JACKWRAP_H
+#ifndef AUDIOINFO_H
+#define AUDIOINFO_H
 
-#include <vector>
-#include <jack/jack.h>
-#include "IAudioIo.h"
-
-class JackWrap : public IAudioIo {
+class AudioInfo{
 public:
-	JackWrap();
-	~JackWrap() override;
-
-	bool isIdle() override;
-	bool isConnected() override;
-	void process(AudioInfo info) override;
-	int getRate() override;
-
-private:
-	enum FSMState {
-		IDLE,
-		CAPTURE
-	};
-	volatile FSMState fsmState = IDLE;
-
-	std::vector<float> playBuf;
+	float* playBuf;
 	float* capBuf;
 	unsigned length;
-
-	jack_client_t* client = nullptr;
-	jack_port_t* inPort;
-	jack_port_t* outPort;
-	jack_status_t status;
-	jack_nframes_t currentPosition = 0;
-
-	void closeClient();
-	int processJack(jack_nframes_t nframes);
-	friend int processJackWrap(jack_nframes_t nframes, void* arg);
+	unsigned rate;
+	int playDb;
 };
 
 #endif

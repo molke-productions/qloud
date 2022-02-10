@@ -1,6 +1,7 @@
 include(../config.pri)
 
 SOURCES += main.cpp \
+ AudioIoManager.cpp \
  CapThread.cpp \
  Capture.cpp \
  Excitation.cpp \
@@ -23,6 +24,7 @@ SOURCES += main.cpp \
  LineEditDelegate.cpp \
  Plotter.cpp \
  PlotWindow.cpp \
+ PortAudioWrap.cpp \
  QLCfg.cpp \
  QLUtl.cpp \
  QLWin.cpp \
@@ -42,6 +44,8 @@ CONFIG += warn_on \
  release
 
 HEADERS += CapThread.h \
+ AudioInfo.h \
+ AudioIoManager.h \
  Capture.h \
  Excitation.h \
  ExcitCfg.h \
@@ -52,6 +56,7 @@ HEADERS += CapThread.h \
  HarmData.h \
  Harmonics.h \
  HarmPlot.h \
+ IAudioIo.h \
  IR.h \
  IRInfo.h \
  IRPlot.h \
@@ -59,11 +64,11 @@ HEADERS += CapThread.h \
  IrsForm.h \
  IrsModel.h \
  IrsView.h \
- JackInfo.h \
  JackWrap.h \
  LineEditDelegate.h \
  Plotter.h \
  PlotWindow.h \
+ PortAudioWrap.h \
  QLCfg.h \
  QLE.h \
  QLUtl.h \
@@ -91,9 +96,8 @@ CONFIG += debug
 
 INCLUDEPATH += /usr/include/qt
 
-LIBS += -lsndfile \
--lfftw3 \
--ljack
+CONFIG += link_pkgconfig
+PKGCONFIG += jack sndfile fftw3 portaudio-2.0
 
 INSTALLS += target
 target.path = $$PREFIX/bin
@@ -101,6 +105,10 @@ target.path = $$PREFIX/bin
 TRANSLATIONS += \
     qloud_en.ts \
     qloud_fr.ts
+
+mac {
+    QMAKE_INFO_PLIST = ../Info.plist
+}
 
 LOCALE_DIR = ../locale
 updateqm.input = TRANSLATIONS
@@ -118,4 +126,3 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 config.input = config.h.in
 config.output = config.h
 QMAKE_SUBSTITUTES += config
-

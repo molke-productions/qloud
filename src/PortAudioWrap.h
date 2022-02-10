@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 Andrew Gaydenko <a@gaydenko.com>
+	Copyright (C) 2022 Manuel Weichselbaumer <mincequi@web.de>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,17 +16,17 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef JACKWRAP_H
-#define JACKWRAP_H
+#ifndef PORTAUDIOWRAP_H
+#define PORTAUDIOWRAP_H
 
-#include <vector>
-#include <jack/jack.h>
 #include "IAudioIo.h"
 
-class JackWrap : public IAudioIo {
+#include <vector>
+
+class PortAudioWrap : public IAudioIo {
 public:
-	JackWrap();
-	~JackWrap() override;
+	PortAudioWrap();
+	~PortAudioWrap();
 
 	bool isIdle() override;
 	bool isConnected() override;
@@ -34,25 +34,9 @@ public:
 	int getRate() override;
 
 private:
-	enum FSMState {
-		IDLE,
-		CAPTURE
-	};
-	volatile FSMState fsmState = IDLE;
-
 	std::vector<float> playBuf;
-	float* capBuf;
-	unsigned length;
-
-	jack_client_t* client = nullptr;
-	jack_port_t* inPort;
-	jack_port_t* outPort;
-	jack_status_t status;
-	jack_nframes_t currentPosition = 0;
-
-	void closeClient();
-	int processJack(jack_nframes_t nframes);
-	friend int processJackWrap(jack_nframes_t nframes, void* arg);
+	float* capBuf = nullptr;
+	unsigned length = 0;
 };
 
-#endif
+#endif // PORTAUDIOWRAP_H
