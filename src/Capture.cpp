@@ -16,9 +16,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include "AudioIoManager.h"
-#include "Excitation.h"
 #include "Capture.h"
+
+#include "Excitation.h"
 #include "IAudioIo.h"
 #include "WavIn.h"
 #include "WavOut.h"
