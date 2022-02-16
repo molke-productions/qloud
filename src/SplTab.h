@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 Andrew Gaydenko <a@gaydenko.com>
+	Copyright (C) 2022 Manuel Weichselbaumer <mincequi@web.de>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,36 +16,27 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef EXCITTHREAD_H
-#define EXCITTHREAD_H
+#ifndef SPLTAB_H
+#define SPLTAB_H
 
-#include <QtWidgets>
-#include "ExcitCfg.h"
+#include <QWidget>
 
-class ExcitThread : public QThread {
+class Plotter;
+class QDoubleSpinBox;
+class SplPlot;
+
+class SplTab : public QWidget {
 	Q_OBJECT
-
 public:
-	ExcitThread(
-		QObject* parent,
-		const QString& wrkDir,
-		const ExcitCfg& aCfg,
-		QWidget* aFeedback
-	);
+	explicit SplTab(const QString& dir, Plotter** ref, QWidget *parent = nullptr);
+
+	void init();
 
 signals:
-	void showStatus(const QString&);
-	void showStatus(const QString&, int);
-	void showCritical(const QString&);
-	void generated();
-
-protected:
-	void run();
 
 private:
-	ExcitCfg cfg;
-	QString wrkDir;
-	QWidget* feedback;
+	QDoubleSpinBox* cntWindow;
+	SplPlot* plotter;
 };
 
-#endif
+#endif // SPLTAB_H

@@ -30,21 +30,13 @@ IrsView::IrsView(
 	this->setAlternatingRowColors(true);
 	this->setSelectionMode(QAbstractItemView::SingleSelection);
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
+	this->horizontalHeader()->setStretchLastSection(true);
+	this->horizontalHeader()->hide();
 
 	LineEditDelegate* delegate = new LineEditDelegate();
 	this->setItemDelegate(delegate);
 
 	this->setContextMenuPolicy(Qt::DefaultContextMenu);
-
-	QLabel* tmp = new QLabel("W88 s, 192000 Hz/32 bit, 99999–99999 Hz");
-	int columnWidth = tmp->sizeHint().width();
-	delete tmp;
-	this->setColumnWidth(0, columnWidth);
-	this->setColumnWidth(1, columnWidth);
-	tmp = new QLabel("WW Max. level [dB]");
-	columnWidth = tmp->sizeHint().width();
-	delete tmp;
-	this->setColumnWidth(2, columnWidth);
 
 	this->menu = new QMenu();
 	QAction* delAction = this->menu->addAction(tr("Delete measurement"));

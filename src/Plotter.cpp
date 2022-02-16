@@ -33,7 +33,7 @@ Plotter::~Plotter() {
 }
 
 void Plotter::setTitle(const QString &title) {
-	chart->setTitle(title);
+	//chart->setTitle(title);
 }
 
 QString Plotter::getTitle() {
@@ -75,6 +75,14 @@ void Plotter::removeSeries(QLineSeries *series, QAbstractAxis* yattached) {
 
 	xUnits.removeAt(i);
 	yUnits.removeAt(i);
+}
+
+void Plotter::clearSeries() {
+	list.clear();
+	chart->removeAllSeries();
+
+	xUnits.clear();
+	yUnits.clear();
 }
 
 bool Plotter::exportSeries(const QString &filename) {
@@ -141,20 +149,22 @@ void Plotter::mouseMoveEvent(QMouseEvent *event)
 	QToolTip::showText(event->globalPos(), label, this, QRect(), 10000);
 
 	/* draw dashed vertical line */
-	double x = val.x();
-	QValueAxis* yaxis0 = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical, list.at(0)).at(0));
-	double ymin = yaxis0->min();
-	double ymax = yaxis0->max();
-	QPointF value1(x, ymin);
-	QPointF point1 = chart->mapToPosition(value1);
-	QPointF value2(x, ymax);
-	QPointF point2 = chart->mapToPosition(value2);
-	QLineF line (point1, point2);
-	if (vLine) {
-		this->scene()->removeItem(vLine);
-		delete vLine;
+	if (!list.isEmpty()) {
+		double x = val.x();
+		QValueAxis* yaxis0 = qobject_cast<QValueAxis*>(chart->axes(Qt::Vertical, list.at(0)).at(0));
+		double ymin = yaxis0->min();
+		double ymax = yaxis0->max();
+		QPointF value1(x, ymin);
+		QPointF point1 = chart->mapToPosition(value1);
+		QPointF value2(x, ymax);
+		QPointF point2 = chart->mapToPosition(value2);
+		QLineF line (point1, point2);
+		if (vLine) {
+			this->scene()->removeItem(vLine);
+			delete vLine;
+		}
+		vLine = this->scene()->addLine(line, QPen(Qt::DashLine));
 	}
-	vLine = this->scene()->addLine(line, QPen(Qt::DashLine));
 
 	event->accept();
 }

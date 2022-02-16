@@ -19,23 +19,15 @@
 #ifndef QLWIN_H
 #define QLWIN_H
 
-#include <QtWidgets>
-#include <QDoubleSpinBox>
-#include "ExcitForm.h"
-#include "Capture.h"
-#include "TickPoster.h"
-#include "IrsForm.h"
+#include <QMainWindow>
 
-class AudioIoManager;
+class ExcitForm;
+class IrsForm;
 
 class QLWin : public QMainWindow {
 	Q_OBJECT
 
 public:
-	static const int BIG_SPACE = 44;
-	static const int SMALL_SPACE = 15;
-	static QSize rightSize();
-
 	QLWin(const QString* wrkDir, QWidget* parent);
 	~QLWin();
 
@@ -53,7 +45,6 @@ public slots:
 	void showInfo(const QString&);
 	void showStatus(const QString&);
 	void showStatus(const QString&, int);
-	void changeExcitInfo(const QString&);
 
 protected:
 	void closeEvent(QCloseEvent* event);
@@ -62,31 +53,17 @@ private slots:
 	void dirDialog();
 	void updateWorkDir(const QString&);
 
-	void startCapture();
-	void startJacking();
-	void captureFinished();
 	void irCalculated();
 
 private:
 	QString workDir;
-	QComboBox* backendCombo;
-	QComboBox* delayCombo;
 
 	ExcitForm* excit;
 	IrsForm* irs;
-	AudioIoManager* audioIo;
-	Capture* capture;
-	TickPoster* ticker;
-	QLabel* excitInfoLbl;
-	QDoubleSpinBox* playDb;
-	QPushButton* capBtn;
-
-	bool jackConnected;
 
 	void saveMyState();
 	void restoreMyState(const QString *wrkDir);
 	void createIrList();
-	bool initCapture();
 };
 
 #endif

@@ -25,11 +25,11 @@ WavOut::WavOut(QString aPath) {
 
 WavOut::~WavOut() {}
 
-void WavOut::writeFloat(WavInfo info, float* buf) {
+void WavOut::writeFloat(WavInfo info, const float* buf) {
 	this->write(info, sizeof(float), (char*)buf);
 }
 
-void WavOut::writeDouble(WavInfo info, double* buf) {
+void WavOut::writeDouble(WavInfo info, const double* buf) {
 	this->write(info, sizeof(double), (char*)buf);
 }
 

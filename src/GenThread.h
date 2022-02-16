@@ -22,12 +22,17 @@
 #include <QtWidgets>
 #include "IRInfo.h"
 
+class Capture;
+class Excitation;
+
 class GenThread : public QThread {
 	Q_OBJECT
 
 public:
 	GenThread(
 		QObject* parent,
+		const Excitation& excitation,
+		const Capture& capture,
 		const QString& wrkDir,
 		const QString& aDescription,
 		double maxLevel,
@@ -44,6 +49,8 @@ protected:
 	void run();
 
 private:
+	const Excitation& excitation;
+	const Capture& capture;
 	QString workDir;
 	QString description;
 	double maxLevel; // in dB

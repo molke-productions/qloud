@@ -19,13 +19,13 @@
 #ifndef AUDIOINFO_H
 #define AUDIOINFO_H
 
-class AudioInfo{
+#include <vector>
+
+class AudioInfo {
 public:
-	float* playBuf;
-	float* capBuf;
-	unsigned length;
+	const std::vector<float>& playBuf;
+	std::vector<float>& capBuf;
 	unsigned rate;
-	int playDb;
 };
 
 #endif

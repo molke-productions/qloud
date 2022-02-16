@@ -21,13 +21,22 @@
 
 #include "AudioInfo.h"
 
+#include <QStringList>
+
 class IAudioIo {
 public:
 	virtual ~IAudioIo() {};
+
+	virtual QStringList inputDevices() const = 0;
+	virtual void selectInputDevice(const QString& device) = 0;
+
+	virtual QStringList outputDevices() const = 0;
+	virtual void selectOutputDevice(const QString& device) = 0;
+
 	virtual bool isIdle() = 0;
 	virtual bool isConnected() = 0;
-	virtual void process(AudioInfo info) = 0;
-	virtual int getRate() = 0;
+	virtual void process(const AudioInfo& info) = 0;
+	virtual uint32_t getRate() = 0;
 };
 
 #endif // IAUDIOIO_H

@@ -16,16 +16,17 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef IRSFORM_H
 #define IRSFORM_H
 
-#include <QtWidgets>
-#include "QLE.h"
-#include "IrsModel.h"
-#include "PlotWindow.h"
+#include <QGroupBox>
+#include <QPushButton>
+#include <QTableView>
 
-class IrsForm : public QWidget {
+class IrsModel;
+class PlotWindow;
+
+class IrsForm : public QGroupBox {
 	Q_OBJECT
 
 public:
@@ -39,7 +40,7 @@ signals:
 	void showCritical(const QString&);
 
 private slots:
-	void newPlot();
+	void updatePlot();
 	void updateWorkDir(const QString&);
 	void updateIrList();
 
@@ -49,6 +50,7 @@ private:
 	IrsModel* model;
 	QTableView* view;
 	QPushButton* btnPlot;
+	PlotWindow* plotWindow;
 	QMap<PlotWindow*,QString> plots;
 };
 

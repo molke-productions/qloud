@@ -27,10 +27,7 @@ void IRInfo::fill(const ExcitCfg& ecfg) {
 }
 
 QString IRInfo::maxLevelAsString() const {
-	int iLevel = int(this->maxLevel * 10000.0 + 0.5);
-	double dLevel = double(iLevel) / 10000.0;
-	QString rounded = QVariant(dLevel).toString();
-	return rounded;
+	return QString::number(maxLevel, 'f', 1);
 }
 
 QString IRInfo::format() const {

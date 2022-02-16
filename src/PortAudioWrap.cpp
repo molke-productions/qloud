@@ -41,6 +41,36 @@ PortAudioWrap::~PortAudioWrap() {
 	Pa_Terminate();
 }
 
+QStringList PortAudioWrap::inputDevices() const {
+	QStringList out;
+	auto numDevices = Pa_GetDeviceCount();
+	for (PaDeviceIndex i = 0; i < numDevices; ++i) {
+		auto deviceInfo = Pa_GetDeviceInfo(i);
+		if (deviceInfo->maxInputChannels != 0) {
+			out.push_back(deviceInfo->name);
+		}
+	}
+	return out;
+}
+
+void PortAudioWrap::selectInputDevice(const QString& /*device*/) {
+}
+
+QStringList PortAudioWrap::outputDevices() const {
+	QStringList out;
+	auto numDevices = Pa_GetDeviceCount();
+	for (PaDeviceIndex i = 0; i < numDevices; ++i) {
+		auto deviceInfo = Pa_GetDeviceInfo(i);
+		if (deviceInfo->maxOutputChannels != 0) {
+			out.push_back(deviceInfo->name);
+		}
+	}
+	return out;
+}
+
+void PortAudioWrap::selectOutputDevice(const QString& /*device*/) {
+}
+
 bool PortAudioWrap::isIdle() {
 	return true;
 }
@@ -49,15 +79,7 @@ bool PortAudioWrap::isConnected() {
 	return true;
 }
 
-void PortAudioWrap::process(AudioInfo info) {
-	this->capBuf = info.capBuf;
-	this->length = info.length;
-	this->playBuf.resize(info.length);
-	const float playDb = pow(10.0f, info.playDb/20.0f);
-	for (uint i = 0; i < this->length; ++i) {
-		this->playBuf[i] = info.playBuf[i] * playDb;
-	}
-
+void PortAudioWrap::process(const AudioInfo& info) {
 	uint i = 0;
 	PaStream *stream;
 	/* Open an audio I/O stream. */
@@ -80,12 +102,12 @@ void PortAudioWrap::process(AudioInfo info) {
 	if (err != paNoError)
 		goto error;
 
-	for (i = 0; i < this->length/FRAMES_PER_BUFFER; ++i) {
+	for (i = 0; i < info.playBuf.size()/FRAMES_PER_BUFFER; ++i) {
 		// You may get underruns or overruns if the output is not primed by PortAudio.
-		err = Pa_WriteStream(stream, this->playBuf.data() + i * FRAMES_PER_BUFFER, FRAMES_PER_BUFFER);
+		err = Pa_WriteStream(stream, info.playBuf.data() + i * FRAMES_PER_BUFFER, FRAMES_PER_BUFFER);
 		if (err)
 			goto error;
-		err = Pa_ReadStream(stream, this->capBuf + i * FRAMES_PER_BUFFER, FRAMES_PER_BUFFER);
+		err = Pa_ReadStream(stream, info.capBuf.data() + i * FRAMES_PER_BUFFER, FRAMES_PER_BUFFER);
 		if (err)
 			goto error;
 	}
@@ -109,6 +131,6 @@ error:
 	throw QLE(QString("Failed to open stream: ") + Pa_GetErrorText(err));
 }
 
-int PortAudioWrap::getRate() {
+uint32_t PortAudioWrap::getRate() {
 	return 44100;
 }

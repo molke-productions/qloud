@@ -19,19 +19,42 @@
 #ifndef EXCITATION_H
 #define EXCITATION_H
 
+#include <vector>
 #include <QtCore>
+#include "QLCfg.h"
 #include "QLE.h"
 #include "ExcitCfg.h"
 
-class Excitation {
+class Excitation : public QObject {
+	Q_OBJECT
+
 public:
-	static void generate(const QString& dirPath, const ExcitCfg& cfg);
+	Excitation(QObject* parent = nullptr);
+	virtual ~Excitation();
+
+	void generate();
+
 	static QString excitationFileName() {
 		return QString("excitation.wav");
 	}
 	static QString filterFileName() {
 		return QString("filter.wav");
 	}
+
+	void setWorkDir(const QString&);
+	ExcitCfg& newConfig();
+	const ExcitCfg& lastConfig() const;
+	const std::vector<double>& excitation() const;
+	const std::vector<double>& filter() const;
+
+private:
+	void writeWavFile(const ExcitCfg& cfg, const std::vector<double>& data, const QString& dirPath);
+
+	QLCfg* m_qlCfg = nullptr;
+	ExcitCfg m_newConfig;
+	ExcitCfg m_lastConfig;
+	std::vector<double> m_excitation;
+	std::vector<double> m_filter;
 };
 
 #endif

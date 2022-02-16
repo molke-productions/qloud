@@ -29,15 +29,20 @@ class StepPlot: public Plotter {
 	Q_OBJECT
 
 public:
-	StepPlot(const QString& dir, IRInfo ii, QWidget *parent = 0);
+	StepPlot(const QString& dir, QWidget *parent = 0);
 	~StepPlot();
+
+	void setIrInfo(const IRInfo& ii) override;
 
 private:
 	QString dir;
 	IRInfo ii;
 
-	double* time;
-	double* amps;
+	double* time = nullptr;
+	double* amps = nullptr;
+
+	QValueAxis *XAxis = nullptr;
+	QLineSeries* ampCurve = nullptr;
 
 	unsigned calculate();
 };

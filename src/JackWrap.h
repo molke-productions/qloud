@@ -28,10 +28,16 @@ public:
 	JackWrap();
 	~JackWrap() override;
 
+	QStringList inputDevices() const override;
+	void selectInputDevice(const QString& device) override;
+
+	QStringList outputDevices() const override;
+	void selectOutputDevice(const QString& device) override;
+
 	bool isIdle() override;
 	bool isConnected() override;
-	void process(AudioInfo info) override;
-	int getRate() override;
+	void process(const AudioInfo& info) override;
+	uint32_t getRate() override;
 
 private:
 	enum FSMState {
@@ -40,9 +46,7 @@ private:
 	};
 	volatile FSMState fsmState = IDLE;
 
-	std::vector<float> playBuf;
-	float* capBuf;
-	unsigned length;
+	const AudioInfo* audioInfo = nullptr;
 
 	jack_client_t* client = nullptr;
 	jack_port_t* inPort;

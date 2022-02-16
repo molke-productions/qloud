@@ -30,8 +30,7 @@ public:
 	CapThread(
 		QObject* parent,
 		Capture* aCapture,
-		TickPoster* aPoster,
-		int playDb
+		TickPoster* aPoster
 	);
 
 signals:
@@ -46,7 +45,6 @@ protected:
 private:
 	Capture* capture;
 	TickPoster* ticker;
-	int playDbLevel;
 };
 
 #endif

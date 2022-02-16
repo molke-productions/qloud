@@ -21,6 +21,7 @@
 #define CAPTURE_H
 
 #include <QtCore>
+#include "Excitation.h"
 #include "WavInfo.h"
 #include "QLE.h"
 
@@ -28,33 +29,27 @@ class IAudioIo;
 
 class Capture {
 public:
-	Capture(QString aDirPath, IAudioIo* audioIo);
+	Capture(IAudioIo* audioIo);
 	~Capture();
 	static QString responseFileName() {
 		return QString("response.wav");
 	}
-	void openAudioIo();
 	int getAudioIoRate();
-	bool jackIsConnected();
-	void initBuffers();
-	void doJob(int playDbLevel);
+	bool isAudioIoConnected();
+	void initBuffers(const std::vector<double>& data, int playDb);
+	void doJob();
 	float getMaxResponse();
-	QString getWorkDir() {
-		return this->dirPath;
-	}
+	const std::vector<float>& getCaptureBuffer() const;
 
 private:
-	QString dirPath;
-
-	float* playBuf = nullptr;
-	float* capBuf = nullptr;
-
-	WavInfo* wavInfo = nullptr;
 	IAudioIo* audioIo = nullptr;
+
+	std::vector<float> playBuf;
+	std::vector<float> capBuf;
+
 	float maxResponse = 0.0f;
 
 	void closeAudioIo();
-	void freeBuffers();
 };
 
 #endif

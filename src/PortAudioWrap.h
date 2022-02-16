@@ -28,15 +28,16 @@ public:
 	PortAudioWrap();
 	~PortAudioWrap();
 
+	QStringList inputDevices() const override;
+	void selectInputDevice(const QString& device) override;
+
+	QStringList outputDevices() const override;
+	void selectOutputDevice(const QString& device) override;
+
 	bool isIdle() override;
 	bool isConnected() override;
-	void process(AudioInfo info) override;
-	int getRate() override;
-
-private:
-	std::vector<float> playBuf;
-	float* capBuf = nullptr;
-	unsigned length = 0;
+	void process(const AudioInfo& info) override;
+	uint32_t getRate() override;
 };
 
 #endif // PORTAUDIOWRAP_H

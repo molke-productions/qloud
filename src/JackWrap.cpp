@@ -59,6 +59,20 @@ JackWrap::~JackWrap() {
 	this->closeClient();
 }
 
+QStringList JackWrap::inputDevices() const {
+	return {};
+}
+
+void JackWrap::selectInputDevice(const QString& /*device*/) {
+}
+
+QStringList JackWrap::outputDevices() const  {
+	return {};
+}
+
+void JackWrap::selectOutputDevice(const QString& /*device*/) {
+}
+
 bool JackWrap::isIdle() {
 	return (this->fsmState == IDLE);
 }
@@ -69,16 +83,11 @@ bool JackWrap::isConnected() {
 	);
 }
 
-void JackWrap::process(AudioInfo info) {
+void JackWrap::process(const AudioInfo& info) {
 	if( ! this->isConnected() )
 		throw QLE("Connect JACK ports before capturing!");
-	this->capBuf = info.capBuf;
-	this->length = info.length;
-	this->playBuf.resize(info.length);
-	const float playDb = pow(10.0f, info.playDb/20.0f);
-	for (uint i = 0; i < this->length; ++i) {
-		this->playBuf[i] = info.playBuf[i] * playDb;
-	}
+
+	this->audioInfo = &info;
 
 	this->fsmState = CAPTURE;
 
@@ -93,9 +102,9 @@ void JackWrap::closeClient() {
 	}
 }
 
-int JackWrap::getRate() {
+uint32_t JackWrap::getRate() {
 	if(this->client)
-		return int(jack_get_sample_rate(this->client));
+		return jack_get_sample_rate(this->client);
 	return -1;
 }
 
@@ -114,8 +123,8 @@ int JackWrap::processJack(jack_nframes_t nframes) {
 	jack_nframes_t samplesToProcess = nframes;
 
 	bool lastBuffer = false;
-	if(nframes > this->length -this->currentPosition) {
-		samplesToProcess = this->length - this->currentPosition;
+	if(nframes > this->audioInfo->playBuf.size() - this->currentPosition) {
+		samplesToProcess = this->audioInfo->playBuf.size() - this->currentPosition;
 		lastBuffer = true;
 	}
 
@@ -127,8 +136,8 @@ int JackWrap::processJack(jack_nframes_t nframes) {
 		this->outPort, nframes
 	);
 
-	std::memcpy(out, this->playBuf.data() + this->currentPosition, samplesToProcess*4);
-	std::memcpy(this->capBuf + this->currentPosition, in, samplesToProcess*4);
+	std::memcpy(out, this->audioInfo->playBuf.data() + this->currentPosition, samplesToProcess*4);
+	std::memcpy(this->audioInfo->capBuf.data() + this->currentPosition, in, samplesToProcess*4);
 
 	this->currentPosition += samplesToProcess;
 

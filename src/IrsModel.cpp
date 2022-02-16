@@ -49,7 +49,7 @@ int IrsModel::rowCount(const QModelIndex& parent) const {
 
 int IrsModel::columnCount(const QModelIndex& parent) const {
 	Q_UNUSED(parent);
-	return 3;
+	return 1;
 }
 
 QVariant IrsModel::data(const QModelIndex& index, int role) const {
@@ -73,22 +73,9 @@ QVariant IrsModel::data(const QModelIndex& index, int role) const {
 	return QVariant();
 }
 
-QVariant IrsModel::headerData(
-	int section,
-	Qt::Orientation orientation,
-	int role
-) const {
-	if(role != Qt::DisplayRole)
-		return QAbstractTableModel::headerData(section, orientation, role);
-	if(orientation != Qt::Horizontal)
-		return QAbstractTableModel::headerData(section, orientation, role);
-
-	switch(section) {
-		case 0: return tr("Description");
-		case 1: return tr("Used excitation");
-		case 2: return tr("Max. level [dB]");
-	}
-	return QVariant();
+QString IrsModel::infoString(int row) const {
+	IRInfo ii = this->list.at(row);
+	return "Used excitation: " + ii.format() + ", Max. level [dB]: " + ii.maxLevelAsString();
 }
 
 bool IrsModel::setData(

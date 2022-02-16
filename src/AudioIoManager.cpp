@@ -65,6 +65,22 @@ void AudioIoManager::selectBackend(const QString& backend) {
 	m_selectedBackend = it->second;
 }
 
+QStringList AudioIoManager::inputDevices() const {
+	return m_selectedBackend->inputDevices();
+}
+
+void AudioIoManager::selectInputDevice(const QString& device) {
+	m_selectedBackend->selectInputDevice(device);
+}
+
+void AudioIoManager::selectOutputDevice(const QString& device) {
+	m_selectedBackend->selectOutputDevice(device);
+}
+
+QStringList AudioIoManager::outputDevices() const  {
+	return m_selectedBackend->outputDevices();
+}
+
 bool AudioIoManager::isIdle() {
 	return m_selectedBackend->isIdle();
 }
@@ -73,10 +89,10 @@ bool AudioIoManager::isConnected()  {
 	return m_selectedBackend->isConnected();
 }
 
-void AudioIoManager::process(AudioInfo info)  {
+void AudioIoManager::process(const AudioInfo& info)  {
 	m_selectedBackend->process(info);
 }
 
-int AudioIoManager::getRate() {
+uint32_t AudioIoManager::getRate() {
 	return m_selectedBackend->getRate();
 }

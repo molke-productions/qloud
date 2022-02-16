@@ -27,7 +27,7 @@ ExcitCfg::ExcitCfg() {
 	this->fMax = 10000;
 }
 
-QString ExcitCfg::toString() {
+QString ExcitCfg::toString() const {
 	QString s;
 	s += QVariant(this->length).toString();
 	s += " s, ";

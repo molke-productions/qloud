@@ -17,23 +17,18 @@
 */
 
 #include "IrsForm.h"
-#include "QLWin.h"
-#include "QLUtl.h"
-#include "QLCfg.h"
-#include "PlotWindow.h"
+
+#include "IrsModel.h"
 #include "IrsView.h"
+#include "QLCfg.h"
 
 IrsForm::IrsForm(
 	QWidget* aFeedback,
 	QString aWorkDir,
 	QWidget* parent
-) : QWidget(parent) {
+) : QGroupBox(tr("Measurements set"), parent) {
 	this->feedback = aFeedback;
 	this->workDir = aWorkDir;
-
-	QVBoxLayout* mainLayout = new QVBoxLayout();
-	QGroupBox* group = new QGroupBox(tr("Measurements set"));
-	QHBoxLayout* hLay = new QHBoxLayout();
 
 	this->model = new IrsModel(this->workDir, &this->plots);
 	connect(
@@ -63,33 +58,19 @@ IrsForm::IrsForm(
 		SLOT(showCritical(const QString&))
 	);
 
+	this->plotWindow = new PlotWindow(this->workDir, &this->plots);
+
+	QHBoxLayout* hLay = new QHBoxLayout();
 	hLay->addWidget(this->view, 1);
-	hLay->addSpacing(QLWin::BIG_SPACE);
+	hLay->addWidget(this->plotWindow, 3);
+	connect(this->view->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &IrsForm::updatePlot);
 
-	QVBoxLayout* vLay = new QVBoxLayout();
-	vLay->addStretch(1);
-
-	QWidget* lbl = new QLabel(tr("<b>Response</b>"));
-	lbl->setFixedWidth(QLWin::rightSize().width());
-	vLay->addWidget(lbl);
-
-	this->btnPlot = new QPushButton(tr("Plot"));
-	this->btnPlot->setFixedWidth(QLWin::rightSize().width());
-	vLay->addWidget(this->btnPlot);
-
-	hLay->addLayout(vLay);
-
-	group->setLayout(hLay);
-	mainLayout->addWidget(group);
-	this->setLayout(mainLayout);
-	this->layout()->setContentsMargins(0,0,0,0);
-
-	connect(this->btnPlot, SIGNAL(clicked()), this, SLOT(newPlot()));
+	setLayout(hLay);
 }
 
 IrsForm::~IrsForm() {}
 
-void IrsForm::newPlot() {
+void IrsForm::updatePlot() {
 	QModelIndex index = this->view->currentIndex();
 	if( (! index.isValid()) || (this->model->rowCount() < 1) ) {
 		emit setStatus(tr("Valid selection not found"), 2000);
@@ -99,15 +80,12 @@ void IrsForm::newPlot() {
 
 	try {
 		QLCfg cfg(this->workDir);
-		PlotWindow* w = new PlotWindow(
-			this->workDir,
-			cfg.getIr(irKey),
-			&this->plots
-		);
-		w->show();
+		plotWindow->setIrInfo(cfg.getIr(irKey));
 	} catch(QLE e) {
 		emit showCritical(e.msg);
 	}
+
+	emit setStatus(model->infoString(index.row()));
 }
 
 void IrsForm::updateWorkDir(const QString& newDir) {

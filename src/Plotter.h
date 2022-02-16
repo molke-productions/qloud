@@ -30,10 +30,12 @@ class Plotter: public QChartView {
 	Q_OBJECT
 
 public:
-	static constexpr double DEFAULT_SMOOTH = 6.0; // 1/6 octave
+	static constexpr int DEFAULT_SMOOTH = 6; // 1/6 octave
 
 	Plotter(QWidget *parent = 0);
-	~Plotter();
+	virtual ~Plotter();
+
+	virtual void setIrInfo(const IRInfo& ii) = 0;
 
 	void setTitle(const QString& title);
 	QString getTitle();
@@ -42,6 +44,7 @@ public:
 			QAbstractAxis* xaxis, Qt::Alignment xalign, const QString &xunit,
 			QAbstractAxis* yaxis, Qt::Alignment yalign, const QString &yunit);
 	void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
+	void clearSeries();
 
 	virtual bool exportSeries(const QString &filename);
 

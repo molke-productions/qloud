@@ -16,38 +16,17 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <QtWidgets>
-#include "AudioIoManager.h"
 #include "QLWin.h"
-#include "QLE.h"
+
+#include "ExcitForm.h"
+#include "IrsForm.h"
 #include "QLUtl.h"
-#include "TickPoster.h"
-#include "CapThread.h"
-#include "PlotWindow.h"
-#include "QLCfg.h"
-#include "ExcitCfg.h"
-#include "IR.h"
-#include "IRInfo.h"
-#include "GenThread.h"
 
 QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->workDir = QDir::homePath();
 
-	try {
-		this->audioIo = new AudioIoManager();
-	} catch(QLE e) {
-		QString s = tr("Failed to init audio backends. The error is:\n\n");
-		s += e.msg;
-		s += tr("\n\nCapturing will be disabled.");
-		this->showCritical(s);
-	}
-
 	this->setWindowTitle("QLoud");
 	QVBoxLayout* mainLayout = new QVBoxLayout();
-
-	this->ticker = 0;
-	this->capture = 0;
-	this->jackConnected = false;
 
 	// create WorkDir group
 	QGroupBox* wrkGroup = new QGroupBox(tr("All project files are here"));
@@ -72,93 +51,18 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	wrkLayout->addWidget(dirBtn);
 	connect(dirBtn, SIGNAL(clicked()), this, SLOT(dirDialog()));
 
-	wrkLayout->addSpacing(QLWin::BIG_SPACE);
-	QWidget* tmp = new QLabel(tr("<b>Directory</b>"));
-	tmp->setFixedWidth(QLWin::rightSize().width());
-	wrkLayout->addWidget(tmp);
-
 	wrkGroup->setLayout(wrkLayout);
 	mainLayout->addWidget(wrkGroup);
 
 	// Excitation generator has own widget will be added after restoring a state
-
 	int excitLayoutIndex = mainLayout->indexOf(wrkGroup) + 1;
-
-	// create Capture group
-	QGroupBox* capGroup = new QGroupBox(tr("Capturing audiosystem response"));
-	QVBoxLayout* capLayout = new QVBoxLayout();
-
-	// Capture top
-	QHBoxLayout* capTop = new QHBoxLayout();
-	capTop->addWidget(new QLabel(tr("Backend:")));
-	this->backendCombo = new QComboBox();
-	this->backendCombo->addItems(this->audioIo->backends());
-	connect(this->backendCombo, &QComboBox::currentTextChanged, this->audioIo, &AudioIoManager::selectBackend);
-	capTop->addWidget(this->backendCombo);
-
-	capTop->addStretch(2);
-	capTop->addWidget(new QLabel(tr("Excitation:")));
-
-	this->excitInfoLbl = new QLabel("");
-	capTop->addWidget(this->excitInfoLbl);
-
-	capTop->addSpacing(QLWin::SMALL_SPACE);
-	QPushButton* jackBtn = new QPushButton(tr("Connect"));
-	jackBtn->setFixedWidth(QPushButton(tr("Disconnect")).sizeHint().width());
-
-	capTop->addSpacing(QLWin::BIG_SPACE);
-	tmp = new QLabel(tr("<b>Capture</b>"));
-	tmp->setFixedWidth(QLWin::rightSize().width());
-	capTop->addWidget(tmp);
-
-	capLayout->addLayout(capTop);
-
-	// Capture bottom
-	QHBoxLayout* capBottom = new QHBoxLayout();
-
-	capBottom->addStretch(6);
-
-	capBottom->addWidget(new QLabel(tr("Playback level [dB]")));
-	this->playDb = new QDoubleSpinBox();
-	this->playDb->setRange(-100, 0);
-	this->playDb->setSingleStep(1);
-	this->playDb->setValue(-6);
-	tmp = new QLabel("W-100W");
-	this->playDb->setFixedWidth(
-		this->playDb->sizeHint().width() + tmp->sizeHint().width()
-	);
-	capBottom->addWidget(this->playDb);
-	capBottom->addStretch(6);
-
-	capBottom->addWidget(new QLabel(tr("Delay before capture [s]")));
-
-	this->delayCombo = new QComboBox();
-	this->delayCombo->setEditable(false);
-	this->delayCombo->addItem("1");
-	this->delayCombo->addItem("3");
-	this->delayCombo->addItem("5");
-	this->delayCombo->addItem("10");
-	this->delayCombo->addItem("20");
-	this->delayCombo->addItem("40");
-	this->delayCombo->setCurrentIndex(0);
-	capBottom->addWidget(this->delayCombo);
-
-	capBottom->addSpacing(QLWin::BIG_SPACE);
-	this->capBtn = new QPushButton(tr("Start recording"));
-	this->capBtn->setFixedWidth(QLWin::rightSize().width());
-	capBottom->addWidget(this->capBtn);
-	connect(this->capBtn, SIGNAL(clicked()), this, SLOT(startCapture()));
-
-	capLayout->addLayout(capBottom);
-
-	capGroup->setLayout(capLayout);
-	mainLayout->addWidget(capGroup, 0);
 
 	// Create IR group
 	this->createIrList();
 	mainLayout->addWidget(this->irs, 1);
 
 	// Layout finishing
+	mainLayout->setSpacing(24);
 	QWidget* centralWidget = new QWidget();
 	centralWidget->setLayout(mainLayout);
 	this->setCentralWidget(centralWidget);
@@ -194,22 +98,21 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->restoreMyState(wrkDir);
 
 	// workDir is restored, it is safe to add widgets which depends on it
-	this->excit = new ExcitForm(this, this->workDir);
-	mainLayout->insertWidget( excitLayoutIndex, this->excit, 0);
+	this->excit = new ExcitForm(this);
+	this->excit->setWorkDir(this->workDir);
+	mainLayout->insertWidget(excitLayoutIndex, this->excit, 0);
+	connect(
+		this,
+		SIGNAL(workDirChanged(const QString&)),
+		this->excit,
+		SLOT(setWorkDir(const QString&))
+	);
 
-	this->capBtn->setEnabled(this->initCapture());
 	this->excit->generated();
 }
 
 QLWin::~QLWin() {
 	//this->saveMyState(); - this is done in closeEvent()
-}
-
-QSize QLWin::rightSize() {
-	QWidget* tmp = new QPushButton(tr("Impulse response"));
-	QSize size = tmp->sizeHint();
-	delete tmp;
-	return size;
 }
 
 void QLWin::showCritical(const QString& msg) {
@@ -226,29 +129,6 @@ void QLWin::showStatus(const QString& msg, int delay) {
 
 void QLWin::showStatus(const QString& msg) {
 	emit setStatus(msg);
-}
-
-void QLWin::changeExcitInfo(const QString& in) {
-	this->excitInfoLbl->setText(in);
-	if(in == "NONE") {
-		this->capBtn->setEnabled(false);
-		return;
-	}
-
-	if(this->jackConnected) {
-		QLCfg cfg(this->workDir);
-		try {
-			ExcitCfg eCfg = cfg.getExcit();
-			if(eCfg.rate == this->capture->getAudioIoRate())
-				this->capBtn->setEnabled(true);
-			else {
-				this->capBtn->setEnabled(false);
-				emit forceRate(this->capture->getAudioIoRate());
-			}
-		} catch(QLE e) {
-			emit showCritical(e.msg);
-		}
-	}
 }
 
 // protected
@@ -333,82 +213,6 @@ void QLWin::updateWorkDir(const QString& newDir) {
 	this->workDir = newDir;
 	emit setStatus("Working dir is: " + this->workDir, 2000);
 	emit irAdded();
-	if( ! this->jackConnected)
-		return;
-	if(this->jackConnected)
-		emit forceRate(this->capture->getAudioIoRate());
-}
-
-// returns true if JACK is running
-bool QLWin::initCapture() {
-	this->capture = new Capture(this->workDir, this->audioIo);
-	this->capture->openAudioIo();
-	this->jackConnected = true;
-	emit forceRate(this->capture->getAudioIoRate());
-	return !this->audioIo->backends().isEmpty();
-}
-
-void QLWin::startCapture() {
-	try {
-		this->capture->initBuffers();
-	} catch(QLE e) {
-		emit showCritical(e.msg);
-		return;
-	}
-
-	if( ! this->capture->jackIsConnected()) {
-		emit showCritical(tr("Connect JACK ports before capturing!"));
-		return;
-	}
-
-	int delay = QVariant(this->delayCombo->currentText()).toInt();
-	if(this->ticker)
-		delete this->ticker;
-	// TODO: replace '300' with something
-	this->ticker = new TickPoster(-delay, 300);
-	this->ticker->move(this->pos() + QPoint(10, 10));
-	this->ticker->show();
-
-	connect(ticker, SIGNAL(zero()), this, SLOT(startJacking()));
-	this->ticker->startTick();
-}
-
-void QLWin::startJacking() {
-	CapThread* cap = new CapThread(
-		this,
-		this->capture,
-		this->ticker,
-		this->playDb->value()
-	);
-	connect(cap, SIGNAL(workIsDone()), this->ticker, SLOT(stopTick()));
-	connect(cap, SIGNAL(workIsDone()), this, SLOT(captureFinished()));
-	cap->start();
-}
-
-void QLWin::captureFinished() {
-	QString stdDescription = QDate::currentDate().toString(Qt::ISODate);
-	stdDescription = QDate::currentDate().toString(Qt::ISODate);
-	stdDescription += "-" + QTime::currentTime().toString();
-
-	double maxLevel = QLUtl::toDb(this->capture->getMaxResponse());
-	bool ok;
-	QString msg = tr("Maximum capture level: ");
-	msg += QVariant(maxLevel).toString() + " dB";
-	msg += tr("\nGive a meaningful description for the measurement");
-	msg += tr("\n(“Cancel” will ignore this measurement)");
-	QString tmp = tr("Measurement description");
-	QString description = QInputDialog::getText(
-		this, tmp, msg, QLineEdit::Normal, stdDescription, &ok
-	);
-	if( ! ok)
-		return;
-	// save this measurement
-	if( ! description.length() )
-		description = stdDescription;
-	GenThread* gen = new GenThread(
-		this, this->workDir, description, maxLevel, this
-	);
-	gen->start();
 }
 
 void QLWin::irCalculated() {

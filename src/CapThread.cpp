@@ -23,12 +23,10 @@
 CapThread::CapThread(
 	QObject* parent,
 	Capture* aCapture,
-	TickPoster* aTicker,
-	int playDb
+	TickPoster* aTicker
 ) : QThread(parent) {
 	this->capture = aCapture;
 	this->ticker = aTicker;
-	this->playDbLevel = playDb;
 	connect(
 		this,
 		SIGNAL(showCritical(const QString&)),
@@ -51,7 +49,7 @@ CapThread::CapThread(
 
 void CapThread::run() {
 	try {
-		this->capture->doJob(this->playDbLevel);
+		this->capture->doJob();
 	} catch(QLE e) {
 		emit showCritical(e.msg);
 	}

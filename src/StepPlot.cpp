@@ -30,43 +30,26 @@ static const QColor AMP_MARKER_COLOR(Qt::black);
 
 StepPlot::StepPlot(
 	const QString& aDir,
-	IRInfo anIi,
 	QWidget *parent
 ) : Plotter(parent) {
 	this->dir = aDir;
-	this->ii = anIi;
 
-	this->time = 0;
-	this->amps = 0;
+	setTitle(tr("Step Response"));
 
-	unsigned curveLength = this->calculate();
+	XAxis = new QValueAxis(this->chart);
+	XAxis->setLabelFormat("%d");
+	XAxis->setTitleText(tr("Time in ms"));
 
-		setTitle(tr("Step Response"));
+	QValueAxis *YAxis = new QValueAxis(this->chart);
+	YAxis->setTitleText(tr("Amplitude"));
+	YAxis->setLabelFormat("%.02f");
+	YAxis->setMax(1.5);
+	YAxis->setMin(-1.5);
 
-		QValueAxis *XAxis = new QValueAxis(this->chart);
-		XAxis->setLabelFormat("%d");
-		XAxis->setTitleText(tr("Time in ms"));
-		XAxis->setMax(this->time[curveLength-1]);
-		XAxis->setMin(this->time[0]);
-		XAxis->applyNiceNumbers();
-
-		QValueAxis *YAxis = new QValueAxis(this->chart);
-		YAxis->setTitleText(tr("Amplitude"));
-		YAxis->setLabelFormat("%.02f");
-		YAxis->setMax(1.5);
-		YAxis->setMin(-1.5);
-
-		QLineSeries* ampCurve = new QLineSeries(this->chart);
-		ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-		appendSeries(ampCurve, XAxis, Qt::AlignBottom, "ms", YAxis, Qt::AlignLeft, "");
-
-		QList<QPointF> points;
-		for (unsigned int i = 0; i < curveLength; i++) {
-			points.append(QPointF(this->time[i], this->amps[i]));
-		}
-		ampCurve->replace(points);
+	ampCurve = new QLineSeries(this->chart);
+	ampCurve->setPen(QPen(AMP_CURVE_COLOR));
+	appendSeries(ampCurve, XAxis, Qt::AlignBottom, "ms", YAxis, Qt::AlignLeft, "");
 }
-
 
 StepPlot::~StepPlot() {
 	if(this->time)
@@ -75,6 +58,21 @@ StepPlot::~StepPlot() {
 		delete this->amps;
 }
 
+void StepPlot::setIrInfo(const IRInfo& ii) {
+	this->ii = ii;
+
+	unsigned curveLength = this->calculate();
+
+	XAxis->setMax(this->time[curveLength-1]);
+	XAxis->setMin(this->time[0]);
+	XAxis->applyNiceNumbers();
+
+	QList<QPointF> points;
+	for (unsigned int i = 0; i < curveLength; i++) {
+		points.append(QPointF(this->time[i], this->amps[i]));
+	}
+	ampCurve->replace(points);
+}
 
 unsigned StepPlot::calculate() {
 	WavIn* irWav = new WavIn(this->dir + "/" + this->ii.key + IR::irFileName());

@@ -80,51 +80,16 @@ double IR::getMaxTrimLength() {
 	return this->maxTrimLength;
 }
 
-void IR::generate() {
-	// read input files
-	WavIn* filterWav = new WavIn(
-		this->dirPath + "/" + Excitation::filterFileName()
-	);
-	WavIn* respWav = new WavIn(
-		this->dirPath + "/" + Capture::responseFileName()
-	);
+void IR::generate(const Excitation& excitation, const Capture& capture) {
 
-	double* realFilter = 0;
-	double* realResp = 0;
-
-	try {
-		realFilter = filterWav->readDouble();
-		realResp = respWav->readDouble();
-	} catch(QLE e) {
-		delete filterWav;
-		delete respWav;
-		if(realFilter)
-			delete realFilter;
-		if(realResp)
-			delete realResp;
-		throw QLE(e);
-	}
-
-	if(filterWav->getLength() != respWav->getLength()) {
-		delete filterWav;
-		delete respWav;
-		delete realFilter;
-		delete realResp;
+	if (excitation.filter().size() != capture.getCaptureBuffer().size()) {
 		throw QLE(
-			Excitation::filterFileName() +
-			" and " +
-			Capture::responseFileName() +
-			" have different lengths!"
+			"Excitation and Response have different lengths!"
 		);
 	}
 
-	// saved to use while IR writing
-	WavInfo* wavInfo = filterWav->getWavInfo();
-	delete filterWav;
-	delete respWav;
-
 	// convert input samples to complex
-	unsigned fftLength = wavInfo->length * 2;
+	const unsigned fftLength = excitation.filter().size() * 2;
 
 	fftw_complex* filterBuf = (fftw_complex*) fftw_malloc(
 		sizeof(fftw_complex) * fftLength
@@ -132,21 +97,19 @@ void IR::generate() {
 	fftw_complex* respBuf = (fftw_complex*) fftw_malloc(
 		sizeof(fftw_complex) * fftLength
 	);
-	for(unsigned i = 0; i < wavInfo->length; i++) {
-		filterBuf[i][0] = realFilter[i];
+	for(unsigned i = 0; i < excitation.filter().size(); i++) {
+		filterBuf[i][0] = excitation.filter()[i];
 		filterBuf[i][1] = 0.0;
-		respBuf[i][0] = realResp[i];
+		respBuf[i][0] = capture.getCaptureBuffer()[i];
 		respBuf[i][1] = 0.0;
 	}
 	// zero pad
-	for(unsigned i = wavInfo->length; i < fftLength; i++) {
+	for(unsigned i = excitation.filter().size(); i < fftLength; i++) {
 		filterBuf[i][0] = 0.0;
 		filterBuf[i][1] = 0.0;
 		respBuf[i][0] = 0.0;
 		respBuf[i][1] = 0.0;
 	}
-	delete realFilter;
-	delete realResp;
 
 	// do forward FFT transform
 	fftw_complex* filterFft = (fftw_complex*)fftw_malloc(
@@ -195,7 +158,7 @@ void IR::generate() {
 	fftw_free(product);
 
 	// get real IR part and normalize ------------------------------------------
-	double* realIr = new double[fftLength];
+	std::vector<double> realIr(fftLength);
 	double max = 0.0;
 	double tmpAbs = 0.0;
 	for(unsigned i = 0; i < fftLength; i++) {
@@ -209,20 +172,20 @@ void IR::generate() {
 		realIr[i] /= max;
 
 	// save IR -----------------------------------------------------------------
-	WavOut* wavOut = new WavOut(
+	WavOut wavOut(
 		this->dirPath + "/" + this->prefix + IR::irFileName()
 	);
-	wavInfo->length = fftLength;
+
+	WavInfo wavInfo;
+	wavInfo.length = fftLength;
+	wavInfo.rate = excitation.lastConfig().rate;
+	wavInfo.bitDepth = excitation.lastConfig().depth;
+	wavInfo.channels = 1;
 	try {
-		wavOut->writeDouble(*wavInfo, realIr);
+		wavOut.writeDouble(wavInfo, realIr.data());
 	} catch(QLE e) {
-		delete wavOut;
-		delete[] realIr;
 		throw QLE(e.msg);
 	}
-	delete wavOut;
-	delete wavInfo;
-	delete[] realIr;
 }
 
 void IR::trim(double secs) {

@@ -10,29 +10,20 @@ static const QColor PHASE_CURVE_COLOR(0, 150, 0);
 
 SplPlot::SplPlot(
 	const QString& aDir,
-	IRInfo anIi,
 	QWidget *parent
 ) : Plotter(parent) {
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	this->dir = aDir;
-	this->ii = anIi;
-
-	this->freqs = 0;
-	this->amps = 0;
-	this->phase = 0;
-	this->phaseCurve = 0;
-
-	this->ir = new IR(dir, ii.key);
 
 	setTitle(tr("Frequency Response"));
 
 	XAxis = new QLogValueAxis(this->chart);
-	((QLogValueAxis*) XAxis)->setBase(10.0);
-	((QLogValueAxis*) XAxis)->setLabelFormat("%d");
+	XAxis->setBase(10.0);
+	XAxis->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Frequency in Hz"));
-	XAxis->setRange(10, 100000);
-	((QLogValueAxis *) XAxis)->setMinorTickCount(8);
+	XAxis->setRange(16, 25000);
+	XAxis->setMinorTickCount(8);
 
 	YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Amplitude in dB"));
@@ -59,7 +50,6 @@ SplPlot::SplPlot(
 
 	this->smoothFactor = Plotter::DEFAULT_SMOOTH; // 1/6 octave
 	this->winLength = 0.5; // 500 ms for right window
-	this->recalculate();
 }
 
 SplPlot::~SplPlot() {
@@ -73,6 +63,14 @@ SplPlot::~SplPlot() {
 		delete ir;
 	if(this->phaseCurve)
 		delete this->phaseCurve; // may be detached
+}
+
+void SplPlot::setIrInfo(const IRInfo& ii) {
+	this->ii = ii;
+
+	this->ir = new IR(dir, ii.key);
+
+	this->recalculate();
 }
 
 bool SplPlot::exportSeries(const QString &filename) {
@@ -112,7 +110,7 @@ double SplPlot::getMaxTrimLength() {
 	return this->ir->getMaxTrimLength();
 }
 
-void SplPlot::setSmooth(double aSmoothFactor) {
+void SplPlot::setSmooth(int aSmoothFactor) {
 	this->smoothFactor = aSmoothFactor;
 	this->recalculate();
 }

@@ -31,7 +31,7 @@ public:
 	int fMax;
 
 	void check() const;
-	QString toString();
+	QString toString() const;
 };
 
 #endif

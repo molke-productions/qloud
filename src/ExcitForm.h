@@ -19,17 +19,21 @@
 #ifndef EXCITFORM_H
 #define EXCITFORM_H
 
-#include <QtWidgets>
+#include <QComboBox>
 #include <QDoubleSpinBox>
-#include "ExcitCfg.h"
-#include "QLE.h"
-#include "QLCfg.h"
+#include <QGroupBox>
+#include <QPushButton>
 
-class ExcitForm : public QWidget {
+class AudioIoManager;
+class Capture;
+class Excitation;
+class TickPoster;
+
+class ExcitForm : public QGroupBox {
 	Q_OBJECT
 
 public:
-	ExcitForm(QWidget* feedback, QString workDir, QWidget* parent = 0);
+	ExcitForm(QWidget* feedback, QWidget* parent = 0);
 	~ExcitForm();
 
 signals:
@@ -53,24 +57,40 @@ private slots:
 	void depthChanged(const QString&);
 	void fMinChanged(double);
 	void fMaxChanged(double);
-	void generate();
+	void changeExcitInfo();
+
+	void startCapture();
+	void startJacking();
+	void captureFinished();
+
+	void onBackendChanged(const QString& text);
 
 private:
 	QWidget* feedback;
 	QString workDir;
-	QLCfg* qlCfg;
 
-	ExcitCfg lastCfg;
-	ExcitCfg newCfg;
+	AudioIoManager* audioIo = nullptr;
+	Excitation* excitation = nullptr;
+	Capture* capture = nullptr;
 
-	QComboBox* lengthCombo;
-	QComboBox* rateCombo;
-	QComboBox* depthCombo;
-	QDoubleSpinBox* fMinCnt;
-	QDoubleSpinBox* fMaxCnt;
+	QComboBox* backendCombo = nullptr;
+	QComboBox* inputCombo = nullptr;
+	QComboBox* outputCombo = nullptr;
+	QComboBox* delayCombo = nullptr;
+	QComboBox* lengthCombo = nullptr;
+	QComboBox* rateCombo = nullptr;
+	QComboBox* depthCombo = nullptr;
+	QDoubleSpinBox* fMinCnt = nullptr;
+	QDoubleSpinBox* fMaxCnt = nullptr;
+	QDoubleSpinBox* playDb = nullptr;
+	QPushButton* capBtn = nullptr;
+	TickPoster* ticker = nullptr;
+
+	bool jackConnected = false;
 
 	QString getInfoString();
 	void mapCfgToControls();
+	bool initCapture();
 };
 
 #endif

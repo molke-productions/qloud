@@ -23,75 +23,41 @@
 #include "WavIn.h"
 #include "WavOut.h"
 
-Capture::Capture(QString aDirPath, IAudioIo* audioIo) {
-	this->dirPath = aDirPath;
+Capture::Capture(IAudioIo* audioIo) {
 	this->audioIo = audioIo;
 }
 
 Capture::~Capture() {
 	this->closeAudioIo();
-	this->freeBuffers();
-	if(this->wavInfo)
-		delete this->wavInfo;
 }
 
-void Capture::openAudioIo() {
-	this->freeBuffers();
-}
+void Capture::initBuffers(const std::vector<double>& data, int playDb) {
+	this->playBuf.resize(data.size());
+	this->capBuf.resize(data.size());
 
-void Capture::initBuffers() {
-	this->freeBuffers();
-	WavIn* excitWav = new WavIn(
-		this->dirPath + "/" + Excitation::excitationFileName()
-	);
-	this->wavInfo = excitWav->getWavInfo();
-	if(this->wavInfo->rate != this->audioIo->getRate())
-		throw QLE("Excitation and JACK sample rates are not equal!");
-
-	try {
-		this->playBuf = excitWav->readFloat();
-	} catch(QLE e) {
-		delete excitWav;
-		this->freeBuffers();
-		throw QLE(e.msg);
+	const float playDb_ = pow(10.0f, playDb/20.0f);
+	for (uint i = 0; i < data.size(); ++i) {
+		playBuf[i] = data[i] * playDb_;
 	}
-
-	delete excitWav;
-	this->capBuf = new float[this->wavInfo->length];
 }
 
-void Capture::doJob(int playDbLevel) {
-	if( ! this->jackIsConnected())
+void Capture::doJob() {
+	if( ! this->isAudioIoConnected())
 		throw QLE("JACK ports are not connected!");
 	if( ! this->audioIo->isIdle())
 		throw QLE("JACK client isn’t IDLE now!");
 
-	this->maxResponse = 0.0;
-
-	AudioInfo info;
-	info.playBuf = this->playBuf;
-	info.capBuf = this->capBuf;
-	info.length = this->wavInfo->length;
-	info.playDb = playDbLevel;
-
-	info.rate = this->audioIo->getRate(); // suppress gcc warning
-
+	AudioInfo info{ this->playBuf, this->capBuf, this->audioIo->getRate() };
 	this->audioIo->process(info);
 
-	for (unsigned i = 0; i < this->wavInfo->length; ++i) {
-		this->maxResponse = std::max(this->maxResponse, fabsf(this->capBuf[i]));
+	// Compute max response
+	this->maxResponse = 0.0;
+	for (auto& d : info.capBuf) {
+		this->maxResponse = std::max(this->maxResponse, fabsf(d));
 	}
-
-	WavOut* respWav = new WavOut(
-		this->dirPath + "/" + Capture::responseFileName()
-	);
-	respWav->writeFloat(*this->wavInfo, this->capBuf);
-	delete respWav;
-
-	this->freeBuffers();
 }
 
-bool Capture::jackIsConnected() {
+bool Capture::isAudioIoConnected() {
 	if(this->audioIo )
 		return this->audioIo->isConnected();
 	return false;
@@ -107,21 +73,14 @@ int Capture::getAudioIoRate() {
 	return -1;
 }
 
+const std::vector<float>& Capture::getCaptureBuffer() const {
+	return this->capBuf;
+}
+
 //////////////////////////////// privates //////////////////////////////////////
 void Capture::closeAudioIo() {
 	if(this->audioIo) {
 		delete this->audioIo;
 		this->audioIo = nullptr;
-	}
-}
-
-void Capture::freeBuffers() {
-	if(this->playBuf) {
-		delete this->playBuf;
-		this->playBuf = 0;
-	}
-	if(this->capBuf) {
-		delete this->capBuf;
-		this->capBuf = 0;
 	}
 }

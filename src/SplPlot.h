@@ -7,14 +7,16 @@ class SplPlot : public Plotter {
 	Q_OBJECT
 
 public:
-	SplPlot(const QString& aDir, IRInfo anIi, QWidget *parent = 0);
+	SplPlot(const QString& aDir, QWidget *parent = 0);
 	~SplPlot();
+
+	void setIrInfo(const IRInfo& ii) override;
 
 	double getMaxTrimLength(); // secs
 	bool exportSeries(const QString &filename) override;
 
 public slots:
-	void setSmooth(double smoothFactor);
+	void setSmooth(int smoothFactor);
 	void setWinLength(double secs);
 	void enablePhase(int);
 
@@ -23,17 +25,17 @@ private:
 	QString dir;
 	IRInfo ii;
 
-	double* freqs;
-	double* amps;
-	double* phase;
+	double* freqs = nullptr;
+	double* amps = nullptr;
+	double* phase = nullptr;
 
 	double winLength;
-	double smoothFactor;
+	int smoothFactor;
 
-	QLineSeries *ampCurve;
-	QLineSeries *phaseCurve;
+	QLineSeries *ampCurve = nullptr;
+	QLineSeries *phaseCurve = nullptr;
 
-	QAbstractAxis *XAxis;
+	QLogValueAxis *XAxis;
 	QAbstractAxis *YAxis;
 	QAbstractAxis *YPAxis;
 

@@ -16,29 +16,97 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include "Excitation.h"
 #include "ExcitForm.h"
-#include "ExcitThread.h"
+
+#include "AudioIoManager.h"
+#include "Capture.h"
+#include "CapThread.h"
+#include "Excitation.h"
+#include "GenThread.h"
 #include "QLUtl.h"
-#include "QLWin.h"
+#include "TickPoster.h"
 
 ExcitForm::ExcitForm(
 	QWidget* aFeedback,
-	QString aWorkDir,
 	QWidget* parent
-) : QWidget(parent) {
+) : QGroupBox(tr("Parameters for measurement"), parent) {
 	this->feedback = aFeedback;
 
+	this->excitation = new Excitation(this);;
+
+	try {
+		this->audioIo = new AudioIoManager();
+	} catch(QLE e) {
+		QString s = tr("Failed to init audio backends. The error is:\n\n");
+		s += e.msg;
+		s += tr("\n\nCapturing will be disabled.");
+		this->showCritical(s);
+	}
+
 	// Layout
-	QVBoxLayout* mainLayout = new QVBoxLayout();
+	auto* topLayout = new QHBoxLayout();
 
-	QGroupBox* exGroup = new QGroupBox(tr("Parameters for excitation signal"));
-	QVBoxLayout* exLayout = new QVBoxLayout();
+	// Audio system
+	topLayout->addWidget(new QLabel(tr("Backend")));
+	backendCombo = new QComboBox();
+	backendCombo->addItems(this->audioIo->backends());
+	connect(backendCombo, &QComboBox::currentTextChanged, this, &ExcitForm::onBackendChanged);
+	topLayout->addWidget(backendCombo);
 
-	// Excitation top
-	QHBoxLayout* exTop = new QHBoxLayout();
+	// Audio input/output
+	topLayout->addWidget(new QLabel(tr("Input")));
+	inputCombo = new QComboBox();
+	inputCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+	inputCombo->setEnabled(false);
+	topLayout->addWidget(inputCombo);
+	topLayout->addWidget(new QLabel(tr("Output")));
+	outputCombo = new QComboBox();
+	outputCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+	outputCombo->setEnabled(false);
+	topLayout->addWidget(outputCombo);
 
-	exTop->addWidget(new QLabel(tr("Length [s]")));
+	// Sample rate
+	topLayout->addWidget(new QLabel(tr("Sample rate [Hz]")));
+	this->rateCombo = new QComboBox();
+	this->rateCombo->setEditable(false);
+	this->rateCombo->addItem("44100");
+	this->rateCombo->addItem("48000");
+	this->rateCombo->addItem("88200");
+	this->rateCombo->addItem("96000");
+	this->rateCombo->addItem("176400");
+	this->rateCombo->addItem("192000");
+	this->rateCombo->setCurrentIndex(1);
+	topLayout->addWidget(this->rateCombo);
+	connect(
+		this->rateCombo,
+		SIGNAL(currentTextChanged(const QString&)),
+		this,
+		SLOT(rateChanged(const QString&))
+	);
+
+	// Bit depth
+	topLayout->addWidget(new QLabel(tr("Bit depth")));
+	this->depthCombo = new QComboBox();
+	this->depthCombo->setEditable(false);
+	this->depthCombo->addItem("16");
+	this->depthCombo->addItem("24");
+	this->depthCombo->addItem("32");
+	this->depthCombo->setCurrentIndex(2);
+	topLayout->addWidget(this->depthCombo);
+	connect(
+		this->depthCombo,
+		SIGNAL(currentTextChanged(const QString&)),
+		this,
+		SLOT(depthChanged(const QString&))
+	);
+
+	// Spacer at end
+	topLayout->addStretch();
+
+	auto* bottomLayout = new QHBoxLayout();
+
+	// Measurement duration
+	bottomLayout->addWidget(new QLabel(tr("Duration [s]")));
 	this->lengthCombo = new QComboBox();
 	this->lengthCombo->setEditable(false);
 	this->lengthCombo->addItem("3");
@@ -49,7 +117,7 @@ ExcitForm::ExcitForm(
 	this->lengthCombo->addItem("25");
 	this->lengthCombo->addItem("40");
 	this->lengthCombo->setCurrentIndex(2);
-	exTop->addWidget(this->lengthCombo);
+	bottomLayout->addWidget(this->lengthCombo);
 	connect(
 		this->lengthCombo,
 		SIGNAL(currentTextChanged(const QString&)),
@@ -57,67 +125,27 @@ ExcitForm::ExcitForm(
 		SLOT(lengthChanged(const QString&))
 	);
 
-	exTop->addStretch(1);
-	exTop->addSpacing(QLWin::SMALL_SPACE);
-	exTop->addWidget(new QLabel(tr("Sample rate [Hz]")));
-	this->rateCombo = new QComboBox();
-	this->rateCombo->setEditable(false);
-	this->rateCombo->addItem("32000");
-	this->rateCombo->addItem("44100");
-	this->rateCombo->addItem("48000");
-	this->rateCombo->addItem("64000");
-	this->rateCombo->addItem("88200");
-	this->rateCombo->addItem("96000");
-	this->rateCombo->addItem("128000");
-	this->rateCombo->addItem("176400");
-	this->rateCombo->addItem("192000");
-	this->rateCombo->setCurrentIndex(2);
-	exTop->addWidget(this->rateCombo);
-	connect(
-		this->rateCombo,
-		SIGNAL(currentTextChanged(const QString&)),
-		this,
-		SLOT(rateChanged(const QString&))
-	);
+	// Measurement delay
+	bottomLayout->addWidget(new QLabel(tr("Delay [s]")));
+	this->delayCombo = new QComboBox();
+	this->delayCombo->setEditable(false);
+	this->delayCombo->addItem("1");
+	this->delayCombo->addItem("2");
+	this->delayCombo->addItem("5");
+	this->delayCombo->addItem("10");
+	this->delayCombo->addItem("20");
+	this->delayCombo->addItem("50");
+	this->delayCombo->setCurrentIndex(0);
+	bottomLayout->addWidget(this->delayCombo);
 
-	exTop->addStretch(1);
-	exTop->addSpacing(QLWin::SMALL_SPACE);
-	exTop->addWidget(new QLabel(tr("Bit depth")));
-	this->depthCombo = new QComboBox();
-	this->depthCombo->setEditable(false);
-	this->depthCombo->addItem("16");
-	this->depthCombo->addItem("24");
-	this->depthCombo->addItem("32");
-	this->depthCombo->setCurrentIndex(2);
-	exTop->addWidget(this->depthCombo);
-	connect(
-		this->depthCombo,
-		SIGNAL(currentTextChanged(const QString&)),
-		this,
-		SLOT(depthChanged(const QString&))
-	);
-
-	exTop->addSpacing(QLWin::BIG_SPACE);
-	QWidget* excitLabel = new QLabel(tr("<b>Excitation</b>"));
-	excitLabel->setFixedWidth(QLWin::rightSize().width());
-	exTop->addWidget(excitLabel);
-
-	exLayout->addLayout(exTop);
-
-	// Excitation bottom
-	QHBoxLayout* exBottom = new QHBoxLayout();
-
-	exBottom->addWidget(new QLabel(tr("Min. freq. [Hz]")));
+	// Min Frequency
+	bottomLayout->addWidget(new QLabel(tr("Min. freq. [Hz]")));
 	this->fMinCnt = new QDoubleSpinBox(this);
-	this->fMinCnt->setRange(1, 100000);
+	this->fMinCnt->setRange(1, 16000);
 	this->fMinCnt->setSingleStep(1);
 	this->fMinCnt->setValue(100);
-	QWidget* tmp = new QLabel("W100000W");
-	this->fMinCnt->setFixedWidth(
-		this->fMinCnt->sizeHint().width() + tmp->sizeHint().width()
-	);
-	delete tmp;
-	exBottom->addWidget(this->fMinCnt, 5);
+	this->fMinCnt->setDecimals(0);
+	bottomLayout->addWidget(this->fMinCnt);
 	connect(
 		this->fMinCnt,
 		SIGNAL(valueChanged(double)),
@@ -125,20 +153,14 @@ ExcitForm::ExcitForm(
 		SLOT(fMinChanged(double))
 	);
 
-	exBottom->addStretch(1);
-	exBottom->addSpacing(QLWin::SMALL_SPACE);
-
-	exBottom->addWidget(new QLabel(tr("Max. freq. [Hz]")));
+	// Max Frequency
+	bottomLayout->addWidget(new QLabel(tr("Max. freq. [Hz]")));
 	this->fMaxCnt = new QDoubleSpinBox(this);
-	this->fMaxCnt->setRange(1, 100000);
+	this->fMaxCnt->setRange(1, 20000);
 	this->fMaxCnt->setSingleStep(1);
 	this->fMaxCnt->setValue(10000);
-	tmp = new QLabel("W1000000W");
-	this->fMaxCnt->setFixedWidth(
-		this->fMaxCnt->sizeHint().width() + tmp->sizeHint().width()
-	);
-	delete tmp;
-	exBottom->addWidget(this->fMaxCnt, 5);
+	this->fMaxCnt->setDecimals(0);
+	bottomLayout->addWidget(this->fMaxCnt);
 	connect(
 		this->fMaxCnt,
 		SIGNAL(valueChanged(double)),
@@ -146,18 +168,28 @@ ExcitForm::ExcitForm(
 		SLOT(fMaxChanged(double))
 	);
 
-	exBottom->addSpacing(QLWin::BIG_SPACE);
-	QPushButton* genBtn = new QPushButton(tr("Generate"));
-	genBtn->setFixedWidth(QLWin::rightSize().width());
-	exBottom->addWidget(genBtn);
-	connect(genBtn, SIGNAL(clicked()), this, SLOT(generate()));
+	// Playback level
+	bottomLayout->addWidget(new QLabel(tr("Playback level [dB]")));
+	this->playDb = new QDoubleSpinBox();
+	this->playDb->setRange(-96, 0);
+	this->playDb->setSingleStep(1);
+	this->playDb->setValue(-6);
+	this->playDb->setDecimals(0);
+	bottomLayout->addWidget(this->playDb);
 
-	exLayout->addLayout(exBottom);
+	// Measure button
+	this->capBtn = new QPushButton(tr("Start recording"));
+	connect(this->capBtn, SIGNAL(clicked()), this, SLOT(startCapture()));
+	this->capBtn->setEnabled(this->initCapture());
 
-	exGroup->setLayout(exLayout);
-	mainLayout->addWidget(exGroup);
-	this->setLayout(mainLayout);
-	this->layout()->setContentsMargins(0,0,0,0);
+	// Assign layout to group
+	auto* layout = new QGridLayout();
+	layout->addLayout(topLayout, 0, 0, 1, 3);
+	layout->addLayout(bottomLayout, 1, 0, 1, 1);
+	layout->addWidget(this->capBtn, 1, 2, 1, 1);
+	layout->setColumnStretch(1, 1);
+
+	setLayout(layout);
 
 	// Signals
 	connect(
@@ -188,15 +220,12 @@ ExcitForm::ExcitForm(
 	connect(
 		this,
 		SIGNAL(excitInfoChanged(const QString&)),
-		this->feedback,
-		SLOT(changeExcitInfo(const QString&))
+		this,
+		SLOT(changeExcitInfo())
 	);
-
-	this->setWorkDir(aWorkDir);
 }
 
 ExcitForm::~ExcitForm() {
-	delete this->qlCfg;
 }
 
 void ExcitForm::showCritical(const QString& msg) {
@@ -217,10 +246,9 @@ void ExcitForm::showStatus(const QString& msg) {
 
 void ExcitForm::setWorkDir(const QString& dir) {
 	this->workDir = dir;
-	this->qlCfg = new QLCfg(this->workDir);
+
 	try {
-		this->lastCfg = this->qlCfg->getExcit();
-		this->newCfg = this->lastCfg;
+		this->excitation->setWorkDir(dir);
 		this->mapCfgToControls();
 	} catch(QLE e) {
 		emit showCritical(e.msg);
@@ -233,7 +261,7 @@ void ExcitForm::setWorkDir(const QString& dir) {
 void ExcitForm::forceRate(int newRate) {
 	this->rateCombo->setEnabled(false);
 	if(QLUtl::setComboToData(this->rateCombo, newRate))
-		this->newCfg.rate = newRate;
+		this->excitation->newConfig().rate = newRate;
 	else
         this->showCritical(tr("Failed accepting JACK rate!"));
 }
@@ -244,41 +272,121 @@ void ExcitForm::generated() {
 
 // private
 void ExcitForm::lengthChanged(const QString& in) {
-	this->newCfg.length = QVariant(in).toInt();
+	this->excitation->newConfig().length = QVariant(in).toInt();
 }
 
 void ExcitForm::rateChanged(const QString& in) {
-	this->newCfg.rate = QVariant(in).toInt();
+	this->excitation->newConfig().rate = QVariant(in).toInt();
 }
 
 void ExcitForm::depthChanged(const QString& in) {
-	this->newCfg.depth = QVariant(in).toInt();
+	this->excitation->newConfig().depth = QVariant(in).toInt();
 }
 
 void ExcitForm::fMinChanged(double in) {
-	this->newCfg.fMin = int(in + 0.5);
+	this->excitation->newConfig().fMin = int(in + 0.5);
 }
 
 void ExcitForm::fMaxChanged(double in) {
-	this->newCfg.fMax = int(in + 0.5);
+	this->excitation->newConfig().fMax = int(in + 0.5);
 }
 
-void ExcitForm::generate() {
-	try {
-		this->newCfg.check();
-		this->lastCfg = this->newCfg;
-		this->qlCfg->setExcit(this->lastCfg);
-		ExcitThread* eThread = new ExcitThread(
-			this,
-			this->workDir,
-			this->lastCfg,
-			this
-		);
-		eThread->start(QThread::LowestPriority);
-		emit excitInfoChanged(this->getInfoString());
-	} catch(QLE e) {
-		QLUtl::showCritical(this, e.msg);
+void ExcitForm::changeExcitInfo() {
+	if(this->jackConnected) {
+		QLCfg cfg(this->workDir);
+		try {
+			ExcitCfg eCfg = cfg.getExcit();
+			if(eCfg.rate == this->capture->getAudioIoRate())
+				this->capBtn->setEnabled(true);
+			else {
+				this->capBtn->setEnabled(false);
+				emit forceRate(this->capture->getAudioIoRate());
+			}
+		} catch(QLE e) {
+			emit showCritical(e.msg);
+		}
 	}
+}
+
+void ExcitForm::startCapture() {
+	try {
+		this->excitation->generate();
+		this->capture->initBuffers(this->excitation->excitation(), this->playDb->value());
+	} catch(QLE e) {
+		emit showCritical(e.msg);
+		return;
+	}
+
+	if( ! this->capture->isAudioIoConnected()) {
+		emit showCritical(tr("Connect JACK ports before capturing!"));
+		return;
+	}
+
+	int delay = QVariant(this->delayCombo->currentText()).toInt();
+	if(this->ticker)
+		delete this->ticker;
+	// TODO: replace '300' with something
+	this->ticker = new TickPoster(-delay, 300);
+	this->ticker->move(this->pos() + QPoint(10, 10));
+	this->ticker->show();
+
+	connect(ticker, SIGNAL(zero()), this, SLOT(startJacking()));
+	this->ticker->startTick();
+}
+
+void ExcitForm::startJacking() {
+	CapThread* cap = new CapThread(
+		this,
+		this->capture,
+		this->ticker
+	);
+	connect(cap, SIGNAL(workIsDone()), this->ticker, SLOT(stopTick()));
+	connect(cap, SIGNAL(workIsDone()), this, SLOT(captureFinished()));
+	cap->start();
+}
+
+void ExcitForm::captureFinished() {
+	QString stdDescription = QDate::currentDate().toString(Qt::ISODate);
+	stdDescription = QDate::currentDate().toString(Qt::ISODate);
+	stdDescription += "-" + QTime::currentTime().toString();
+
+	double maxLevel = QLUtl::toDb(this->capture->getMaxResponse());
+	bool ok;
+	QString msg = tr("Maximum capture level: ");
+	msg += QVariant(maxLevel).toString() + " dB";
+	msg += tr("\nGive a meaningful description for the measurement");
+	msg += tr("\n(“Cancel” will ignore this measurement)");
+	QString tmp = tr("Measurement description");
+	QString description = QInputDialog::getText(
+		this, tmp, msg, QLineEdit::Normal, stdDescription, &ok
+	);
+	if( ! ok)
+		return;
+	// save this measurement
+	if( ! description.length() )
+		description = stdDescription;
+	GenThread* gen = new GenThread(
+						 this,
+						 *this->excitation,
+						 *this->capture,
+						 this->workDir,
+						 description,
+						 maxLevel,
+						 this->feedback
+	);
+	gen->start();
+}
+
+void ExcitForm::onBackendChanged(const QString& text) {
+	audioIo->selectBackend(text);
+
+	inputCombo->clear();
+	inputCombo->addItems(audioIo->inputDevices());
+	inputCombo->setEnabled(inputCombo->count());
+
+	outputCombo->clear();
+	outputCombo->addItems(audioIo->outputDevices());
+	outputCombo->setEnabled(outputCombo->count());
 }
 
 QString ExcitForm::getInfoString() {
@@ -292,13 +400,21 @@ QString ExcitForm::getInfoString() {
 	if( ! exists)
 		return "NONE";
 
-	return this->lastCfg.toString();
+	return this->excitation->lastConfig().toString();
 }
 
 void ExcitForm::mapCfgToControls() {
-	QLUtl::setComboToData(this->lengthCombo, this->newCfg.length);
-	QLUtl::setComboToData(this->rateCombo, this->newCfg.rate);
-	QLUtl::setComboToData(this->depthCombo, this->newCfg.depth);
-	this->fMinCnt->setValue(this->newCfg.fMin);
-	this->fMaxCnt->setValue(this->newCfg.fMax);
+	QLUtl::setComboToData(this->lengthCombo, this->excitation->newConfig().length);
+	QLUtl::setComboToData(this->rateCombo, this->excitation->newConfig().rate);
+	QLUtl::setComboToData(this->depthCombo, this->excitation->newConfig().depth);
+	this->fMinCnt->setValue(this->excitation->newConfig().fMin);
+	this->fMaxCnt->setValue(this->excitation->newConfig().fMax);
+}
+
+// returns true if JACK is running
+bool ExcitForm::initCapture() {
+	this->capture = new Capture(this->audioIo);
+	this->jackConnected = true;
+	emit forceRate(this->capture->getAudioIoRate());
+	return !this->audioIo->backends().isEmpty();
 }

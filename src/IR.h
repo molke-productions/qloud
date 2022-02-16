@@ -23,6 +23,9 @@
 #include <fftw3.h>
 #include <QLE.h>
 
+class Capture;
+class Excitation;
+
 class IR {
 
 public:
@@ -38,7 +41,7 @@ public:
 		return QString("irPower.wav");
 	}
 
-	void generate();
+	void generate(const Excitation& excitation, const Capture& capture);
 	void trim(double secs);
 	double getMaxTrimLength();
 

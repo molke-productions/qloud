@@ -7,7 +7,6 @@ SOURCES += main.cpp \
  Excitation.cpp \
  ExcitCfg.cpp \
  ExcitForm.cpp \
- ExcitThread.cpp \
  FileFft.cpp \
  GenThread.cpp \
  HarmData.cpp \
@@ -29,6 +28,7 @@ SOURCES += main.cpp \
  QLUtl.cpp \
  QLWin.cpp \
  SplPlot.cpp \
+ SplTab.cpp \
  StepPlot.cpp \
  TickPoster.cpp \
  WavIn.cpp \
@@ -50,7 +50,6 @@ HEADERS += CapThread.h \
  Excitation.h \
  ExcitCfg.h \
  ExcitForm.h \
- ExcitThread.h \
  FileFft.h \
  GenThread.h \
  HarmData.h \
@@ -74,6 +73,7 @@ HEADERS += CapThread.h \
  QLUtl.h \
  QLWin.h \
  SplPlot.h \
+ SplTab.h \
  StepPlot.h \
  TickPoster.h \
  WavInfo.h \

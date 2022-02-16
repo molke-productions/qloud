@@ -19,6 +19,7 @@
 #include <math.h>
 
 #include "Excitation.h"
+#include "QLWin.h"
 #include "Weights.h"
 #include "WavInfo.h"
 #include "WavIn.h"
@@ -27,26 +28,51 @@
 static const double START_SMOOTH = 0.05;
 static const double FINISH_SMOOTH = 0.005;
 
-void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
+Excitation::Excitation(QObject* parent)
+	: QObject(parent) {
+}
+
+Excitation::~Excitation() {
+	if (m_qlCfg) {
+		delete m_qlCfg;
+		m_qlCfg = nullptr;
+	}
+}
+
+void Excitation::setWorkDir(const QString& dir) {
+	if (m_qlCfg) {
+		delete m_qlCfg;
+		m_qlCfg = nullptr;
+	}
+	m_qlCfg = new QLCfg(dir);
+	m_lastConfig = m_qlCfg->getExcit();
+	m_newConfig = m_lastConfig;
+}
+
+void Excitation::generate() {
+	newConfig().check();
+	m_lastConfig = m_newConfig;
+	m_qlCfg->setExcit(lastConfig());
+
 	// prepare buffer with Farina’s excitation
-	double L = double(cfg.length) / log(double(cfg.fMax)/cfg.fMin);
-	double K = 2.0 * M_PI * cfg.fMin * L;
-	int length = cfg.length * cfg.rate;
+	double L = double(m_newConfig.length) / log(double(m_newConfig.fMax)/m_newConfig.fMin);
+	double K = 2.0 * M_PI * m_newConfig.fMin * L;
+	int length = m_newConfig.length * m_newConfig.rate;
 	if(length % 2)
 		length++; // to simplify: 1).reversing on place, 2). r2c fft-ing
-	int fileLength = length + cfg.rate; // + 1 second for sound delay/decay
-	double* buf = new double[fileLength];
+	int fileLength = length + m_newConfig.rate; // + 1 second for sound delay/decay
+	m_excitation.resize(fileLength);
 	// log sine at first
 	for(int i = 0; i < length; i++) {
-		double t = ((double)i) / cfg.rate;
+		double t = ((double)i) / m_newConfig.rate;
 		// to be sure our float is below 0db
-		buf[i] = sin(K * (exp(t/L) - 1.0)) * 0.9999;
+		m_excitation[i] = sin(K * (exp(t/L) - 1.0)) * 0.9999;
 	}
 	// apply start smoothing window...
 	int winLength = (int)(START_SMOOTH * length);
 	Weights* w = new Weights("hanning", winLength * 2 + 1);
 	for(int i = 0; i <= winLength; i++)
-		buf[i] = buf[i] * w->getPoint(i);
+		m_excitation[i] = m_excitation[i] * w->getPoint(i);
 	delete w;
 	// ... and finish smoothing window
 	winLength = (int)(FINISH_SMOOTH * length);
@@ -54,52 +80,60 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 	int bufIdx = length - winLength -1;
 	int winIdx = winLength;
 	for(int i = 0; i <= winLength; i++)
-		buf[bufIdx + i] = buf[bufIdx + i] * w->getPoint(winIdx + i);
+		m_excitation[bufIdx + i] = m_excitation[bufIdx + i] * w->getPoint(winIdx + i);
 	delete w;
 
 	// add 1 sec zeros
 	for(int i = length; i < fileLength; i++)
-		buf[i] = 0.0;
+		m_excitation[i] = 0.0;
 
 	// write excitation file ------------------------------------------------------
+	//writeWavFile(cfg, m_response, dirPath + "/" + Excitation::excitationFileName());
+
+	// revers the buf
+	m_filter.resize(m_excitation.size());
+	for(int i = 0; i < fileLength/2; i++) {
+		m_filter[i] = m_excitation[fileLength -  i - 1];
+		m_filter[fileLength -  i - 1] = m_excitation[i];
+	}
+	// apply decay
+	double factor = log2( double(m_newConfig.fMax) / m_newConfig.fMin ) / length;
+	for(int i = m_newConfig.rate; i < fileLength; i++) // skip 1 sec
+		m_filter[i] *= pow(0.5, factor * (i - m_newConfig.rate));
+
+	// write reverse filter file --------------------------------------------------
+	//writeWavFile(cfg, m_inverse, dirPath + "/" + Excitation::filterFileName());
+
+	m_lastConfig = m_newConfig;
+}
+
+ExcitCfg& Excitation::newConfig() {
+	return m_newConfig;
+}
+
+const ExcitCfg& Excitation::lastConfig() const {
+	return m_lastConfig;
+}
+
+const std::vector<double>& Excitation::excitation() const {
+	return m_excitation;
+}
+
+const std::vector<double>& Excitation::filter() const {
+	return m_filter;
+}
+
+void Excitation::writeWavFile(const ExcitCfg& cfg, const std::vector<double>& data, const QString& dirPath) {
 	WavInfo wavInfo;
 	wavInfo.rate = cfg.rate;
-	wavInfo.length = fileLength;
+	wavInfo.length = data.size();
 	wavInfo.channels = 1;
 	wavInfo.bitDepth = cfg.depth;
 
-	WavOut* excitOut = new WavOut(
-		dirPath + "/" + Excitation::excitationFileName()
-	);
+	WavOut wavOut(dirPath);
 	try {
-		excitOut->writeDouble(wavInfo, buf);
+		wavOut.writeDouble(wavInfo, data.data());
 	} catch(QLE e) {
-		delete excitOut;
-        delete[] buf;
 		throw QLE(e.msg);
 	}
-	delete excitOut;
-
-	// write reverse filter file --------------------------------------------------
-	// revers the buf on place
-	for(int i = 0; i < fileLength/2; i++) {
-		double t = buf[i];
-		buf[i] = buf[fileLength -  i - 1];
-		buf[fileLength -  i - 1] = t;
-	}
-	// apply decay
-	double factor = log2( double(cfg.fMax) / cfg.fMin ) / length;
-	for(int i = cfg.rate; i < fileLength; i++) // skip 1 sec
-		buf[i] *= pow(0.5, factor * (i - cfg.rate));
-	// write with the same WavInfo
-	WavOut* filterOut = new WavOut(dirPath + "/" + Excitation::filterFileName());
-	try {
-		filterOut->writeDouble(wavInfo, buf);
-	} catch(QLE e) {
-		delete filterOut;
-        delete[] buf;
-		throw QLE(e.msg);
-	}
-	delete filterOut;
-    delete[] buf;
 }

@@ -23,11 +23,15 @@
 
 GenThread::GenThread(
 	QObject* parent,
+	const Excitation& aExcitation,
+	const Capture& aCapture,
 	const QString& aWrkDir,
 	const QString& aDescription,
 	double aMaxLevel,
 	QWidget* aFeedback
-) : QThread(parent) {
+) : QThread(parent),
+	excitation(aExcitation),
+	capture(aCapture) {
 	this->workDir = aWrkDir;
 	this->description = aDescription;
 	this->maxLevel = aMaxLevel;
@@ -64,7 +68,7 @@ void GenThread::run() {
 		QLCfg* qlCfg = new QLCfg(this->workDir);
 		QString prefix  = qlCfg->nextIrKey();
 		IR* ir = new IR(this->workDir, prefix);
-		ir->generate();
+		ir->generate(excitation, capture);
 		delete ir;
 
 		ExcitCfg eCfg = qlCfg->getExcit();

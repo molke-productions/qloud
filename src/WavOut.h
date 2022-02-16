@@ -27,8 +27,8 @@ class WavOut {
 public:
 	WavOut(QString aPath);
 	~WavOut();
-	void writeFloat(WavInfo info, float* buf);
-	void writeDouble(WavInfo info, double* buf);
+	void writeFloat(WavInfo info, const float* buf);
+	void writeDouble(WavInfo info, const double* buf);
 
 private:
 	void write(WavInfo info, int size, char* buf);

@@ -19,6 +19,7 @@
 #ifndef HARMPLOT_H
 #define HARMPLOT_H
 
+#include <array>
 #include <QtWidgets>
 #include <QtCharts/QtCharts>
 #include "QLE.h"
@@ -30,14 +31,20 @@ class HarmPlot: public Plotter {
 	Q_OBJECT
 
 public:
-	HarmPlot(const QString& dir, IRInfo ii, QWidget *parent = 0);
+	HarmPlot(const QString& dir, QWidget *parent = 0);
 	~HarmPlot();
+
+	void setIrInfo(const IRInfo& ii) override;
 
 private:
 	QString dir;
 	IRInfo ii;
 
-	HarmData** data;
+	QLogValueAxis* XAxis = nullptr;
+	QValueAxis* YAxis = nullptr;
+
+	static const int MAX_HARM = 4;
+	std::array<HarmData*, MAX_HARM> harmData;
 	void addCurves(QAbstractAxis *x, QAbstractAxis *y);
 };
 

@@ -25,17 +25,24 @@
 #include "IRInfo.h"
 #include "Plotter.h"
 
+class IRPlot;
+class IRPPlot;
+class StepPlot;
+class HarmPlot;
+class SplTab;
+
 class PlotWindow : public QWidget {
 	Q_OBJECT
 
 public:
 	PlotWindow(
 		const QString& dir,
-		const IRInfo& ii,
 		QMap<PlotWindow*, QString>* plots,
 		QWidget *parent = 0
 	);
 	~PlotWindow();
+
+	void setIrInfo(const IRInfo& ii);
 
 public slots:
 	void onPrintClicked();
@@ -50,16 +57,19 @@ protected:
 private:
 	QMap<PlotWindow*, QString>* plots;
 
+	QTabWidget* tabs;
+	SplTab* splTab;
+
 	// SPL plotting
-	QWidget* getSplTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	static SplTab* buildSplTab(const QString& dir, Plotter** plot);
 	// IR itself plotting
-	QWidget* getIRTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	static IRPlot* buildIRTab(const QString& dir, Plotter** plot);
 	// IR power plotting
-	QWidget* getIRPTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	static IRPPlot* buildIRPTab(const QString& dir, Plotter** plot);
 	// Step response plotting
-	QWidget* getStepTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	static StepPlot* buildStepTab(const QString& dir, Plotter** plot);
 	// Harmonics plotting
-	QWidget* getHarmTab(const QString& dir, const IRInfo& ii, Plotter** plot);
+	static HarmPlot* buildHarmTab(const QString& dir, Plotter** plot);
 
 	Plotter *splplot;
 	Plotter *irplot;

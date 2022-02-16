@@ -28,15 +28,20 @@ class IRPPlot: public Plotter {
 	Q_OBJECT
 
 public:
-	IRPPlot(const QString& dir, IRInfo ii, QWidget *parent = 0);
+	IRPPlot(const QString& dir, QWidget *parent = 0);
 	~IRPPlot();
+
+	void setIrInfo(const IRInfo& ii) override;
 
 private:
 	QString dir;
 	IRInfo ii;
 
-	double* time;
-	double* amps;
+	QValueAxis *XAxis = nullptr;
+	QLineSeries* ampCurve = nullptr;
+
+	double* time = nullptr;
+	double* amps = nullptr;
 
 	unsigned calculate();
 };
