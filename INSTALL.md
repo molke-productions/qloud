@@ -24,6 +24,6 @@ The `qloud` executable will be in the `bin` directory.
 
 * install dependencies
 ```
-sudo apt install qttools5-dev libjack-jackd2-dev libsndfile1-dev libfftw3-dev
+sudo apt install qttools5-dev libjack-jackd2-dev libsndfile1-dev libfftw3-dev libqt5charts5-dev
 ```
 `libjack-jackd2-dev` can be exchanged with `libjack-dev` if using jackd1
