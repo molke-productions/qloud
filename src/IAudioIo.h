@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 Andrew Gaydenko <a@gaydenko.com>
+	Copyright (C) 2022 Manuel Weichselbaumer <mincequi@web.de>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,24 +16,27 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef IAUDIOIO_H
+#define IAUDIOIO_H
 
-#ifndef WAVINFO_H
-#define WAVINFO_H
+#include "AudioInfo.h"
 
-#include <QtCore>
-#include "QLE.h"
+#include <QStringList>
 
-class WavInfo {
+class IAudioIo {
 public:
-	WavInfo();
-	~WavInfo();
-	unsigned length;
-	uint32_t rate;
-	int bitDepth;
-	int channels;
+	virtual ~IAudioIo() {};
 
-	int getFormat();
-	void show();
+	virtual QStringList inputDevices() const = 0;
+	virtual void selectInputDevice(const QString& device) = 0;
+
+	virtual QStringList outputDevices() const = 0;
+	virtual void selectOutputDevice(const QString& device) = 0;
+
+	virtual bool isIdle() = 0;
+	virtual bool isConnected() = 0;
+	virtual void process(const AudioInfo& info) = 0;
+	virtual uint32_t getRate() = 0;
 };
 
-#endif
+#endif // IAUDIOIO_H

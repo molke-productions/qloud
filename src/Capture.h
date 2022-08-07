@@ -22,19 +22,19 @@
 
 #include <QtCore>
 #include "WavInfo.h"
-#include "JackWrap.h"
 #include "QLE.h"
+
+class IAudioIo;
 
 class Capture {
 public:
-	Capture(QString aDirPath);
+	Capture(const QString& aDirPath, IAudioIo* audioIo);
 	~Capture();
 	static QString responseFileName() {
 		return QString("response.wav");
 	}
-	void openJack();
-	int getJackRate();
-	void closeJack();
+	void openAudioIo();
+	int getAudioIoRate();
 	bool jackIsConnected();
 	void initBuffers();
 	void doJob(int playDbLevel);
@@ -44,15 +44,16 @@ public:
 	}
 
 private:
-	QString dirPath;
+	const QString& dirPath;
 
-	float* playBuf;
-	float* capBuf;
+	float* playBuf = nullptr;
+	float* capBuf = nullptr;
 
-	WavInfo* wavInfo;
-	JackWrap* jack;
-	float maxResponse;
+	WavInfo* wavInfo = nullptr;
+	IAudioIo* audioIo = nullptr;
+	float maxResponse = 0.0f;
 
+	void closeAudioIo();
 	void freeBuffers();
 };
 

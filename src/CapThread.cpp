@@ -23,11 +23,9 @@
 CapThread::CapThread(
 	QObject* parent,
 	Capture* aCapture,
-	TickPoster* aTicker,
 	int playDb
 ) : QThread(parent) {
 	this->capture = aCapture;
-	this->ticker = aTicker;
 	this->playDbLevel = playDb;
 	connect(
 		this,

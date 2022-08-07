@@ -28,13 +28,13 @@ class Harmonics {
 public:
 	static const int POINTS_AMOUNT = 4096;
 
-	Harmonics(QString aDirPath, IRInfo anInfo);
+	Harmonics(const QString& aDirPath, IRInfo anInfo);
 	~Harmonics();
 
 	HarmData* getHarm(int num);
 
 private:
-	QString dirPath;
+	const QString& dirPath;
 	IRInfo info;
 	double* irSamples;
 	int maxIdx;

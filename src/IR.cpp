@@ -28,8 +28,8 @@
 #include "Weights.h"
 #include "IR.h"
 
-IR::IR(QString aDirPath, QString aPrefix) {
-	this->dirPath = aDirPath;
+IR::IR(const QString& aDirPath, QString aPrefix)
+	: dirPath(aDirPath) {
 	this->prefix = aPrefix;
 	this->maxIdx = -1;
 	this->maxTrimLength = -1.0;

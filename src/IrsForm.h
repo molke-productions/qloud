@@ -29,7 +29,7 @@ class IrsForm : public QWidget {
 	Q_OBJECT
 
 public:
-	IrsForm(QWidget* feedback, QString workDir, QWidget* parent = 0);
+	IrsForm(QWidget* feedback, const QString& workDir, QWidget* parent = 0);
 	~IrsForm();
 
 signals:
@@ -45,7 +45,7 @@ private slots:
 
 private:
 	QWidget* feedback;
-	QString workDir;
+	const QString& workDir;
 	IrsModel* model;
 	QTableView* view;
 	QPushButton* btnPlot;

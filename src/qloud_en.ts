@@ -72,17 +72,17 @@
 <context>
     <name>HarmPlot</name>
     <message>
-        <location filename="HarmPlot.cpp" line="48"/>
+        <location filename="HarmPlot.cpp" line="43"/>
         <source>Harmonic Distortion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="HarmPlot.cpp" line="53"/>
+        <location filename="HarmPlot.cpp" line="48"/>
         <source>Frequency in Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="HarmPlot.cpp" line="58"/>
+        <location filename="HarmPlot.cpp" line="53"/>
         <source>Distortion in dB</source>
         <translation type="unfinished"></translation>
     </message>
@@ -284,111 +284,118 @@ Are you sure you want to delete this measurement?</source>
     </message>
 </context>
 <context>
+    <name>Plotter</name>
+    <message>
+        <location filename="Plotter.cpp" line="134"/>
+        <source>%1 %2 @ %3 %4</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QLWin</name>
     <message>
-        <location filename="QLWin.cpp" line="43"/>
+        <location filename="QLWin.cpp" line="53"/>
         <source>All project files are here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="46"/>
+        <location filename="QLWin.cpp" line="56"/>
         <source>Select working directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="66"/>
+        <location filename="QLWin.cpp" line="76"/>
         <source>&lt;b&gt;Directory&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="78"/>
+        <location filename="QLWin.cpp" line="88"/>
         <source>Capturing audiosystem response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="85"/>
+        <location filename="QLWin.cpp" line="93"/>
+        <source>Backend:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="QLWin.cpp" line="100"/>
         <source>Excitation:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="91"/>
+        <location filename="QLWin.cpp" line="106"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="92"/>
+        <location filename="QLWin.cpp" line="107"/>
         <source>Disconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="95"/>
+        <location filename="QLWin.cpp" line="110"/>
         <source>&lt;b&gt;Capture&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="106"/>
+        <location filename="QLWin.cpp" line="121"/>
         <source>Playback level [dB]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="118"/>
+        <location filename="QLWin.cpp" line="133"/>
         <source>Delay before capture [s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="132"/>
+        <location filename="QLWin.cpp" line="147"/>
         <source>Start recording</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="194"/>
+        <location filename="QLWin.cpp" line="209"/>
         <source>Impulse response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="339"/>
-        <source>Failed connecting with JACK server. The error is:
-
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="QLWin.cpp" line="341"/>
+        <location filename="QLWin.cpp" line="41"/>
         <source>
 
 Capturing will be disabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="342"/>
-        <source>
-To enable start JACK and restart the application</source>
+        <location filename="QLWin.cpp" line="39"/>
+        <source>Failed to init audio backends. The error is:
+
+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="357"/>
+        <location filename="QLWin.cpp" line="363"/>
         <source>Connect JACK ports before capturing!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="392"/>
+        <location filename="QLWin.cpp" line="398"/>
         <source>Maximum capture level: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="394"/>
+        <location filename="QLWin.cpp" line="400"/>
         <source>
 Give a meaningful description for the measurement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="395"/>
+        <location filename="QLWin.cpp" line="401"/>
         <source>
 (“Cancel” will ignore this measurement)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="QLWin.cpp" line="396"/>
+        <location filename="QLWin.cpp" line="402"/>
         <source>Measurement description</source>
         <translation type="unfinished"></translation>
     </message>
@@ -396,7 +403,7 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="main.cpp" line="51"/>
+        <location filename="main.cpp" line="55"/>
         <source>Loudspeaker response measurement program.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -404,22 +411,22 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>SplPlot</name>
     <message>
-        <location filename="SplPlot.cpp" line="31"/>
+        <location filename="SplPlot.cpp" line="28"/>
         <source>Frequency Response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="36"/>
+        <location filename="SplPlot.cpp" line="33"/>
         <source>Frequency in Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="41"/>
+        <location filename="SplPlot.cpp" line="38"/>
         <source>Amplitude in dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="SplPlot.cpp" line="54"/>
+        <location filename="SplPlot.cpp" line="51"/>
         <source>Phase in degrees</source>
         <translation type="unfinished"></translation>
     </message>
@@ -427,17 +434,17 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>StepPlot</name>
     <message>
-        <location filename="StepPlot.cpp" line="47"/>
+        <location filename="StepPlot.cpp" line="44"/>
         <source>Step Response</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="StepPlot.cpp" line="51"/>
+        <location filename="StepPlot.cpp" line="48"/>
         <source>Time in ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="StepPlot.cpp" line="57"/>
+        <location filename="StepPlot.cpp" line="54"/>
         <source>Amplitude</source>
         <translation type="unfinished"></translation>
     </message>
@@ -445,7 +452,7 @@ Give a meaningful description for the measurement</source>
 <context>
     <name>main</name>
     <message>
-        <location filename="main.cpp" line="57"/>
+        <location filename="main.cpp" line="61"/>
         <source>Project directory to work on.</source>
         <translation type="unfinished"></translation>
     </message>

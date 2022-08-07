@@ -20,7 +20,7 @@ public slots:
 
 private:
 	IR* ir;
-	QString dir;
+	const QString& dir;
 	IRInfo ii;
 
 	double* freqs;

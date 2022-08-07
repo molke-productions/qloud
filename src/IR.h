@@ -26,7 +26,7 @@
 class IR {
 
 public:
-	IR(QString aDirPath, QString aPrefix);
+	IR(const QString& aDirPath, QString aPrefix);
 
 	static QString irFileName() {
 		return QString("ir.wav");
@@ -43,7 +43,7 @@ public:
 	double getMaxTrimLength();
 
 private:
-	QString dirPath;
+	const QString& dirPath;
 	QString prefix;
 	int maxIdx;
 	double maxTrimLength; // secs

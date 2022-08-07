@@ -44,7 +44,7 @@ protected:
 
 private:
 	ExcitCfg cfg;
-	QString wrkDir;
+	const QString& wrkDir;
 	QWidget* feedback;
 };
 
