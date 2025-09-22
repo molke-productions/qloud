@@ -1,30 +1,19 @@
 # About
 
-QLoud is a tool to measure a loudspeaker frequency response and distortions.
+QLoud is a tool to measure frequency response and distortion.
 
-This was just an attempt of porting it to QT5. It now uses Qt Charts instead of Qwt for plotting.
+This was just an attempt to port it to Qt5. It now uses Qt Charts instead of Qwt for plotting.
+The original app page is now [archived](https://web.archive.org/web/20250123210056/http://gaydenko.com/qloud/).
 
-The original app page is here:
+Writing this app was inspired by [excellent applications written by Fons Adriaensen](https://kokkinizita.linuxaudio.org/linuxaudio/index.html).
 
-http://gaydenko.com/qloud/
-
-Writing this app was inspired by excellent applications written
-by Fons Adriaensen:
-
-http://users.skynet.be/solaris/linuxaudio/
-
-Theoretical background belongs to Angelo Farina:
-
-http://pcfarina.eng.unipr.it/
-
-In particular, this method was used:
-
-http://pcfarina.eng.unipr.it/Public/Papers/134-AES00.PDF
+Theoretical background belongs to the late [Angelo Farina](https://angelofarina.it/).
+In particular, [this method](https://angelofarina.it/Public/Papers/134-AES00.PDF) was used.
 
 
 # Target use
 
-* loudspeaker DIY (crossover tuning).
+* loudspeaker DIY (crossover tuning)
 
 
 # Measurement chain
@@ -40,8 +29,8 @@ http://pcfarina.eng.unipr.it/Public/Papers/134-AES00.PDF
 
 # Result
 
-After audio system response capturing is done, an IR (impulse response)
-is calculated. Currently, these IR-aware analysis outcomes are available:
+After audio system response capturing is done, an IR (impulse response) is calculated. 
+Currently, the following IR-aware analysis outcomes are available:
 
 * plotting of SPL (sound pressure level) as a function of frequency (dB/Hz)
 * plotting of IR power as a function of time (dB/s)
@@ -52,15 +41,14 @@ is calculated. Currently, these IR-aware analysis outcomes are available:
 	* 4th – light green
 	* 5th – light red
 
-
-The IR power plot is useful to see room reflections behavior.
-The step response plot is useful for speakers time alignment in multiway loudspeakers.
+The IR power plot is useful to see room reflection behavior.
+The step response plot is useful for speaker time alignment in multiway loudspeakers.
 
 
 # A few hints
 
 * move mouse above “?” sign at plot window and wait
-* to change a measurement description double-click it
+* to change a measurement description, double-click it
 * to delete a measurement, use the context menu on the measurements table
 * to see what the app does, just connect the app’s JACK ports directly and try
 * to see what your sound card does, use loopback for line in/out
