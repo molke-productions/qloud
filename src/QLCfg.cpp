@@ -272,15 +272,27 @@ QDomDocument QLCfg::read() {
 	file.open(QIODevice::ReadOnly);
 	QLUtl::checkFileError(file);
 	QDomDocument doc;
+	QString error;
+	int row, col;
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 	auto res = doc.setContent(&file);
-	QString error = res.errorMessage;
+	error = res.errorMessage;
+	row = res.errorLine;
+	col = res.errorColumn;
+#else
+	bool ok = doc.setContent(&file, &error, &row, &col);
+#endif
 	file.close();
 	QLUtl::checkFileError(file);
-	if(error.length()) {
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+	if(!error.isEmpty()) {
+#else
+		if (!ok) {
+#endif
 		error += " at row ";
-		error += QString::number(res.errorLine);
+		error += QString::number(row);
 		error += " and column ";
-		error += QString::number(res.errorColumn);
+		error += QString::number(col);
 		throw QLE(error);
 	}
 	return doc;
