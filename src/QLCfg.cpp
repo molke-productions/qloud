@@ -271,17 +271,16 @@ QDomDocument QLCfg::read() {
 	QFile file(this->fileName());
 	file.open(QIODevice::ReadOnly);
 	QLUtl::checkFileError(file);
-	QString error;
-	int row, column;
 	QDomDocument doc;
-	doc.setContent(&file, &error, &row, &column);
+	auto res = doc.setContent(&file);
+	QString error = res.errorMessage;
 	file.close();
 	QLUtl::checkFileError(file);
 	if(error.length()) {
 		error += " at row ";
-		error += QVariant(row).toString();
+		error += QString::number(res.errorLine);
 		error += " and column ";
-		error += QVariant(column).toString();
+		error += QString::number(res.errorColumn);
 		throw QLE(error);
 	}
 	return doc;

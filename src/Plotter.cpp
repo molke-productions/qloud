@@ -138,7 +138,7 @@ void Plotter::mouseMoveEvent(QMouseEvent *event)
 	}
 
 	/* draw tooltip */
-	QToolTip::showText(event->globalPos(), label, this, QRect(), 10000);
+	QToolTip::showText(event->globalPosition().toPoint(), label, this, QRect(), 10000);
 
 	/* draw dashed vertical line */
 	double x = val.x();
