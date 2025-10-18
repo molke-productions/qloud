@@ -190,7 +190,7 @@ QWidget* PlotWindow::getSplTab(
 	QDoubleSpinBox* cntSmooth = new QDoubleSpinBox();
 	cntSmooth->setRange(0.25, 256.0);
 	cntSmooth->setSingleStep(0.25);
-	cntSmooth->setValue(Plotter::DEFAULT_SMOOTH); // 1/6 octave
+	cntSmooth->setValue(Plotter::DEFAULT_SMOOTH);
 	QWidget* tmp = new QLabel("W9999.99W");
 	cntSmooth->setFixedWidth(
 		cntSmooth->sizeHint().width() + tmp->sizeHint().width()
@@ -211,7 +211,7 @@ QWidget* PlotWindow::getSplTab(
 	double maxMilliSecs = plotter->getMaxTrimLength() * 1000.0;
 	cntWindow->setRange(1.0, maxMilliSecs);
 	cntWindow->setSingleStep(1);
-	cntWindow->setValue(500);
+	cntWindow->setValue(20.0);
 	tmp = new QLabel("W25999.0W");
 	cntWindow->setFixedWidth(
 		cntWindow->sizeHint().width() + tmp->sizeHint().width()

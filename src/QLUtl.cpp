@@ -16,6 +16,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#define QT_NO_USE_NODISCARD_FILE_OPEN
+
 #include <cmath>
 #include <iostream>
 #include "QLUtl.h"
@@ -140,19 +142,16 @@ double* QLUtl::fastSmooth(double* in, double smoothFactor, int length) {
 	double rightFactor = pow(2.0, smoothFactor / 2.0);
 	double leftFactor = 1.0 / rightFactor;
 
-	int left;
-	int right;
-	double tmp;
 	for(int i = 0; i < length; i++) {
-		left = int(leftFactor * i + 0.5);
+		int left = int(leftFactor * i + 0.5);
 		if(left < 0)
 			left = 0;
 
-		right = int(rightFactor * i + 0.5);
+		int right = int(rightFactor * i + 0.5);
 		if(right > length-1 )
 			right = length -1;
 
-		tmp = 0.0;
+		double tmp = 0.0;
 		int increment = 1;
 		if(right - left > 2048)
 			increment = (right - left) / 2048;
@@ -173,19 +172,16 @@ double* QLUtl::smooth(double* in, double smoothFactor, int length) {
 	double rightFactor = pow(2.0, smoothFactor / 2.0);
 	double leftFactor = 1.0 / rightFactor;
 
-	int left;
-	int right;
-	double tmp;
 	for(int i = 0; i < length; i++) {
-		left = int(leftFactor * i + 0.5);
+		int left = int(leftFactor * i + 0.5);
 		if(left < 0)
 			left = 0;
 
-		right = int(rightFactor * i + 0.5);
+		int right = int(rightFactor * i + 0.5);
 		if(right > length-1 )
 			right = length -1;
 
-		tmp = 0.0;
+		double tmp = 0.0;
 		for(int j = left; j <= right; j++)
 			tmp += in[j];
 
@@ -212,26 +208,22 @@ double* QLUtl::smoothForLog(
 		delta++;
 	}
 
-	int left;
-	int right;
-	double tmp;
-	int deltaInUse;
 	for(int i = 0; i < length; i++) {
-		deltaInUse = delta;
+		int deltaInUse = delta;
 
-		left = i - deltaInUse;
+		int left = i - deltaInUse;
 		if(left < 0) {
 			deltaInUse = i;
 			left = 0;
 		}
 
-		right = i + deltaInUse;
+		int right = i + deltaInUse;
 		if(right > length-1 ) {
 			deltaInUse = length - 1 - i;
 			right = length - 1;
 		}
 
-		tmp = 0.0;
+		double tmp = 0.0;
 		for(int j = left; j <= right; j++)
 			tmp += in[j];
 

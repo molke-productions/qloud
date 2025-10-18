@@ -53,8 +53,7 @@ StepPlot::StepPlot(
 		QValueAxis *YAxis = new QValueAxis(this->chart);
 		YAxis->setTitleText(tr("Amplitude"));
 		YAxis->setLabelFormat("%.02f");
-		YAxis->setMax(1.5);
-		YAxis->setMin(-1.5);
+		YAxis->setRange(-1.0, 1.0);
 
 		QLineSeries* ampCurve = new QLineSeries(this->chart);
 		ampCurve->setPen(QPen(AMP_CURVE_COLOR));
@@ -80,7 +79,7 @@ unsigned StepPlot::calculate() {
 	WavIn* irWav = new WavIn(this->dir + "/" + this->ii.key + IR::irFileName());
 	try {
 		this->amps = irWav->readDouble();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete irWav;
 		if(this->amps) {
 			delete this->amps;

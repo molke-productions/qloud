@@ -28,7 +28,7 @@ class ExcitThread : public QThread {
 public:
 	ExcitThread(
 		QObject* parent,
-		const QString& wrkDir,
+		const QString& aWrkDir,
 		const ExcitCfg& aCfg,
 		QWidget* aFeedback
 	);

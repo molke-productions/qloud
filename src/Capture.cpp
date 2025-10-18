@@ -59,7 +59,7 @@ void Capture::initBuffers() {
 
 	try {
 		this->playBuf = excitWav->readFloat();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete excitWav;
 		this->freeBuffers();
 		throw QLE(e.msg);

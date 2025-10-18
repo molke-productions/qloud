@@ -16,7 +16,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef WAVINFO_H
 #define WAVINFO_H
 

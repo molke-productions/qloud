@@ -16,6 +16,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#define QT_NO_USE_NODISCARD_FILE_OPEN
+
 #include <QtXml/QtXml>
 #include "QLCfg.h"
 #include "QLUtl.h"
@@ -287,7 +289,7 @@ QDomDocument QLCfg::read() {
 #if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 	if(!error.isEmpty()) {
 #else
-		if (!ok) {
+	if (!ok) {
 #endif
 		error += " at row ";
 		error += QString::number(row);

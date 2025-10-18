@@ -55,14 +55,14 @@ IRPlot::IRPlot(
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Amplitude"));
 	YAxis->setLabelFormat("%.02f");
-	YAxis->setMax(1.5);
-	YAxis->setMin(-1.5);
-	YAxis->setTickCount(7);
-	YAxis->setMinorTickCount(10);
+	YAxis->setRange(-1.0, 1.0);
+// 	YAxis->setTickCount(5);
+	YAxis->setMinorTickCount(4);
 
 	QLineSeries* ampCurve = new QLineSeries(this->chart);
 	ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	appendSeries(ampCurve, XAxis, Qt::AlignBottom, "ms", YAxis, Qt::AlignLeft, "");
+	appendSeries(ampCurve, XAxis, Qt::AlignBottom, "ms",
+		YAxis, Qt::AlignLeft, "");
 
 	QList<QPointF> points;
 	for (unsigned int i = 0; i < curveLength; i++)
@@ -82,7 +82,7 @@ unsigned IRPlot::calculate() {
 	WavIn* irWav = new WavIn(this->dir + "/" + this->ii.key + IR::irFileName());
 	try {
 		this->amps = irWav->readDouble();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete irWav;
 		if(this->amps) {
 			delete this->amps;

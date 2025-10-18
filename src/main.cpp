@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 		w->show();
 		app.exec();
 		delete w;
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		QLUtl::d(e.msg);
 	}
 	return 0;

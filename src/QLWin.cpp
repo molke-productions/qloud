@@ -75,7 +75,7 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	int excitLayoutIndex = mainLayout->indexOf(wrkGroup) + 1;
 
 	// create Capture group
-	QGroupBox* capGroup = new QGroupBox(tr("Capturing audiosystem response"));
+	QGroupBox* capGroup = new QGroupBox(tr("Capturing audio system response"));
 	QVBoxLayout* capLayout = new QVBoxLayout();
 
 	// Capture top
@@ -107,7 +107,7 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->playDb = new QDoubleSpinBox();
 	this->playDb->setRange(-100, 0);
 	this->playDb->setSingleStep(1);
-	this->playDb->setValue(-6);
+	this->playDb->setValue(-10);
 	tmp = new QLabel("W-100W");
 	this->playDb->setFixedWidth(
 		this->playDb->sizeHint().width() + tmp->sizeHint().width()
@@ -125,7 +125,7 @@ QLWin::QLWin(const QString* wrkDir, QWidget* parent) : QMainWindow(parent) {
 	this->delayCombo->addItem("10");
 	this->delayCombo->addItem("20");
 	this->delayCombo->addItem("40");
-	this->delayCombo->setCurrentIndex(0);
+	this->delayCombo->setCurrentIndex(2);
 	capBottom->addWidget(this->delayCombo);
 
 	capBottom->addSpacing(QLWin::BIG_SPACE);

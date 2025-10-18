@@ -46,7 +46,7 @@ double IR::getMaxTrimLength() {
 	double* irSamples =0;
 	try {
 		irSamples = irWav->readDouble();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete irWav;
 		if(irSamples)
 			delete irSamples;
@@ -57,9 +57,8 @@ double IR::getMaxTrimLength() {
 
 	// find peak
 	double max = 0.0;
-	double tmp = 0.0;
 	for(unsigned i = 0; i < wavInfo->length; i++) {
-		tmp = fabs(irSamples[i]);
+		double tmp = fabs(irSamples[i]);
 		if(tmp > max) {
 			max = tmp;
 			this->maxIdx = i;
@@ -95,7 +94,7 @@ void IR::generate() {
 	try {
 		realFilter = filterWav->readDouble();
 		realResp = respWav->readDouble();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete filterWav;
 		delete respWav;
 		if(realFilter)
@@ -204,7 +203,7 @@ void IR::generate() {
 		if( tmpAbs > max )
 			max = tmpAbs;
 	}
-    delete[] irBuf;
+	delete[] irBuf;
 	for(unsigned i = 0; i < fftLength; i++)
 		realIr[i] /= max;
 
@@ -215,7 +214,7 @@ void IR::generate() {
 	wavInfo->length = fftLength;
 	try {
 		wavOut->writeDouble(*wavInfo, realIr);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete wavOut;
 		delete[] realIr;
 		throw QLE(e.msg);
@@ -236,7 +235,7 @@ void IR::trim(double secs) {
 	double* irSamples =0;
 	try {
 		irSamples = irWav->readDouble();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete irWav;
 		if(irSamples)
 			delete irSamples;
@@ -277,7 +276,7 @@ void IR::trim(double secs) {
 	if(leftShift > maxIdx)
 		leftShift = maxIdx;
 	int left = maxIdx - leftShift;
-	Weights* w = new Weights("hanning", leftShift * 2 + 1);
+	Weights* w = new Weights(leftShift * 2 + 1);
 	for(int i = 0; i <= leftShift; i++)
 		irSamples[left + i] *= w->getPoint(i);
 	delete w;
@@ -287,7 +286,7 @@ void IR::trim(double secs) {
 	int right = maxIdx + rightShift;
 	if(right > int(wavInfo->length))
 		throw QLE("Window too wide");
-	w = new Weights("hanning", rightShift * 2 + 1);
+	w = new Weights(rightShift * 2 + 1);
 	for(int i = 0; i <= rightShift; i++)
 		irSamples[maxIdx + i] *= w->getPoint(i + rightShift);
 	delete w;
@@ -305,7 +304,7 @@ void IR::trim(double secs) {
 	);
 	try {
 		trimOut->writeDouble(*wavInfo, trimmed);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete trimOut;
 		delete[] trimmed;
 		throw QLE(e.msg);

@@ -310,7 +310,7 @@ Are you sure you want to delete this measurement?</source>
     </message>
     <message>
         <location filename="QLWin.cpp" line="78"/>
-        <source>Capturing audiosystem response</source>
+        <source>Capturing audio system response</source>
         <translation>Enregistrement de la réponse du système audio</translation>
     </message>
     <message>

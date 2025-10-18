@@ -20,31 +20,27 @@
 #include <cmath>
 #include "Weights.h"
 
-Weights::Weights(char const* name, int pointsAmount) {
+Weights::Weights(int pointsAmount) {
 	this->points = 0;
 
 	if( pointsAmount < 2 )
 		throw QLE("points amount must be > 2!");
 	this->length = pointsAmount;
 
-	// define constants for window
-	double a, b;
-	if( ! strcmp("hanning", name) ) {
-		a = 0.5;
-		b = 0.5;
-	} else if( ! strcmp("hamming", name) ) {
-		a = 0.54;
-		b = 0.46;
-	} else
-		throw QLE("unknown window type!");
+	// define window constant
+// 	// Hann
+// 	double a = 0.5;
+// 	// Hamming
+// 	double a = 25/46;
+	// Cosine 10 %
+	double a = 0.9;
 
 	// generate weights
 	this->points = new double[pointsAmount];
 	double factor = M_PI * 2.0 / (this->length - 1);
 	for(int i=0; i < this->length; i++)
-		this->points[i] = a - b * cos(factor * i);
+		this->points[i] = a - (1 - a) * cos(factor * i);
 }
-
 
 Weights::~Weights() {
 	if(this->points)

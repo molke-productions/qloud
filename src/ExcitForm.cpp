@@ -222,7 +222,7 @@ void ExcitForm::setWorkDir(const QString& dir) {
 		this->lastCfg = this->qlCfg->getExcit();
 		this->newCfg = this->lastCfg;
 		this->mapCfgToControls();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 		return;
 	}
@@ -276,7 +276,7 @@ void ExcitForm::generate() {
 		);
 		eThread->start(QThread::LowestPriority);
 		emit excitInfoChanged(this->getInfoString());
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		QLUtl::showCritical(this, e.msg);
 	}
 }

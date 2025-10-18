@@ -56,10 +56,9 @@ IRPPlot::IRPPlot(
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Power in dB"));
 	YAxis->setLabelFormat("%d");
-	YAxis->setMax(20);
-	YAxis->setMin(-100);
-	YAxis->setTickCount(7);
-	YAxis->setMinorTickCount(10);
+	YAxis->setRange(-100, 0);
+	YAxis->setTickCount(6);
+	YAxis->setMinorTickCount(3);
 
 	QLineSeries* ampCurve = new QLineSeries(this->chart);
 	ampCurve->setPen(QPen(AMP_CURVE_COLOR));
@@ -83,7 +82,7 @@ unsigned IRPPlot::calculate() {
 	WavIn* irWav = new WavIn(this->dir + "/" + this->ii.key + IR::irFileName());
 	try {
 		this->amps = irWav->readDouble();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete irWav;
 		if(this->amps) {
 			delete this->amps;

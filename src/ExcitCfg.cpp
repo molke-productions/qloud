@@ -20,11 +20,11 @@
 #include "ExcitCfg.h"
 
 ExcitCfg::ExcitCfg() {
-	this->length = 7;
+	this->length = 10;
 	this->rate = 48000;
-	this->depth = 32;
-	this->fMin = 100;
-	this->fMax = 10000;
+	this->depth = 24;
+	this->fMin = 20;
+	this->fMax = 20000;
 }
 
 QString ExcitCfg::toString() {

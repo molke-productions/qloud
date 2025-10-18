@@ -54,7 +54,7 @@ void ExcitThread::run() {
 	try {
 		Excitation::generate( this->wrkDir, this->cfg);
 		emit generated();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 		emit showStatus("Excitation generating failed!", 2000);
 		return;

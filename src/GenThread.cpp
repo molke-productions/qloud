@@ -76,7 +76,7 @@ void GenThread::run() {
 		qlCfg->appendIr(ii);
 
 		delete qlCfg;
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		QString msg = tr("IR-file calculation failed:\n\n");
 		msg += e.msg;
 		emit showCritical(msg);

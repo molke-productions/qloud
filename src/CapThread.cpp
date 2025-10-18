@@ -52,7 +52,7 @@ CapThread::CapThread(
 void CapThread::run() {
 	try {
 		this->capture->doJob(this->playDbLevel);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 	}
 	emit workIsDone(); // for ticker and IR management

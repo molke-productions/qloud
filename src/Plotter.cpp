@@ -16,6 +16,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#define QT_NO_USE_NODISCARD_FILE_OPEN
+
 #include "Plotter.h"
 #include "QLCfg.h"
 

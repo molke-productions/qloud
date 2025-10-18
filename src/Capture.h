@@ -16,7 +16,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef CAPTURE_H
 #define CAPTURE_H
 

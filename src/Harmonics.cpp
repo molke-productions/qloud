@@ -50,7 +50,7 @@ void Harmonics::init() {
 	);
 	try {
 		this->irSamples = irWav->readDouble();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete irWav;
 		if(this->irSamples)
 			delete this->irSamples;
@@ -61,9 +61,8 @@ void Harmonics::init() {
 
 	// find peak
 	double max = 0.0;
-	double tmp = 0.0;
 	for(unsigned i=0; i < this->wavInfo->length; i++) {
-		tmp = fabs(this->irSamples[i]);
+		double tmp = fabs(this->irSamples[i]);
 		if(tmp > max) {
 			max = tmp;
 			this->maxIdx = i;
@@ -136,12 +135,12 @@ HarmData* Harmonics::doHarmonicFFT(int num, int leftShift, int rightShift) {
 		samples[i] = this->irSamples[left + i];
 
 	// apply windows at edges
-	Weights* w = new Weights("hanning", leftShift * 2 + 1);
+	Weights* w = new Weights(leftShift * 2 + 1);
 	for(int i = 0; i <= leftShift; i++)
 		samples[i] *= w->getPoint(i);
 	delete w;
 
-	w = new Weights("hanning", rightShift * 2 + 1);
+	w = new Weights(rightShift * 2 + 1);
 	for(int i = 0; i <= rightShift; i++)
 		samples[i + leftShift] *= w->getPoint(rightShift + i);
 	delete w;
@@ -149,7 +148,7 @@ HarmData* Harmonics::doHarmonicFFT(int num, int leftShift, int rightShift) {
 	// main harmonics-related work is here
 
 	fftw_complex* fft = QLUtl::doFFT(samples, length, this->wavInfo->rate);
-    delete[] samples;
+	delete[] samples;
 
 	int fftResultLength = this->wavInfo->rate / 2;
 	double* linAmps = new double[fftResultLength];
@@ -165,7 +164,7 @@ HarmData* Harmonics::doHarmonicFFT(int num, int leftShift, int rightShift) {
 	double* logAmps = QLUtl::spaceAmpsToFreqs(
 		Harmonics::POINTS_AMOUNT, freqs, fftResultLength, linAmps
 	);
-    delete[] linAmps;
+	delete[] linAmps;
 
 	if(num != 1)
 		for(int i=0; i < Harmonics::POINTS_AMOUNT; i++)

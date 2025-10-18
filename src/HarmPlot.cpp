@@ -46,16 +46,15 @@ HarmPlot::HarmPlot(
 	XAxis->setBase(10.0);
 	XAxis->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Frequency in Hz"));
-	XAxis->setRange(10, 10000);
+	XAxis->setRange(20, 20000);
 	XAxis->setMinorTickCount(8);
 
 	QValueAxis *YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Distortion in dB"));
 	YAxis->setLabelFormat("%d");
-	YAxis->setMax(20);
-	YAxis->setMin(-120);
-	YAxis->setTickCount(8);
-	YAxis->setMinorTickCount(10);
+	YAxis->setRange(-100, 0);
+	YAxis->setTickCount(6);
+	YAxis->setMinorTickCount(3);
 
 	this->addCurves(XAxis, YAxis);
 }

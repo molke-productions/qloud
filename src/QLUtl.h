@@ -21,7 +21,6 @@
 
 #include <QtWidgets>
 #include <fftw3.h>
-#include "QLUtl.h"
 #include "QLE.h"
 
 static const bool QL_DEBUG = true;

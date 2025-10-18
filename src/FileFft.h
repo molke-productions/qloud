@@ -29,11 +29,11 @@ class FileFft {
 public:
 	static const int POINTS_AMOUNT = 1024 * 4;
 
-	FileFft(const QString& path, const IRInfo& ii);
+	FileFft(const QString& path, const IRInfo& anIi);
 	~FileFft();
 
-	double* getAmps(double smooth);
-	double* getPhase(double smooth);
+	double* getAmps(double smoothFactor);
+	double* getPhase(double smoothFactor);
 	double* getFreqs();
 
 private:

@@ -23,7 +23,7 @@
 
 class Weights {
 public:
-	Weights(char const* name, int pointsAmount);
+	Weights(int pointsAmount);
 	~Weights();
 	double getPoint(int pointNum) const;
 

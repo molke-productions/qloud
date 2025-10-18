@@ -20,8 +20,8 @@
 #define WAVOUT_H
 
 #include <QtCore>
-#include <WavInfo.h>
-#include <QLE.h>
+#include "WavInfo.h"
+#include "QLE.h"
 
 class WavOut {
 public:

@@ -40,17 +40,17 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 	for(int i = 0; i < length; i++) {
 		double t = ((double)i) / cfg.rate;
 		// to be sure our float is below 0db
-		buf[i] = sin(K * (exp(t/L) - 1.0)) * 0.9999;
+		buf[i] = sin(K * expm1(t/L)) * 0.9999;
 	}
 	// apply start smoothing window...
 	int winLength = (int)(START_SMOOTH * length);
-	Weights* w = new Weights("hanning", winLength * 2 + 1);
+	Weights* w = new Weights(winLength * 2 + 1);
 	for(int i = 0; i <= winLength; i++)
 		buf[i] = buf[i] * w->getPoint(i);
 	delete w;
 	// ... and finish smoothing window
 	winLength = (int)(FINISH_SMOOTH * length);
-	w = new Weights("hanning", winLength * 2 + 1);
+	w = new Weights(winLength * 2 + 1);
 	int bufIdx = length - winLength -1;
 	int winIdx = winLength;
 	for(int i = 0; i <= winLength; i++)
@@ -73,9 +73,9 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 	);
 	try {
 		excitOut->writeDouble(wavInfo, buf);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete excitOut;
-        delete[] buf;
+		delete[] buf;
 		throw QLE(e.msg);
 	}
 	delete excitOut;
@@ -95,7 +95,7 @@ void Excitation::generate(const QString& dirPath, const ExcitCfg& cfg) {
 	WavOut* filterOut = new WavOut(dirPath + "/" + Excitation::filterFileName());
 	try {
 		filterOut->writeDouble(wavInfo, buf);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		delete filterOut;
         delete[] buf;
 		throw QLE(e.msg);

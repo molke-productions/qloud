@@ -1,3 +1,5 @@
+#define QT_NO_USE_NODISCARD_FILE_OPEN
+
 #include "SplPlot.h"
 #include "IR.h"
 #include "FileFft.h"
@@ -31,34 +33,33 @@ SplPlot::SplPlot(
 	((QLogValueAxis*) XAxis)->setBase(10.0);
 	((QLogValueAxis*) XAxis)->setLabelFormat("%d");
 	XAxis->setTitleText(tr("Frequency in Hz"));
-	XAxis->setRange(10, 100000);
+	XAxis->setRange(20, 20000);
 	((QLogValueAxis *) XAxis)->setMinorTickCount(8);
 
 	YAxis = new QValueAxis(this->chart);
 	YAxis->setTitleText(tr("Amplitude in dB"));
 	((QValueAxis *) YAxis)->setLabelFormat("%d");
-	YAxis->setMax(20);
-	YAxis->setMin(-100);
-	((QValueAxis *) YAxis)->setTickCount(7);
-	((QValueAxis *) YAxis)->setMinorTickCount(10);
+	YAxis->setRange(-80, 0);
+	((QValueAxis *) YAxis)->setTickCount(5);
+	((QValueAxis *) YAxis)->setMinorTickCount(3);
 
 	this->ampCurve = new QLineSeries(this->chart);
 	this->ampCurve->setPen(QPen(AMP_CURVE_COLOR));
-	appendSeries(ampCurve, XAxis, Qt::AlignBottom, "Hz", YAxis, Qt::AlignLeft, "dB");
+	appendSeries(ampCurve, XAxis, Qt::AlignBottom, "Hz",
+		YAxis, Qt::AlignLeft, "dB");
 
 	if(QLCfg::USE_PHASE) {
 		YPAxis = new QValueAxis(this->chart);
 		YPAxis->setTitleText(tr("Phase in degrees"));
 		((QValueAxis *) YPAxis)->setLabelFormat("%d");
-		YPAxis->setMax(180);
-		YPAxis->setMin(-180);
+		YPAxis->setRange(-180, 180);
 
 		this->phaseCurve = new QLineSeries(this->chart);
 		this->phaseCurve->setPen(QPen(PHASE_CURVE_COLOR));
 	}
 
-	this->smoothFactor = Plotter::DEFAULT_SMOOTH; // 1/6 octave
-	this->winLength = 0.5; // 500 ms for right window
+	this->smoothFactor = Plotter::DEFAULT_SMOOTH;
+	this->winLength = 0.05; // 50 ms for right window
 	this->recalculate();
 }
 

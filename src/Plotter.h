@@ -16,7 +16,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #ifndef PLOTTER_H
 #define PLOTTER_H
 
@@ -30,7 +29,7 @@ class Plotter: public QChartView {
 	Q_OBJECT
 
 public:
-	static constexpr double DEFAULT_SMOOTH = 6.0; // 1/6 octave
+	static constexpr double DEFAULT_SMOOTH = 256.0; // (almost) no smoothing
 
 	Plotter(QWidget *parent = 0);
 	~Plotter();
@@ -39,8 +38,8 @@ public:
 	QString getTitle();
 
 	void appendSeries(QLineSeries* series,
-			QAbstractAxis* xaxis, Qt::Alignment xalign, const QString &xunit,
-			QAbstractAxis* yaxis, Qt::Alignment yalign, const QString &yunit);
+		QAbstractAxis* xaxis, Qt::Alignment xalign, const QString &xunit,
+		QAbstractAxis* yaxis, Qt::Alignment yalign, const QString &yunit);
 	void removeSeries(QLineSeries* series, QAbstractAxis* yattached);
 
 	virtual bool exportSeries(const QString &filename);

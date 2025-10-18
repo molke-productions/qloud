@@ -28,7 +28,7 @@ public:
 	LineEditDelegate(QObject* parent=0);
 
 	QWidget *createEditor(
-		QWidget *parent,
+		QWidget *aParent,
 		const QStyleOptionViewItem &option,
 		const QModelIndex &index
 	) const;

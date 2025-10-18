@@ -105,7 +105,7 @@ void IrsForm::newPlot() {
 			&this->plots
 		);
 		w->show();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 	}
 }

@@ -41,7 +41,7 @@ int IrsModel::rowCount(const QModelIndex& parent) const {
 	try {
 		QLCfg cfg(this->workDir);
 		return cfg.getIrs().size();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 	}
 	return 0;
@@ -85,7 +85,7 @@ QVariant IrsModel::headerData(
 
 	switch(section) {
 		case 0: return tr("Description");
-		case 1: return tr("Used excitation");
+		case 1: return tr("Excitation");
 		case 2: return tr("Max. level [dB]");
 	}
 	return QVariant();
@@ -109,7 +109,7 @@ bool IrsModel::setData(
 	try {
 		QLCfg cfg(this->workDir);
 		cfg.replaceIr(ii);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 		return false;
 	}
@@ -147,7 +147,7 @@ bool IrsModel::removeRows(int row, int count, const QModelIndex& parent) {
 	try {
 		QLCfg cfg(this->workDir);
 		cfg.removeIr(ii.key);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 		return false;
 	}
@@ -175,7 +175,7 @@ bool IrsModel::removeRows(int row, int count, const QModelIndex& parent) {
 				return false;
 			}
 		QLUtl::checkFileError(trimFile);
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 		return false;
 	}
@@ -194,7 +194,7 @@ void IrsModel::irListChanged() {
 	try {
 		QLCfg cfg(this->workDir);
 		this->list = cfg.getIrs();
-	} catch(QLE e) {
+	} catch(QLE const &e) {
 		emit showCritical(e.msg);
 		return;
 	}

@@ -36,10 +36,12 @@ IrsView::IrsView(
 
 	this->setContextMenuPolicy(Qt::DefaultContextMenu);
 
-	QLabel* tmp = new QLabel("W88 s, 192000 Hz/32 bit, 99999–99999 Hz");
-	int columnWidth = tmp->sizeHint().width();
+	this->setColumnWidth(0, 500);
+	QLabel* tmp;
+	int columnWidth;
+	tmp = new QLabel("W88 s, 192000 Hz/32 bit, 99999–99999 Hz");
+	columnWidth = tmp->sizeHint().width();
 	delete tmp;
-	this->setColumnWidth(0, columnWidth);
 	this->setColumnWidth(1, columnWidth);
 	tmp = new QLabel("WW Max. level [dB]");
 	columnWidth = tmp->sizeHint().width();
